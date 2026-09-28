@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My Online Store</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f5f6fa;
+    color: #222;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    background: #111827;
+    color: white;
+    padding: 18px 25px;
+    text-align: center;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+
+/* =========================
+   PAGE CONTROL
+========================= */
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+
+/* =========================
+   CUSTOMER PAGE
+========================= */
+
+.customer-page {
+    min-height: calc(100vh - 70px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 15px;
+}
+
+.customer-box {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.10);
+}
+
+.customer-box h1 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 28px;
+}
+
+.customer-subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    background: white;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #2563eb;
+}
+
+.required {
+    color: red;
+}
+
+
+/* =========================
+   SAVE BUTTON
+========================= */
+
+.save-btn {
+    width: 100%;
+    border: none;
+    background: #2563eb;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background: #1d4ed8;
+}
+
+
+/* =========================
+   PRODUCTS PAGE
+========================= */
+
+.products-page {
+    min-height: calc(100vh - 70px);
+    padding: 35px 20px 60px;
+}
+
+.products-container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.products-title {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.products-title h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.products-title p {
+    color: #666;
+}
+
+
+/* =========================
+   PRODUCT GRID
+========================= */
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+
+/* =========================
+   PRODUCT CARD
+========================= */
+
+.product-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    display: block;
+    background: #eeeeee;
+}
+
+.product-content {
+    padding: 20px;
+}
+
+.product-content h2 {
+    font-size: 21px;
+    margin-bottom: 10px;
+}
+
+.product-description {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.product-price {
+    font-size: 23px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+
+/* =========================
+   WHATSAPP PRODUCT BUTTON
+========================= */
+
+.whatsapp-btn {
+    width: 100%;
+    background: #25D366;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 9px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.whatsapp-btn:hover {
+    background: #1ebe5d;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    background: #111827;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 900px) {
+
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .customer-box {
+        padding: 25px 20px;
+    }
+
+    .customer-box h1 {
+        font-size: 24px;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .product-image {
+        height: 350px;
+    }
+
+    .products-title h1 {
+        font-size: 27px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==================================================
+     HEADER
+================================================== -->
+
+<header>
+
+    <div class="logo">
+        My Online Store
+    </div>
+
+</header>
+
+
+
+<!-- ==================================================
+     STEP 1
+     CUSTOMER DETAILS
+================================================== -->
+
+<section
+    id="customerPage"
+    class="page active customer-page"
+>
+
+    <div class="customer-box">
+
+        <h1>
+            Welcome 👋
+        </h1>
+
+        <p class="customer-subtitle">
+            Please enter your details to continue.
+        </p>
+
+
+        <!-- NAME -->
+
+        <div class="form-group">
+
+            <label>
+                Name <span class="required">*</span>
+            </label>
+
+            <input
+                type="text"
+                id="customerName"
+                placeholder="Enter your name"
+            >
+
+        </div>
+
+
+        <!-- CONTACT NUMBER -->
+
+        <div class="form-group">
+
+            <label>
+                Contact Number <span class="required">*</span>
+            </label>
+
+            <input
+                type="tel"
+                id="customerPhone"
+                placeholder="Enter 10-digit mobile number"
+                maxlength="10"
+            >
+
+        </div>
+
+
+        <!-- LOCATION -->
+
+        <div class="form-group">
+
+            <label>
+                Location <span class="required">*</span>
+            </label>
+
+            <input
+                type="text"
+                id="customerLocation"
+                placeholder="Enter your location / city"
+            >
+
+        </div>
+
+
+        <!-- STATE -->
+
+        <div class="form-group">
+
+            <label>
+                State / Union Territory
+                <span class="required">*</span>
+            </label>
+
+            <select id="customerState">
+
+                <option value="">
+                    -- Select State / Union Territory --
+                </option>
+
+                <option>Andhra Pradesh</option>
+                <option>Arunachal Pradesh</option>
+                <option>Assam</option>
+                <option>Bihar</option>
+                <option>Chhattisgarh</option>
+                <option>Goa</option>
+                <option>Gujarat</option>
+                <option>Haryana</option>
+                <option>Himachal Pradesh</option>
+                <option>Jharkhand</option>
+                <option>Karnataka</option>
+                <option>Kerala</option>
+                <option>Madhya Pradesh</option>
+                <option>Maharashtra</option>
+                <option>Manipur</option>
+                <option>Meghalaya</option>
+                <option>Mizoram</option>
+                <option>Nagaland</option>
+                <option>Odisha</option>
+                <option>Punjab</option>
+                <option>Rajasthan</option>
+                <option>Sikkim</option>
+                <option>Tamil Nadu</option>
+                <option>Telangana</option>
+                <option>Tripura</option>
+                <option>Uttar Pradesh</option>
+                <option>Uttarakhand</option>
+                <option>West Bengal</option>
+
+                <option>Andaman and Nicobar Islands</option>
+                <option>Chandigarh</option>
+                <option>Dadra and Nagar Haveli and Daman and Diu</option>
+                <option>Delhi</option>
+                <option>Jammu and Kashmir</option>
+                <option>Ladakh</option>
+                <option>Lakshadweep</option>
+                <option>Puducherry</option>
+
+            </select>
+
+        </div>
+
+
+        <!-- SAVE & CONTINUE -->
+
+        <button
+            class="save-btn"
+            onclick="saveCustomerAndSendWhatsApp()"
+        >
+
+            Save & Continue →
+
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==================================================
+     STEP 3
+     PRODUCTS ONLY
+================================================== -->
+
+<section
+    id="productsPage"
+    class="page products-page"
+>
+
+    <div class="products-container">
+
+
+        <div class="products-title">
+
+            <h1>
+                Our Products
+            </h1>
+
+            <p>
+                Choose a product to know more.
+            </p>
+
+        </div>
+
+
+        <div class="product-grid">
+
+
+            <!-- PRODUCT 1 -->
+
+            <div class="product-card">
+
+                <img
+                    src="images/product1.jpg"
+                    alt="Product 1"
+                    class="product-image"
+                >
+
+                <div class="product-content">
+
+                    <h2>
+                        Product 1
+                    </h2>
+
+                    <p class="product-description">
+                        Premium quality product.
+                        Contact us for more details.
+                    </p>
+
+                    <div class="product-price">
+                        ₹849
+                    </div>
+
+                    <button
+                        class="whatsapp-btn"
+                        onclick="productWhatsApp(
+                            'Product 1',
+                            '₹849'
+                        )"
+                    >
+
+                        💬 Enquire on WhatsApp
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PRODUCT 2 -->
+
+            <div class="product-card">
+
+                <img
+                    src="images/product2.jpg"
+                    alt="Product 2"
+                    class="product-image"
+                >
+
+                <div class="product-content">
+
+                    <h2>
+                        Product 2
+                    </h2>
+
+                    <p class="product-description">
+                        Stylish and premium
+                        quality product.
+                    </p>
+
+                    <div class="product-price">
+                        ₹999
+                    </div>
+
+                    <button
+                        class="whatsapp-btn"
+                        onclick="productWhatsApp(
+                            'Product 2',
+                            '₹999'
+                        )"
+                    >
+
+                        💬 Enquire on WhatsApp
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PRODUCT 3 -->
+
+            <div class="product-card">
+
+                <img
+                    src="images/product3.jpg"
+                    alt="Product 3"
+                    class="product-image"
+                >
+
+                <div class="product-content">
+
+                    <h2>
+                        Product 3
+                    </h2>
+
+                    <p class="product-description">
+                        New arrival with
+                        premium quality.
+                    </p>
+
+                    <div class="product-price">
+                        ₹1,299
+                    </div>
+
+                    <button
+                        class="whatsapp-btn"
+                        onclick="productWhatsApp(
+                            'Product 3',
+                            '₹1,299'
+                        )"
+                    >
+
+                        💬 Enquire on WhatsApp
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==================================================
+     FOOTER
+================================================== -->
+
+<footer>
+
+    © 2026 My Online Store
+
+</footer>
+
+
+
+<script>
+
+
+/* ==================================================
+   SELLER WHATSAPP NUMBER
+================================================== */
+
+/*
+
+   Seller WhatsApp:
+   7731048881
+
+   India country code = 91
+
+   Final WhatsApp number:
+   917731048881
+*/
+
+const sellerWhatsApp = "917731048881";
+
+
+
+/* ==================================================
+   STEP 1
+   SAVE CUSTOMER DETAILS
+   SEND TO SELLER WHATSAPP
+   THEN SHOW PRODUCTS
+================================================== */
+
+function saveCustomerAndSendWhatsApp() {
+
+
+    /* GET CUSTOMER DETAILS */
+
+    const name =
+        document
+        .getElementById("customerName")
+        .value
+        .trim();
+
+
+    const phone =
+        document
+        .getElementById("customerPhone")
+        .value
+        .trim();
+
+
+    const location =
+        document
+        .getElementById("customerLocation")
+        .value
+        .trim();
+
+
+    const state =
+        document
+        .getElementById("customerState")
+        .value;
+
+
+
+    /* =========================
+       VALIDATION
+    ========================= */
+
+    if (name === "") {
+
+        alert("Please enter your name.");
+
+        return;
+
+    }
+
+
+    if (phone === "") {
+
+        alert("Please enter your contact number.");
+
+        return;
+
+    }
+
+
+    if (!/^[0-9]{10}$/.test(phone)) {
+
+        alert(
+            "Please enter a valid 10-digit mobile number."
+        );
+
+        return;
+
+    }
+
+
+    if (location === "") {
+
+        alert("Please enter your location.");
+
+        return;
+
+    }
+
+
+    if (state === "") {
+
+        alert(
+            "Please select your State / Union Territory."
+        );
+
+        return;
+
+    }
+
+
+
+    /* ==================================================
+       SAVE CUSTOMER DETAILS
+    ================================================== */
+
+    localStorage.setItem(
+        "customerName",
+        name
+    );
+
+    localStorage.setItem(
+        "customerPhone",
+        phone
+    );
+
+    localStorage.setItem(
+        "customerLocation",
+        location
+    );
+
+    localStorage.setItem(
+        "customerState",
+        state
+    );
+
+
+
+    /* ==================================================
+       CREATE SELLER WHATSAPP MESSAGE
+    ================================================== */
+
+    const message =
+
+`🛍️ NEW CUSTOMER
+
+👤 Name: ${name}
+
+📱 Contact Number: ${phone}
+
+📍 Location: ${location}
+
+🗺️ State: ${state}
+
+A new customer has submitted their details through the website.
+
+Please contact the customer.`;
+
+
+
+    /* ==================================================
+       ENCODE MESSAGE
+    ================================================== */
+
+    const encodedMessage =
+        encodeURIComponent(message);
+
+
+
+    /* ==================================================
+       SELLER WHATSAPP LINK
+    ================================================== */
+
+    const whatsappURL =
+        "https://wa.me/" +
+        sellerWhatsApp +
+        "?text=" +
+        encodedMessage;
+
+
+
+    /* ==================================================
+       OPEN SELLER WHATSAPP
+    ================================================== */
+
+    window.open(
+        whatsappURL,
+        "_blank"
+    );
+
+
+
+    /* ==================================================
+       HIDE CUSTOMER DETAILS
+       SHOW PRODUCTS ONLY
+    ================================================== */
+
+    document
+        .getElementById("customerPage")
+        .classList.remove("active");
+
+
+    document
+        .getElementById("productsPage")
+        .classList.add("active");
+
+
+    window.scrollTo(
+        0,
+        0
+    );
+
+}
+
+
+
+/* ==================================================
+   PRODUCT WHATSAPP
+================================================== */
+
+function productWhatsApp(
+    productName,
+    price
+) {
+
+
+    const name =
+        localStorage.getItem(
+            "customerName"
+        );
+
+
+    const phone =
+        localStorage.getItem(
+            "customerPhone"
+        );
+
+
+    const location =
+        localStorage.getItem(
+            "customerLocation"
+        );
+
+
+    const state =
+        localStorage.getItem(
+            "customerState"
+        );
+
+
+
+    const message =
+
+`🛒 PRODUCT ENQUIRY
+
+👤 Customer Name: ${name}
+
+📱 Contact Number: ${phone}
+
+📍 Location: ${location}
+
+🗺️ State: ${state}
+
+🛍️ Product: ${productName}
+
+💰 Price: ${price}
+
+Please contact the customer regarding this product.`;
+
+
+
+    const encodedMessage =
+        encodeURIComponent(message);
+
+
+    const whatsappURL =
+        "https://wa.me/" +
+        sellerWhatsApp +
+        "?text=" +
+        encodedMessage;
+
+
+    window.open(
+        whatsappURL,
+        "_blank"
+    );
+
+}
+
+
+
+/* ==================================================
+   PAGE LOAD
+================================================== */
+
+window.addEventListener(
+    "load",
+    function() {
+
+
+        const name =
+            localStorage.getItem(
+                "customerName"
+            );
+
+
+        const phone =
+            localStorage.getItem(
+                "customerPhone"
+            );
+
+
+        const location =
+            localStorage.getItem(
+                "customerLocation"
+            );
+
+
+        const state =
+            localStorage.getItem(
+                "customerState"
+            );
+
+
+
+        /*
+           If details were already saved,
+           show PRODUCTS ONLY.
+
+           Customer details will NOT be displayed.
+        */
+
+        if (
+            name &&
+            phone &&
+            location &&
+            state
+        ) {
+
+            document
+                .getElementById("customerPage")
+                .classList.remove("active");
+
+
+            document
+                .getElementById("productsPage")
+                .classList.add("active");
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>
