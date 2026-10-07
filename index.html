@@ -307,6 +307,7 @@ footer {
 .diya{position:absolute;bottom:7%;font-size:42px;filter:drop-shadow(0 0 16px #ff9d00);animation:diyaGlow 1.3s infinite alternate;z-index:3}.diya1{left:7%}.diya2{right:7%}.diya3{left:48%;bottom:4%;font-size:34px}@keyframes diyaGlow{from{transform:scale(.95);filter:drop-shadow(0 0 7px #ff9d00)}to{transform:scale(1.08);filter:drop-shadow(0 0 24px #ffd166)}}
 .sparkler{position:absolute;width:3px;height:75px;background:linear-gradient(#fff,#ffb300);border-radius:50%;bottom:10%;animation:sparkler 1s infinite alternate;box-shadow:0 0 14px #ffd166}.sparkler:before{content:"✦ ✧ ✦";position:absolute;top:-28px;left:-14px;color:#ffd166;font-size:20px;letter-spacing:4px;white-space:nowrap;filter:drop-shadow(0 0 7px #ff8c00)}.sp1{left:23%;transform:rotate(-7deg)}.sp2{right:23%;transform:rotate(7deg);animation-delay:.45s}@keyframes sparkler{from{opacity:.55;transform:scaleY(.92)}to{opacity:1;transform:scaleY(1.08)}}
 .crackerBurst{position:absolute;width:8px;height:8px;border-radius:50%;background:#fff;animation:crackerPop 2.4s infinite ease-out;z-index:1}.cb1{left:34%;top:30%;animation-delay:.7s}.cb2{right:34%;top:34%;animation-delay:1.5s}.cb3{left:50%;top:18%;animation-delay:2.1s}@keyframes crackerPop{0%{box-shadow:0 0 0 0 rgba(255,209,102,0);opacity:0;transform:scale(.2)}20%{opacity:1}65%{box-shadow:0 -42px 0 #ffd166,30px -30px 0 #ff7b00,42px 0 0 #ffe66d,30px 30px 0 #ff4d6d,0 42px 0 #ffd166,-30px 30px 0 #ff7b00,-42px 0 0 #ffe66d,-30px -30px 0 #ff4d6d;opacity:.9}100%{box-shadow:0 -62px 0 rgba(255,209,102,0),44px -44px 0 rgba(255,123,0,0),62px 0 0 rgba(255,230,109,0),44px 44px 0 rgba(255,77,109,0),0 62px 0 rgba(255,209,102,0);opacity:0;transform:scale(1.3)}}
+.location-note{display:block;margin-top:7px;color:#777;font-size:12px}.gps-btn{width:100%;border:1px solid #e5a400;background:#fff8df;color:#8a5700;padding:13px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}.gps-status{margin-top:8px;color:#666;font-size:13px;line-height:1.4}
 </style>
 
 </head>
@@ -385,80 +386,25 @@ footer {
         </div>
 
 
-        <!-- LOCATION -->
-
+        <!-- DELIVERY AREA -->
         <div class="form-group">
-
-            <label>
-                Location <span class="required">*</span>
-            </label>
-
-            <input
-                type="text"
-                id="customerLocation"
-                placeholder="Enter your location / city"
-            >
-
-        </div>
-
-
-        <!-- STATE -->
-
-        <div class="form-group">
-
-            <label>
-                State / Union Territory
-                <span class="required">*</span>
-            </label>
-
-            <select id="customerState">
-
-                <option value="">
-                    -- Select State / Union Territory --
-                </option>
-
-                <option>Andhra Pradesh</option>
-                <option>Arunachal Pradesh</option>
-                <option>Assam</option>
-                <option>Bihar</option>
-                <option>Chhattisgarh</option>
-                <option>Goa</option>
-                <option>Gujarat</option>
-                <option>Haryana</option>
-                <option>Himachal Pradesh</option>
-                <option>Jharkhand</option>
-                <option>Karnataka</option>
-                <option>Kerala</option>
-                <option>Madhya Pradesh</option>
-                <option>Maharashtra</option>
-                <option>Manipur</option>
-                <option>Meghalaya</option>
-                <option>Mizoram</option>
-                <option>Nagaland</option>
-                <option>Odisha</option>
-                <option>Punjab</option>
-                <option>Rajasthan</option>
-                <option>Sikkim</option>
-                <option>Tamil Nadu</option>
-                <option>Telangana</option>
-                <option>Tripura</option>
-                <option>Uttar Pradesh</option>
-                <option>Uttarakhand</option>
-                <option>West Bengal</option>
-
-                <option>Andaman and Nicobar Islands</option>
-                <option>Chandigarh</option>
-                <option>Dadra and Nagar Haveli and Daman and Diu</option>
-                <option>Delhi</option>
-                <option>Jammu and Kashmir</option>
-                <option>Ladakh</option>
-                <option>Lakshadweep</option>
-                <option>Puducherry</option>
-
+            <label>Delivery Area <span class="required">*</span></label>
+            <select id="customerArea">
+                <option value="">-- Select Delivery Area --</option>
+                <option>Hyderabad</option>
+                <option>Secunderabad</option>
             </select>
-
+            <small class="location-note">Currently delivering only in Hyderabad & Secunderabad.</small>
         </div>
 
+        <!-- GPS LOCATION -->
+        <div class="form-group">
+            <label>Delivery Location <span class="required">*</span></label>
+            <button type="button" class="gps-btn" onclick="getCustomerLocation()">📍 Use My Current Location</button>
+            <div id="gpsStatus" class="gps-status">Tap the button to share your delivery location.</div>
+            <input type="hidden" id="customerLatitude">
+            <input type="hidden" id="customerLongitude">
+        </div>
 
         <!-- SAVE & CONTINUE -->
 
@@ -654,7 +600,22 @@ footer {
 
 
 
-<script>function enterDiwali(){const e=document.getElementById('diwaliIntro');if(e)e.classList.add('hide');setTimeout(()=>{if(e)e.remove()},900)}window.addEventListener('load',()=>setTimeout(()=>{const e=document.getElementById('diwaliIntro');if(e)e.classList.add('hide');setTimeout(()=>{if(e)e.remove()},900)},10000));</script><script>
+<script>function enterDiwali(){const e=document.getElementById('diwaliIntro');if(e)e.classList.add('hide');setTimeout(()=>{if(e)e.remove()},900)}window.addEventListener('load',()=>setTimeout(()=>{const e=document.getElementById('diwaliIntro');if(e)e.classList.add('hide');setTimeout(()=>{if(e)e.remove()},900)},10000));
+function getCustomerLocation() {
+    const status = document.getElementById("gpsStatus");
+    if (!navigator.geolocation) { status.textContent = "GPS is not supported by this browser."; return; }
+    status.textContent = "Requesting your location…";
+    navigator.geolocation.getCurrentPosition(function(position) {
+        const lat = position.coords.latitude.toFixed(6);
+        const lon = position.coords.longitude.toFixed(6);
+        document.getElementById("customerLatitude").value = lat;
+        document.getElementById("customerLongitude").value = lon;
+        status.textContent = "✓ Location captured successfully.";
+    }, function(error) {
+        status.textContent = error.code === 1 ? "Location permission denied. Please allow access and try again." : "Could not get your location. Please try again.";
+    }, {enableHighAccuracy:true, timeout:10000, maximumAge:60000});
+}
+</script><script>
 
 
 /* ==================================================
@@ -702,17 +663,10 @@ function saveCustomerAndSendWhatsApp() {
         .trim();
 
 
-    const location =
-        document
-        .getElementById("customerLocation")
-        .value
-        .trim();
-
-
-    const state =
-        document
-        .getElementById("customerState")
-        .value;
+    const area = document.getElementById("customerArea").value;
+    const latitude = document.getElementById("customerLatitude").value;
+    const longitude = document.getElementById("customerLongitude").value;
+    const location = latitude && longitude ? "GPS: " + latitude + ", " + longitude : "";
 
 
 
@@ -749,26 +703,14 @@ function saveCustomerAndSendWhatsApp() {
     }
 
 
+    if (area === "") {
+        alert("Please select your delivery area.");
+        return;
+    }
     if (location === "") {
-
-        alert("Please enter your location.");
-
+        alert("Please tap 'Use My Current Location' first.");
         return;
-
     }
-
-
-    if (state === "") {
-
-        alert(
-            "Please select your State / Union Territory."
-        );
-
-        return;
-
-    }
-
-
 
     /* ==================================================
        SAVE CUSTOMER DETAILS
@@ -789,10 +731,9 @@ function saveCustomerAndSendWhatsApp() {
         location
     );
 
-    localStorage.setItem(
-        "customerState",
-        state
-    );
+    localStorage.setItem("customerArea", area);
+    localStorage.setItem("customerLatitude", latitude);
+    localStorage.setItem("customerLongitude", longitude);
 
 
 
@@ -810,7 +751,7 @@ function saveCustomerAndSendWhatsApp() {
 
 📍 Location: ${location}
 
-🗺️ State: ${state}
+📍 Delivery Area: ${area}\n\n🛰️ GPS Location: ${location}
 
 A new customer has submitted their details through the website.
 
@@ -902,10 +843,9 @@ function productWhatsApp(
         );
 
 
-    const state =
-        localStorage.getItem(
-            "customerState"
-        );
+    const area = localStorage.getItem("customerArea");
+        const latitude = localStorage.getItem("customerLatitude");
+        const longitude = localStorage.getItem("customerLongitude");
 
 
 
@@ -919,7 +859,7 @@ function productWhatsApp(
 
 📍 Location: ${location}
 
-🗺️ State: ${state}
+📍 Delivery Area: ${area}\n\n🛰️ GPS Location: ${location}
 
 🛍️ Product: ${productName}
 
@@ -976,10 +916,9 @@ window.addEventListener(
             );
 
 
-        const state =
-            localStorage.getItem(
-                "customerState"
-            );
+        const area = localStorage.getItem("customerArea");
+        const latitude = localStorage.getItem("customerLatitude");
+        const longitude = localStorage.getItem("customerLongitude");
 
 
 
@@ -990,12 +929,7 @@ window.addEventListener(
            Customer details will NOT be displayed.
         */
 
-        if (
-            name &&
-            phone &&
-            location &&
-            state
-        ) {
+        if (name && phone && area && latitude && longitude) {
 
             document
                 .getElementById("customerPage")
