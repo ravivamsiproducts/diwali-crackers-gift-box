@@ -610,7 +610,9 @@ function getCustomerLocation() {
         const lon = position.coords.longitude.toFixed(6);
         document.getElementById("customerLatitude").value = lat;
         document.getElementById("customerLongitude").value = lon;
-        status.textContent = "✓ Location captured successfully.";
+        status.textContent = "✓ Location captured. Google Maps location is ready.";
+        const mapsPreview = document.getElementById("gpsStatus");
+        mapsPreview.innerHTML = '✓ Location captured successfully. <a href="https://www.google.com/maps?q=' + lat + ',' + lon + '" target="_blank" rel="noopener">View on Google Maps →</a>';
     }, function(error) {
         status.textContent = error.code === 1 ? "Location permission denied. Please allow access and try again." : "Could not get your location. Please try again.";
     }, {enableHighAccuracy:true, timeout:10000, maximumAge:60000});
@@ -667,6 +669,9 @@ function saveCustomerAndSendWhatsApp() {
     const latitude = document.getElementById("customerLatitude").value;
     const longitude = document.getElementById("customerLongitude").value;
     const location = latitude && longitude ? "GPS: " + latitude + ", " + longitude : "";
+    const mapsLink = latitude && longitude
+        ? "https://www.google.com/maps?q=" + latitude + "," + longitude
+        : "";
 
 
 
@@ -751,7 +756,11 @@ function saveCustomerAndSendWhatsApp() {
 
 📍 Location: ${location}
 
-📍 Delivery Area: ${area}\n\n🛰️ GPS Location: ${location}
+📍 Delivery Area: ${area}
+
+🛰️ GPS Location: ${location}
+
+🗺️ Google Maps: ${mapsLink}
 
 A new customer has submitted their details through the website.
 
@@ -859,7 +868,11 @@ function productWhatsApp(
 
 📍 Location: ${location}
 
-📍 Delivery Area: ${area}\n\n🛰️ GPS Location: ${location}
+📍 Delivery Area: ${area}
+
+🛰️ GPS Location: ${location}
+
+🗺️ Google Maps: ${mapsLink}
 
 🛍️ Product: ${productName}
 
