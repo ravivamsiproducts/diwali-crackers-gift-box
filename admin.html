@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#190d27">
+<title>Admin Dashboard | Diwali Crackers Gift Box</title>
+<style>
+:root{--plum:#190d27;--gold:#ffbf36;--ink:#21172b;--muted:#716779;--line:#eee5d7;--paper:#fffdf8;--green:#16794a;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:#f7f4f8;color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}.top{background:var(--plum);color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:900;font-size:20px}.top a{color:#ffdb8a;text-decoration:none;font-size:14px}.wrap{max-width:1120px;margin:30px auto;padding:0 18px 55px}.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 8px 25px #27133208;margin-bottom:20px}.login{max-width:460px;margin:8vh auto}.eyebrow{color:#9b6500;text-transform:uppercase;font-size:11px;letter-spacing:1.4px;font-weight:900}.panel h1,.panel h2{margin:7px 0 10px;letter-spacing:-.7px}.muted{color:var(--muted);line-height:1.6;font-size:14px}.field{display:grid;gap:7px;margin:15px 0}.field label{font-size:13px;font-weight:800}.field input,.field textarea,.field select{border:1px solid #d9cedf;border-radius:10px;padding:12px;background:#fff;width:100%;min-height:44px}.field textarea{min-height:85px;resize:vertical}.btn{border:0;border-radius:10px;padding:12px 16px;font-weight:850}.gold{background:var(--gold);color:#281900}.dark{background:var(--plum);color:#fff}.outline{background:white;border:1px solid var(--line);color:var(--ink)}.btn:disabled{opacity:.5;cursor:not-allowed}.full{width:100%}.msg{font-size:13px;line-height:1.5;margin-top:12px;white-space:pre-wrap}.error{color:var(--red)}.success{color:var(--green)}.hidden{display:none!important}.dashboard-head{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.form-grid .wide{grid-column:1/-1}.toolbar{display:flex;gap:10px;flex-wrap:wrap}.products{display:grid;gap:10px}.product{display:grid;grid-template-columns:68px minmax(0,1fr) auto;gap:14px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:13px}.thumb{width:68px;height:68px;border-radius:10px;background:#fff2d6;display:grid;place-items:center;overflow:hidden;font-size:28px}.thumb img{width:100%;height:100%;object-fit:cover}.product h3{font-size:15px;margin:0 0 5px}.product small{color:var(--muted);line-height:1.5}.status{display:inline-block;border-radius:30px;padding:4px 8px;background:#e5f6ed;color:var(--green);font-size:11px;font-weight:900;margin-top:5px}.status.off{background:#fce8e6;color:var(--red)}.product-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.product-actions .btn{padding:8px 10px;font-size:12px}.notice{background:#fff5d9;border:1px solid #f1dfb4;border-radius:12px;padding:13px;color:#6d5117;font-size:13px;line-height:1.6}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}@media(max-width:720px){.grid,.form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}.panel{padding:18px}.product{grid-template-columns:55px minmax(0,1fr)}.thumb{width:55px;height:55px}.product-actions{grid-column:1/-1;justify-content:flex-start}.top{padding:15px}.brand{font-size:16px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand">🪔 Diwali Gift Box · Admin</div><a href="./">← View storefront</a></header>
+<main class="wrap">
+<section id="loginPanel" class="panel login">
+<div class="eyebrow">Restricted access</div><h1>Admin sign in</h1><p class="muted">Sign in with the Supabase Auth user that has been added to the active admin roster.</p>
+<form id="loginForm">
+<div class="field"><label for="email">Admin email</label><input id="email" type="email" autocomplete="username" required placeholder="you@example.com"></div>
+<div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required placeholder="Your password"></div>
+<button class="btn gold full" type="submit">Sign in securely</button><div id="loginMsg" class="msg" role="status"></div>
+</form>
+</section>
+<section id="dashboard" class="hidden">
+<div class="panel dashboard-head"><div><div class="eyebrow">Store management</div><h1>Product dashboard</h1><p id="signedInAs" class="muted"></p></div><div class="toolbar"><button id="refreshBtn" class="btn outline">↻ Refresh</button><button id="logoutBtn" class="btn dark">Sign out</button></div></div>
+<div class="notice">Changes here update the Supabase product catalogue. Only active products appear on the storefront. Images are uploaded to the public <code>product-images</code> bucket; never upload private customer information here.</div>
+<div class="grid" style="margin-top:18px">
+<section class="panel"><div class="eyebrow">Catalogue editor</div><h2 id="editorTitle">Add a product</h2>
+<form id="productForm">
+<input id="productId" type="hidden">
+<div class="field"><label for="productName">Product name *</label><input id="productName" maxlength="140" required placeholder="Diwali Gift Box - Classic"></div>
+<div class="field"><label for="productSlug">URL slug *</label><input id="productSlug" maxlength="160" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" placeholder="diwali-gift-box-classic"><small class="muted">Lowercase letters, numbers and hyphens only.</small></div>
+<div class="field"><label for="productDescription">Description</label><textarea id="productDescription" maxlength="1000" placeholder="A short product description"></textarea></div>
+<div class="form-grid">
+<div class="field"><label for="productPrice">Price in ₹ *</label><input id="productPrice" type="number" min="0.01" step="0.01" required placeholder="849"></div>
+<div class="field"><label for="productStock">Stock quantity *</label><input id="productStock" type="number" min="0" step="1" required value="10"></div>
+<div class="field"><label for="productOrder">Display order</label><input id="productOrder" type="number" min="0" step="1" value="1"></div>
+<div class="field"><label for="productActive">Visibility</label><select id="productActive"><option value="true">Active / visible</option><option value="false">Inactive / hidden</option></select></div>
+<div class="field wide"><label for="productImage">Product image (JPG, PNG or WebP, max 5 MB)</label><input id="productImage" type="file" accept="image/jpeg,image/png,image/webp"><small id="imageHint" class="muted">Choose an image to upload. Existing image stays if no new image is selected.</small></div>
+</div>
+<div class="toolbar"><button id="saveBtn" class="btn gold" type="submit">Save product</button><button id="resetBtn" class="btn outline" type="button">Clear form</button></div>
+<div id="productMsg" class="msg" role="status"></div>
+</form></section>
+<section class="panel"><div class="section-title"><div><div class="eyebrow">Live catalogue</div><h2>Products</h2></div><span id="productCount" class="muted">—</span></div><div id="productList" class="products"><p class="muted">Loading products…</p></div><div id="listMsg" class="msg" role="status"></div></section>
+</div>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://zauxvekgomywxmgtaife.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_DGZOVQSV8SLej_vLqjPhfQ_gktGghO-";
+// Publishable key is intended for browser use; table/storage RLS must enforce admin permissions.
+const client=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const $=id=>document.getElementById(id);
+let currentUser=null,products=[];
+const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const formatPrice=p=>new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:2}).format(Number(p||0)/100);
+function message(id,text,kind=""){const el=$(id);el.textContent=text;el.className="msg "+kind}
+function slugify(s){return s.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+async function checkAdmin(){
+ const {data:{session}}=await client.auth.getSession();
+ if(!session){showLogin();return}
+ const {data:allowed,error}=await client.rpc("is_admin");
+ if(error||allowed!==true){await client.auth.signOut();showLogin();message("loginMsg","This account is not enabled as an admin. Check public.admin_users and is_active.","error");return}
+ currentUser=session.user;showDashboard();await loadProducts();
+}
+function showLogin(){$("loginPanel").classList.remove("hidden");$("dashboard").classList.add("hidden")}
+function showDashboard(){$("loginPanel").classList.add("hidden");$("dashboard").classList.remove("hidden");$("signedInAs").textContent="Signed in as "+(currentUser?.email||"admin")}
+async function loadProducts(){
+ $("productList").innerHTML='<p class="muted">Loading products…</p>';message("listMsg","");
+ const {data,error}=await client.from("products").select("id,name,slug,description,price_paise,image_url,stock_quantity,is_active,display_order").order("display_order",{ascending:true});
+ if(error){$("productList").innerHTML="";message("listMsg","Could not load products: "+error.message,"error");return}
+ products=data||[];$("productCount").textContent=products.length+" products";
+ if(!products.length){$("productList").innerHTML='<p class="muted">No products yet. Add your first product using the form.</p>';return}
+ $("productList").innerHTML=products.map(p=>'<article class="product"><div class="thumb">'+(p.image_url?'<img src="'+escapeHtml(p.image_url)+'" alt="">':"🎁")+'</div><div><h3>'+escapeHtml(p.name)+'</h3><small>'+formatPrice(p.price_paise)+' · Stock '+Number(p.stock_quantity||0)+'<br>'+escapeHtml(p.slug)+'</small><br><span class="status '+(p.is_active?"":"off")+'">'+(p.is_active?"ACTIVE":"HIDDEN")+'</span></div><div class="product-actions"><button class="btn outline" data-edit="'+escapeHtml(p.id)+'">Edit</button><button class="btn '+(p.is_active?"outline":"gold")+'" data-toggle="'+escapeHtml(p.id)+'">'+(p.is_active?"Hide":"Activate")+'</button></div></article>').join("");
+}
+function clearForm(){$("productForm").reset();$("productId").value="";$("productStock").value="10";$("productOrder").value=String(Math.max(1,products.length+1));$("productActive").value="true";$("editorTitle").textContent="Add a product";$("saveBtn").textContent="Save product";$("imageHint").textContent="Choose an image to upload. Existing image stays if no new image is selected.";message("productMsg","")}
+function editProduct(id){const p=products.find(x=>x.id===id);if(!p)return;$("productId").value=p.id;$("productName").value=p.name;$("productSlug").value=p.slug;$("productDescription").value=p.description||"";$("productPrice").value=(Number(p.price_paise)/100).toFixed(2);$("productStock").value=p.stock_quantity??0;$("productOrder").value=p.display_order??0;$("productActive").value=String(!!p.is_active);$("productImage").value="";$("imageHint").textContent=p.image_url?"Current image is set. Choose a new file to replace it.":"No image currently set.";$("editorTitle").textContent="Edit product";$("saveBtn").textContent="Update product";message("productMsg","");$("productForm").scrollIntoView({behavior:"smooth",block:"start"})}
+async function uploadImage(file){
+ if(!file)return null;
+ if(!["image/jpeg","image/png","image/webp"].includes(file.type))throw new Error("Please select a JPG, PNG or WebP image.");
+ if(file.size>5*1024*1024)throw new Error("Image is larger than 5 MB.");
+ const ext=({ "image/jpeg":"jpg","image/png":"png","image/webp":"webp"})[file.type];
+ const path="products/"+crypto.randomUUID()+"."+ext;
+ const {error}=await client.storage.from("product-images").upload(path,file,{contentType:file.type,upsert:false});
+ if(error)throw new Error("Image upload failed: "+error.message);
+ return client.storage.from("product-images").getPublicUrl(path).data.publicUrl;
+}
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();message("loginMsg","Signing in…");const {data,error}=await client.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error){message("loginMsg",error.message,"error");return}const {data:allowed,error:checkError}=await client.rpc("is_admin");if(checkError||allowed!==true){await client.auth.signOut();message("loginMsg","Sign-in succeeded, but this account is not authorized as an active admin.","error");return}currentUser=data.user;showDashboard();await loadProducts()});
+$("productName").addEventListener("input",()=>{if(!$("productId").value)$("productSlug").value=slugify($("productName").value)});
+$("productForm").addEventListener("submit",async e=>{
+ e.preventDefault();if(!currentUser){message("productMsg","Please sign in first.","error");return}
+ const id=$("productId").value||null, name=$("productName").value.trim(),slug=$("productSlug").value.trim(),price=Number($("productPrice").value),stock=Number($("productStock").value),order=Number($("productOrder").value);
+ if(!Number.isFinite(price)||price<=0||!Number.isInteger(stock)||stock<0||!Number.isInteger(order)||order<0){message("productMsg","Check the price, stock and display order values.","error");return}
+ $("saveBtn").disabled=true;message("productMsg","Saving product…");
+ try{
+  let image_url=null;const file=$("productImage").files[0];if(file)image_url=await uploadImage(file);
+  const payload={name,slug,description:$("productDescription").value.trim(),price_paise:Math.round(price*100),stock_quantity:stock,is_active:$("productActive").value==="true",display_order:order,updated_at:new Date().toISOString()};
+  if(image_url)payload.image_url=image_url;
+  let result=id?await client.from("products").update(payload).eq("id",id).select("id").single():await client.from("products").insert(payload).select("id").single();
+  if(result.error)throw result.error;
+  message("productMsg","Product saved successfully.","success");clearForm();await loadProducts();
+ }catch(err){message("productMsg",err.message||"Could not save product.","error")}finally{$("saveBtn").disabled=false}
+});
+$("productList").addEventListener("click",async e=>{
+ const edit=e.target.closest("[data-edit]");if(edit){editProduct(edit.dataset.edit);return}
+ const toggle=e.target.closest("[data-toggle]");if(!toggle)return;
+ const p=products.find(x=>x.id===toggle.dataset.toggle);if(!p)return;
+ toggle.disabled=true;const {error}=await client.from("products").update({is_active:!p.is_active,updated_at:new Date().toISOString()}).eq("id",p.id);
+ if(error)message("listMsg","Could not update product: "+error.message,"error");else message("listMsg",p.name+(p.is_active?" hidden from storefront.":" is now active."),"success");
+ await loadProducts();
+});
+$("resetBtn").addEventListener("click",clearForm);$("refreshBtn").addEventListener("click",loadProducts);$("logoutBtn").addEventListener("click",async()=>{await client.auth.signOut();currentUser=null;showLogin();message("loginMsg","You have signed out.","success")});
+if(!client){message("loginMsg","Supabase client could not load. Check your internet connection and refresh.","error")}else{checkAdmin()}
+</script>
+</body>
+</html>
