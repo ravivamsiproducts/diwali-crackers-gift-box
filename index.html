@@ -230,8 +230,8 @@
           <optgroup label="Other">
             <option>Other / nearby area</option>
           </optgroup>
-        </select><small style="font-size:12px;color:var(--muted)">Choose the closest locality. Delivery is accepted only when your PIN code is on our active Hyderabad &amp; Secunderabad service list.</small></div>
-        <div class="field"><label for="customerPincode">Delivery PIN code *</label><input id="customerPincode" name="customerPincode" inputmode="numeric" autocomplete="postal-code" maxlength="6" pattern="[0-9]{6}" required placeholder="Enter your 6-digit PIN code" aria-describedby="pincodeStatus"><div id="pincodeStatus" role="status" aria-live="polite" style="font-size:13px;line-height:1.5;color:var(--muted)">Enter your PIN code to check delivery automatically.</div></div>
+        </select><small style="font-size:12px;color:var(--muted)">Choose the closest locality. If your PIN code is for a nearby area, our team will review the locality and address manually.</small></div>
+        <div class="field"><label for="customerPincode">Delivery PIN code *</label><input id="customerPincode" name="customerPincode" inputmode="numeric" autocomplete="postal-code" maxlength="6" pattern="[0-9]{6}" required placeholder="Enter your 6-digit PIN code"></div>
         <div class="field"><label for="deliveryNotes">Delivery notes (optional)</label><textarea id="deliveryNotes" name="deliveryNotes" maxlength="300" placeholder="Landmark or delivery instructions"></textarea></div>
         <div class="field"><label for="customerMaps">Google Maps delivery location (optional)</label><input id="customerMaps" name="customerMaps" type="url" placeholder="Paste a Google Maps location link"><button class="btn btn-outline" type="button" id="useCurrentLocation" style="width:100%;margin-top:8px">📍 Use my current location</button><small id="locationStatus" role="status" style="font-size:12px;color:var(--muted)">You can share your location to help us find the delivery address. Browser location permission is required.</small></div>
         <div id="checkoutMessage" class="form-error" role="status"></div>
@@ -533,29 +533,13 @@
     ]);
     function checkPincode() {
       const input = $("customerPincode");
-      const status = $("pincodeStatus");
       const pin = input.value.replace(/\D/g, "").slice(0, 6);
       if (input.value !== pin) input.value = pin;
       input.setCustomValidity("");
-      if (!pin) {
-        status.textContent = "Enter your PIN code to check delivery automatically.";
-        status.style.color = "var(--muted)";
-        return false;
-      }
       if (pin.length !== 6) {
-        status.textContent = "Please enter a valid 6-digit PIN code.";
-        status.style.color = "#b42318";
         input.setCustomValidity("Enter a valid 6-digit PIN code.");
         return false;
       }
-      if (!SERVICEABLE_PINCODES.has(pin)) {
-        status.textContent = "Sorry, delivery is not currently available for this PIN code. We currently serve selected Hyderabad & Secunderabad PIN codes.";
-        status.style.color = "#b42318";
-        input.setCustomValidity("Delivery is not available for this PIN code.");
-        return false;
-      }
-      status.textContent = "✓ Great news! Your PIN code is in our Hyderabad & Secunderabad delivery zone.";
-      status.style.color = "var(--green)";
       return true;
     }
     $("customerPincode").addEventListener("input", () => {
@@ -617,7 +601,6 @@
         state.cart = {};
         renderProducts(); renderCart();
         form.reset();
-        $("pincodeStatus").textContent = "Enter your PIN code to check delivery automatically.";
         $("locationStatus").textContent = "You can share your location to help us find the delivery address. Browser location permission is required.";
       } catch (error) {
         console.error("Delivery enquiry submission failed:", error);
