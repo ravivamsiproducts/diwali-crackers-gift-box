@@ -235,7 +235,7 @@
         <div class="field"><label for="deliveryNotes">Delivery notes (optional)</label><textarea id="deliveryNotes" name="deliveryNotes" maxlength="300" placeholder="Landmark or delivery instructions"></textarea></div>
         <div class="field"><label for="customerMaps">Google Maps delivery location (optional)</label><input id="customerMaps" name="customerMaps" type="url" placeholder="Paste a Google Maps location link"><button class="btn btn-outline" type="button" id="useCurrentLocation" style="width:100%;margin-top:8px">📍 Use my current location</button><small id="locationStatus" role="status" style="font-size:12px;color:var(--muted)">You can share your location to help us find the delivery address. Browser location permission is required.</small></div>
         <div id="checkoutMessage" class="form-error" role="status"></div>
-        <button class="btn btn-dark" type="submit" style="width:100%">Review delivery request</button>
+        <button class="btn btn-dark" type="submit" style="width:100%">Send delivery enquiry</button>
         <button class="btn btn-outline" type="button" id="backToCart" style="width:100%;margin-top:9px">Back to cart</button>
       </form>
     </aside>
@@ -604,10 +604,10 @@
         $("locationStatus").textContent = "You can share your location to help us find the delivery address. Browser location permission is required.";
       } catch (error) {
         console.error("Delivery enquiry submission failed:", error);
-        $("checkoutMessage").textContent = "We could not send your enquiry. Please try again later or contact us by WhatsApp. No payment has been taken.";
+        $("checkoutMessage").textContent = (error && error.message && !/non-2xx|functionshttp/i.test(error.message)) ? "Enquiry not sent: " + error.message + ". Please check your details and try again. No payment has been taken." : "We could not send your enquiry right now. Please check your details and try again, or contact us by WhatsApp. No payment has been taken.";
       } finally {
         submitButton.disabled = false;
-        submitButton.textContent = "Review delivery request";
+        submitButton.textContent = "Send delivery enquiry";
       }
     });
     loadProducts();
