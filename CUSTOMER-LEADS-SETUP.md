@@ -3,10 +3,17 @@
 This feature collects delivery enquiries, not paid orders. It does not enable Razorpay or reserve stock.
 
 ## 1. Apply the database migration
-In the Supabase Dashboard for project `zauxvekgomywxmgtaife`, open **SQL Editor**, run the complete contents of `supabase/migrations/202610090001_customer_leads.sql`, and verify it completes. The migration seeds the PIN codes already listed in the storefront. Check those codes against real delivery routes before accepting enquiries.
+In the Supabase Dashboard for project `zauxvekgomywxmgtaife`, open **SQL Editor**, run the complete contents of `supabase/migrations/202610090001_customer_leads.sql`, and verify it completes. The migration seeds the 95 PIN codes currently listed in the storefront. Check those codes against actual delivery routes before accepting enquiries.
 
 ## 2. Deploy the Edge Function
-Deploy `supabase/functions/submit-lead/index.ts` as the function named `submit-lead` in the same Supabase project. Supabase supplies `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` to deployed Edge Functions; keep the service-role key server-side only. Keep the publishable key in the storefront; never put service-role keys or payment secrets in frontend code.
+From the repository root, with the Supabase CLI authenticated to the correct project, run:
+
+```sh
+supabase link --project-ref zauxvekgomywxmgtaife
+supabase functions deploy submit-lead --project-ref zauxvekgomywxmgtaife
+```
+
+The checked-in `supabase/config.toml` marks this one function as public because storefront visitors are not signed in. The function validates the PIN, contact fields, product availability and totals on the server; the service-role key is used only by the deployed function and must never be copied into frontend code. A small honeypot helps reject simple bots but is not a substitute for production rate-limiting or CAPTCHA if abuse appears.
 
 ## 3. Verify admin access
 The existing admin sign-in depends on the `public.is_admin()` RPC. Only users for whom it returns true can read or update customer enquiries under the new RLS policies. Test with a non-admin account to confirm access is denied.
