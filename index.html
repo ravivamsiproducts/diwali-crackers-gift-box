@@ -203,9 +203,10 @@
         <div class="field"><label for="customerName">Full name *</label><input id="customerName" name="customerName" autocomplete="name" required maxlength="100" placeholder="Your name"></div>
         <div class="field"><label for="customerPhone">Mobile number *</label><input id="customerPhone" name="customerPhone" type="tel" inputmode="numeric" autocomplete="tel" pattern="[0-9]{10}" maxlength="10" required placeholder="10-digit mobile number"></div>
         <div class="field"><label for="customerAddress">Full delivery address *</label><textarea id="customerAddress" name="customerAddress" autocomplete="street-address" maxlength="500" required placeholder="House/flat, street, landmark"></textarea></div>
+        <div class="field"><label for="customerArea">Area / locality *</label><select id="customerArea" name="customerArea" required><option value="">Select your area</option><option>Banjara Hills</option><option>Begumpet</option><option>Dilsukhnagar</option><option>Gachibowli</option><option>Hitech City</option><option>Jubilee Hills</option><option>Kondapur</option><option>Kompally</option><option>Kukatpally</option><option>LB Nagar</option><option>Madhapur</option><option>Miyapur</option><option>Secunderabad</option><option>Uppal</option><option>Other / nearby area</option></select><small style="font-size:12px;color:var(--muted)">Delivery availability is still confirmed using your PIN code.</small></div>
         <div class="field"><label for="customerPincode">Delivery PIN code *</label><input id="customerPincode" name="customerPincode" inputmode="numeric" autocomplete="postal-code" maxlength="6" pattern="[0-9]{6}" required placeholder="Enter your 6-digit PIN code" aria-describedby="pincodeStatus"><div id="pincodeStatus" role="status" aria-live="polite" style="font-size:13px;line-height:1.5;color:var(--muted)">Enter your PIN code to check delivery automatically.</div></div>
         <div class="field"><label for="deliveryNotes">Delivery notes (optional)</label><textarea id="deliveryNotes" name="deliveryNotes" maxlength="300" placeholder="Landmark or delivery instructions"></textarea></div>
-        <div class="field"><label for="customerMaps">Google Maps link (optional)</label><input id="customerMaps" name="customerMaps" type="url" placeholder="Paste a location link if useful"></div>
+        <div class="field"><label for="customerMaps">Google Maps delivery location (optional)</label><input id="customerMaps" name="customerMaps" type="url" placeholder="Paste a Google Maps location link"><button class="btn btn-outline" type="button" id="useCurrentLocation" style="width:100%;margin-top:8px">📍 Use my current location</button><small id="locationStatus" role="status" style="font-size:12px;color:var(--muted)">You can share your location to help us find the delivery address. Browser location permission is required.</small></div>
         <div id="checkoutMessage" class="form-error" role="status"></div>
         <button class="btn btn-dark" type="submit" style="width:100%">Review delivery request</button>
         <button class="btn btn-outline" type="button" id="backToCart" style="width:100%;margin-top:9px">Back to cart</button>
@@ -534,15 +535,69 @@
       $("checkoutMessage").textContent = "";
       checkPincode();
     });
+    $("useCurrentLocation").addEventListener("click", () => {
+      const status = $("locationStatus");
+      if (!navigator.geolocation) { status.textContent = "Location is not supported by this browser. Paste a Google Maps link instead."; return; }
+      status.textContent = "Requesting location permission…";
+      navigator.geolocation.getCurrentPosition(position => {
+        const lat = position.coords.latitude.toFixed(6), lng = position.coords.longitude.toFixed(6);
+        $("customerMaps").value = "https://www.google.com/maps?q=" + lat + "," + lng;
+        status.textContent = "Location added. Please confirm your house/street address above.";
+      }, error => {
+        status.textContent = error.code === 1 ? "Location permission was denied. You can paste a Google Maps link instead." : "Could not get your location. Try again or paste a Google Maps link.";
+      }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
+    });
     $("checkoutForm").addEventListener("submit", async e => {
       e.preventDefault();
       const form = e.currentTarget;
       if (!form.reportValidity()) return;
       if (!checkPincode()) return;
-      if (!cartEntries().length) { $("checkoutMessage").textContent = "Your cart is empty. Add a product before checkout."; return; }
-      // The server-side Edge Function must re-check PIN, prices and stock before creating an order.
-      $("checkoutMessage").textContent = "Your PIN code is serviceable. Secure order submission and verified Razorpay payment are not enabled yet; the server-side Supabase Edge Functions must be configured first.";
-      toast("PIN code verified for the delivery zone.");
+      const entries = cartEntries();
+      if (!entries.length) { $("checkoutMessage").textContent = "Your cart is empty. Add a product before checkout."; return; }
+      const mapsUrl = $("customerMaps").value.trim();
+      if (mapsUrl) {
+        try {
+          const parsed = new URL(mapsUrl);
+          const host = parsed.hostname.toLowerCase();
+          if (parsed.protocol !== "https:" || !(host === "google.com" || host.endsWith(".google.com") || host === "maps.app.goo.gl" || host === "goo.gl")) {
+            $("checkoutMessage").textContent = "Please enter a valid HTTPS Google Maps link, or clear the location field.";
+            return;
+          }
+        } catch (_) { $("checkoutMessage").textContent = "Please enter a valid Google Maps link, or clear the location field."; return; }
+      }
+      if (!supabaseClient) { $("checkoutMessage").textContent = "We cannot connect securely right now. Please try again later."; return; }
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending request…";
+      $("checkoutMessage").textContent = "Submitting your delivery enquiry securely…";
+      try {
+        const payload = {
+          customer_name: $("customerName").value.trim(),
+          phone: $("customerPhone").value.trim(),
+          address: $("customerAddress").value.trim(),
+          locality: $("customerArea").value,
+          pincode: $("customerPincode").value.trim(),
+          delivery_notes: $("deliveryNotes").value.trim(),
+          maps_url: mapsUrl || null,
+          items: entries.map(({product, quantity}) => ({ product_id: product.id, quantity }))
+        };
+        const { data, error } = await supabaseClient.functions.invoke("submit-lead", { body: payload });
+        if (error) throw error;
+        if (!data || !data.success) throw new Error(data?.error || "We could not submit your request.");
+        $("checkoutMessage").textContent = "Thank you! Your delivery enquiry was received. Reference: " + data.reference + ". Our team will contact you to confirm availability and next steps. This is not a confirmed order or payment.";
+        toast("Delivery enquiry sent successfully.");
+        state.cart = {};
+        renderProducts(); renderCart();
+        form.reset();
+        $("pincodeStatus").textContent = "Enter your PIN code to check delivery automatically.";
+        $("locationStatus").textContent = "You can share your location to help us find the delivery address. Browser location permission is required.";
+      } catch (error) {
+        console.error("Delivery enquiry submission failed:", error);
+        $("checkoutMessage").textContent = "We could not send your enquiry. Please try again later or contact us by WhatsApp. No payment has been taken.";
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Review delivery request";
+      }
     });
     loadProducts();
   </script>
