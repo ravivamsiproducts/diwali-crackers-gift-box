@@ -200,6 +200,7 @@
       <p style="color:var(--muted);line-height:1.6;margin-top:-8px">Your details are requested only after you choose products. Delivery eligibility is checked automatically from your PIN code.</p>
       <div class="checkout-info">We automatically check your PIN code against our Hyderabad &amp; Secunderabad delivery zones. Secure order submission and Razorpay payment are not enabled yet; they require server-side Supabase Edge Functions. Never enter payment secrets on this page.</div>
       <form id="checkoutForm">
+        <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden"><label for="companyWebsite">Leave this field empty</label><input id="companyWebsite" name="companyWebsite" type="text" tabindex="-1" autocomplete="off"></div>
         <div class="field"><label for="customerName">Full name *</label><input id="customerName" name="customerName" autocomplete="name" required maxlength="100" placeholder="Your name"></div>
         <div class="field"><label for="customerPhone">Mobile number *</label><input id="customerPhone" name="customerPhone" type="tel" inputmode="numeric" autocomplete="tel" pattern="[0-9]{10}" maxlength="10" required placeholder="10-digit mobile number"></div>
         <div class="field"><label for="customerAddress">Full delivery address *</label><textarea id="customerAddress" name="customerAddress" autocomplete="street-address" maxlength="500" required placeholder="House/flat, street, landmark"></textarea></div>
@@ -579,6 +580,7 @@
           pincode: $("customerPincode").value.trim(),
           delivery_notes: $("deliveryNotes").value.trim(),
           maps_url: mapsUrl || null,
+          company_website: $("companyWebsite").value,
           items: entries.map(({product, quantity}) => ({ product_id: product.id, quantity }))
         };
         const { data, error } = await supabaseClient.functions.invoke("submit-lead", { body: payload });
