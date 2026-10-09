@@ -173,7 +173,7 @@ $("productList").addEventListener("click",async e=>{
  if(error)message("listMsg","Could not update product: "+error.message,"error");else message("listMsg",p.name+(p.is_active?" hidden from storefront.":" is now active."),"success");
  await loadProducts();
 });
-$("resetBtn").addEventListener("click",clearForm);$("refreshBtn").addEventListener("click",async()=>{await Promise.all([loadProducts(),loadLeads()])});$("logoutBtn").addEventListener("click",async()=>{await client.auth.signOut();currentUser=null;showLogin();message("loginMsg","You have signed out.","success")});
+$("resetBtn").addEventListener("click",clearForm);$("refreshBtn").addEventListener("click",async()=>{await Promise.all([loadProducts(),loadLeads(),loadOrders()])});$("logoutBtn").addEventListener("click",async()=>{await client.auth.signOut();currentUser=null;showLogin();message("loginMsg","You have signed out.","success")});
 if(!client){message("loginMsg","Supabase client could not load. Check your internet connection and refresh.","error")}else{checkAdmin()}
 </script>
 </body>
