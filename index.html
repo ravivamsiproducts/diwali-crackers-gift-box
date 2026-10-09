@@ -374,7 +374,7 @@
       window.setTimeout(() => $("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" }), 180);
     }
     $("exploreBtn").addEventListener("click", showProductsAfterWelcome);
-    window.addEventListener("load", () => window.setTimeout(showProductsAfterWelcome, 5000));
+    window.addEventListener("load", () => window.setTimeout(showProductsAfterWelcome, 10000));
     const menuToggle = $("menuToggle");
     const siteMenu = $("siteMenu");
     function closeSiteMenu() { siteMenu.classList.remove("open"); menuToggle.setAttribute("aria-expanded", "false"); menuToggle.setAttribute("aria-label", "Open navigation menu"); }
