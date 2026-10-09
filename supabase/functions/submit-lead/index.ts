@@ -21,6 +21,7 @@ Deno.serve(async (req) => {
   if (!supabaseUrl || !serviceKey) return reply(500, { success: false, error: "Server configuration is incomplete." });
   try {
     const body = await req.json();
+    if (text(body.company_website, 200)) return reply(200, { success: true, reference: "received" });
     const customer_name = text(body.customer_name, 100), phone = text(body.phone, 10), address = text(body.address, 500);
     const locality = text(body.locality, 100), pincode = text(body.pincode, 6), delivery_notes = text(body.delivery_notes, 300);
     const maps_url = body.maps_url == null ? null : text(body.maps_url, 1000);
