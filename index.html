@@ -365,8 +365,15 @@
       window.requestAnimationFrame(stopWhenHidden);
     }
     startWelcomeFireworks();
-    $("exploreBtn").addEventListener("click", () => $("diwaliIntro").classList.add("hide"));
-    window.addEventListener("load", () => setTimeout(() => $("diwaliIntro")?.classList.add("hide"), 5000));
+    function showProductsAfterWelcome() {
+      const intro = $("diwaliIntro");
+      if (!intro || intro.classList.contains("hide")) return;
+      intro.classList.add("hide");
+      // Take customers straight to the catalogue after the festive welcome.
+      window.setTimeout(() => $("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" }), 180);
+    }
+    $("exploreBtn").addEventListener("click", showProductsAfterWelcome);
+    window.addEventListener("load", () => window.setTimeout(showProductsAfterWelcome, 5000));
     const menuToggle = $("menuToggle");
     const siteMenu = $("siteMenu");
     function closeSiteMenu() { siteMenu.classList.remove("open"); menuToggle.setAttribute("aria-expanded", "false"); menuToggle.setAttribute("aria-label", "Open navigation menu"); }
