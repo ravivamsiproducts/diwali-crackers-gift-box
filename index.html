@@ -108,7 +108,7 @@
       <button class="btn btn-gold" id="exploreBtn">Explore Gift Boxes →</button>
     </div>
   </div>
-  <div class="topbar">Festive gifting in Hyderabad &amp; Secunderabad · Delivery area is confirmed manually</div>
+  <div class="topbar">Festive gifting in Hyderabad &amp; Secunderabad · Instant PIN-code delivery check</div>
   <header class="site-header">
     <nav class="nav" aria-label="Main navigation">
       <div class="brand"><span class="brand-mark">🪔</span><span>Diwali Crackers Gift Box</span></div>
@@ -121,13 +121,13 @@
       <h1>Bring home the <span>Diwali</span> feeling.</h1>
       <p>Explore festive gift boxes, choose your favourites and add them to your cart. Share delivery details at checkout after you’ve made your selection.</p>
       <div class="hero-buttons"><button class="btn btn-gold" id="shopNow">Explore gift boxes ↓</button><button class="btn btn-outline" id="heroCart">View my cart 🛒</button></div>
-      <div class="hero-notes"><span>Product selection first</span><span>Delivery checked manually</span><span>Hyderabad &amp; Secunderabad</span></div>
+      <div class="hero-notes"><span>Product selection first</span><span>Automatic PIN-code check</span><span>Hyderabad &amp; Secunderabad</span></div>
     </div>
   </section>
   <main id="catalog">
     <div class="section-heading"><div><h2>Find your festive favourite</h2><p>Choose a gift box to get started. Prices and availability are loaded from our product catalogue.</p></div><div class="catalog-status" id="catalogStatus" role="status">Connecting to product catalogue…</div></div>
     <div class="product-grid" id="productGrid" aria-live="polite"><div class="state-box">Loading gift boxes…</div></div>
-    <div class="safety-note"><strong>Delivery &amp; product note:</strong> Orders are subject to manual delivery-area confirmation and applicable local laws. Product availability and delivery are confirmed by the seller before payment.</div>
+    <div class="safety-note"><strong>Delivery &amp; product note:</strong> Enter your PIN code at checkout to automatically check whether your address is in our Hyderabad &amp; Secunderabad delivery zone. Product availability and applicable local laws still apply.</div>
   </main>
   <footer class="footer"><strong>🪔 Diwali Crackers Gift Box</strong><br>Serving Hyderabad &amp; Secunderabad<br>© 2026 Diwali Crackers Gift Box</footer>
 
@@ -140,16 +140,13 @@
   <div class="overlay" id="checkoutOverlay" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
     <aside class="drawer">
       <div class="drawer-head"><h2 id="checkoutTitle">Delivery details</h2><button class="icon-btn" id="closeCheckout" aria-label="Close checkout">×</button></div>
-      <p style="color:var(--muted);line-height:1.6;margin-top:-8px">Your details are requested only after you choose products. We’ll need to confirm delivery before payment is enabled.</p>
-      <div class="checkout-info">This is the first website integration step. Secure order creation and Razorpay payment will be enabled only after the server-side Supabase Edge Functions are configured. Do not send payment or secret keys through this page.</div>
+      <p style="color:var(--muted);line-height:1.6;margin-top:-8px">Your details are requested only after you choose products. Delivery eligibility is checked automatically from your PIN code.</p>
+      <div class="checkout-info">We automatically check your PIN code against our Hyderabad &amp; Secunderabad delivery zones. Secure order submission and Razorpay payment are not enabled yet; they require server-side Supabase Edge Functions. Never enter payment secrets on this page.</div>
       <form id="checkoutForm">
         <div class="field"><label for="customerName">Full name *</label><input id="customerName" name="customerName" autocomplete="name" required maxlength="100" placeholder="Your name"></div>
         <div class="field"><label for="customerPhone">Mobile number *</label><input id="customerPhone" name="customerPhone" type="tel" inputmode="numeric" autocomplete="tel" pattern="[0-9]{10}" maxlength="10" required placeholder="10-digit mobile number"></div>
         <div class="field"><label for="customerAddress">Full delivery address *</label><textarea id="customerAddress" name="customerAddress" autocomplete="street-address" maxlength="500" required placeholder="House/flat, street, landmark"></textarea></div>
-        <div class="form-grid">
-          <div class="field"><label for="customerArea">Delivery area *</label><select id="customerArea" name="customerArea" required><option value="">Select area</option><option value="Hyderabad">Hyderabad</option><option value="Secunderabad">Secunderabad</option></select></div>
-          <div class="field"><label for="customerPincode">PIN code</label><input id="customerPincode" name="customerPincode" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="6-digit PIN"></div>
-        </div>
+        <div class="field"><label for="customerPincode">Delivery PIN code *</label><input id="customerPincode" name="customerPincode" inputmode="numeric" autocomplete="postal-code" maxlength="6" pattern="[0-9]{6}" required placeholder="Enter your 6-digit PIN code" aria-describedby="pincodeStatus"><div id="pincodeStatus" role="status" aria-live="polite" style="font-size:13px;line-height:1.5;color:var(--muted)">Enter your PIN code to check delivery automatically.</div></div>
         <div class="field"><label for="deliveryNotes">Delivery notes (optional)</label><textarea id="deliveryNotes" name="deliveryNotes" maxlength="300" placeholder="Landmark or delivery instructions"></textarea></div>
         <div class="field"><label for="customerMaps">Google Maps link (optional)</label><input id="customerMaps" name="customerMaps" type="url" placeholder="Paste a location link if useful"></div>
         <div id="checkoutMessage" class="form-error" role="status"></div>
@@ -210,7 +207,7 @@
       if (!entries.length) {
         $("cartContents").innerHTML = '<div class="empty-cart"><div style="font-size:48px;margin-bottom:12px">🛍️</div><strong>Your cart is empty</strong><p>Choose a gift box from the collection to get started.</p><button class="btn btn-gold" id="browseProducts" style="margin-top:8px">Browse gift boxes</button></div>';
       } else {
-        $("cartContents").innerHTML = '<div class="cart-list">' + entries.map(({product,quantity}) => '<div class="cart-row"><div><h3>' + safeText(product.name) + '</h3><small>' + money(product.price_paise) + ' each</small><div class="qty-controls"><button data-qty="' + safeText(product.id) + '" data-delta="-1" aria-label="Decrease quantity">−</button><span>' + quantity + '</span><button data-qty="' + safeText(product.id) + '" data-delta="1" aria-label="Increase quantity" ' + (quantity >= Number(product.stock_quantity || 0) ? "disabled" : "") + '>+</button><button class="btn btn-outline" style="padding:5px 8px;font-size:12px" data-remove="' + safeText(product.id) + '">Remove</button></div></div><strong>' + money(Number(product.price_paise) * quantity) + '</strong></div>').join("") + '</div><div class="cart-total"><span>Subtotal</span><span>' + money(total) + '</span></div><p style="color:var(--muted);font-size:12px;line-height:1.5">Delivery fees, if any, are confirmed after the delivery address is reviewed.</p><div class="drawer-actions"><button class="btn btn-gold" id="checkoutButton">Continue to delivery details →</button><button class="btn btn-outline" id="continueShopping">Continue shopping</button></div>';
+        $("cartContents").innerHTML = '<div class="cart-list">' + entries.map(({product,quantity}) => '<div class="cart-row"><div><h3>' + safeText(product.name) + '</h3><small>' + money(product.price_paise) + ' each</small><div class="qty-controls"><button data-qty="' + safeText(product.id) + '" data-delta="-1" aria-label="Decrease quantity">−</button><span>' + quantity + '</span><button data-qty="' + safeText(product.id) + '" data-delta="1" aria-label="Increase quantity" ' + (quantity >= Number(product.stock_quantity || 0) ? "disabled" : "") + '>+</button><button class="btn btn-outline" style="padding:5px 8px;font-size:12px" data-remove="' + safeText(product.id) + '">Remove</button></div></div><strong>' + money(Number(product.price_paise) * quantity) + '</strong></div>').join("") + '</div><div class="cart-total"><span>Subtotal</span><span>' + money(total) + '</span></div><p style="color:var(--muted);font-size:12px;line-height:1.5">Delivery eligibility is checked automatically using your PIN code.</p><div class="drawer-actions"><button class="btn btn-gold" id="checkoutButton">Continue to delivery details →</button><button class="btn btn-outline" id="continueShopping">Continue shopping</button></div>';
       }
     }
     function openCart() { renderCart(); $("cartOverlay").classList.add("open"); document.body.style.overflow = "hidden"; }
@@ -266,15 +263,61 @@
       const remove = e.target.closest("[data-remove]");
       if (remove) { delete state.cart[remove.dataset.remove]; renderProducts(); renderCart(); }
     });
+    // Serviceable PIN codes for the Hyderabad & Secunderabad delivery zone.
+    // Keep this allowlist aligned with the actual delivery routes before expanding coverage.
+    const SERVICEABLE_PINCODES = new Set([
+      "500001","500002","500003","500004","500005","500006","500007","500008","500009",
+      "500010","500011","500012","500013","500014","500015","500016","500017","500018",
+      "500019","500020","500022","500023","500024","500025","500026","500027","500028",
+      "500029","500031","500032","500033","500034","500036","500038","500040","500041",
+      "500044","500045","500047","500053","500056","500057","500058","500059","500061",
+      "500063","500064","500065","500066","500067","500068","500069","500073","500076",
+      "500077","500078","500079","500080","500081","500082","500083","500084","500085",
+      "500086","500087","500088","500089","500090","500091","500092","500093","500094",
+      "500095","500096","500098","500100","500101","500102","500103","500104","500105",
+      "500106","500107","500108","500109","500110","500111","500112","500113","500114",
+      "500115","500116","500117","500118","500119"
+    ]);
+    function checkPincode() {
+      const input = $("customerPincode");
+      const status = $("pincodeStatus");
+      const pin = input.value.replace(/\D/g, "").slice(0, 6);
+      if (input.value !== pin) input.value = pin;
+      input.setCustomValidity("");
+      if (!pin) {
+        status.textContent = "Enter your PIN code to check delivery automatically.";
+        status.style.color = "var(--muted)";
+        return false;
+      }
+      if (pin.length !== 6) {
+        status.textContent = "Please enter a valid 6-digit PIN code.";
+        status.style.color = "#b42318";
+        input.setCustomValidity("Enter a valid 6-digit PIN code.");
+        return false;
+      }
+      if (!SERVICEABLE_PINCODES.has(pin)) {
+        status.textContent = "Sorry, delivery is not currently available for this PIN code. We currently serve selected Hyderabad & Secunderabad PIN codes.";
+        status.style.color = "#b42318";
+        input.setCustomValidity("Delivery is not available for this PIN code.");
+        return false;
+      }
+      status.textContent = "✓ Great news! Your PIN code is in our Hyderabad & Secunderabad delivery zone.";
+      status.style.color = "var(--green)";
+      return true;
+    }
+    $("customerPincode").addEventListener("input", () => {
+      $("checkoutMessage").textContent = "";
+      checkPincode();
+    });
     $("checkoutForm").addEventListener("submit", async e => {
       e.preventDefault();
       const form = e.currentTarget;
       if (!form.reportValidity()) return;
+      if (!checkPincode()) return;
       if (!cartEntries().length) { $("checkoutMessage").textContent = "Your cart is empty. Add a product before checkout."; return; }
-      // Do not insert orders directly from the browser. This needs a server-side Edge Function
-      // to re-check prices/stock and create a pending-delivery-review order securely.
-      $("checkoutMessage").textContent = "Your details are ready, but secure order submission is not enabled yet. The next setup step is the Supabase Edge Function that validates stock and prices, creates the order for manual delivery review, and only then enables verified Razorpay payment.";
-      toast("Delivery form is ready. Secure order submission is the next setup step.");
+      // The server-side Edge Function must re-check PIN, prices and stock before creating an order.
+      $("checkoutMessage").textContent = "Your PIN code is serviceable. Secure order submission and verified Razorpay payment are not enabled yet; the server-side Supabase Edge Functions must be configured first.";
+      toast("PIN code verified for the delivery zone.");
     });
     loadProducts();
   </script>
