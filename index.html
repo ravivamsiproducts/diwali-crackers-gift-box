@@ -1,966 +1,203 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Diwali Crackers Gift Box | Hyderabad & Secunderabad</title>
-
-<style>
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-    background: #f5f6fa;
-    color: #222;
-}
-
-/* =========================
-   HEADER
-========================= */
-
-header {
-    background: #111827;
-    color: white;
-    padding: 18px 25px;
-    text-align: center;
-}
-
-.logo {
-    font-size: 25px;
-    font-weight: bold;
-}
-
-
-/* =========================
-   PAGE CONTROL
-========================= */
-
-.page {
-    display: none;
-}
-
-.page.active {
-    display: block;
-}
-
-
-/* =========================
-   CUSTOMER PAGE
-========================= */
-
-.customer-page {
-    min-height: calc(100vh - 70px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px 15px;
-}
-
-.customer-box {
-    width: 100%;
-    max-width: 500px;
-    background: white;
-    padding: 35px;
-    border-radius: 18px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.10);
-}
-
-.customer-box h1 {
-    text-align: center;
-    margin-bottom: 10px;
-    font-size: 28px;
-}
-
-.customer-subtitle {
-    text-align: center;
-    color: #666;
-    margin-bottom: 30px;
-    font-size: 14px;
-}
-
-
-/* =========================
-   FORM
-========================= */
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    font-size: 16px;
-    outline: none;
-    background: white;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    border-color: #2563eb;
-}
-
-.required {
-    color: red;
-}
-
-
-/* =========================
-   SAVE BUTTON
-========================= */
-
-.save-btn {
-    width: 100%;
-    border: none;
-    background: #2563eb;
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.save-btn:hover {
-    background: #1d4ed8;
-}
-
-
-/* =========================
-   PRODUCTS PAGE
-========================= */
-
-.products-page {
-    min-height: calc(100vh - 70px);
-    padding: 35px 20px 60px;
-}
-
-.products-container {
-    max-width: 1200px;
-    margin: auto;
-}
-
-.products-title {
-    text-align: center;
-    margin-bottom: 35px;
-}
-
-.products-title h1 {
-    font-size: 32px;
-    margin-bottom: 8px;
-}
-
-.products-title p {
-    color: #666;
-}
-
-
-/* =========================
-   PRODUCT GRID
-========================= */
-
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-}
-
-
-/* =========================
-   PRODUCT CARD
-========================= */
-
-.product-card {
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    transition: 0.3s;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-}
-
-.product-image {
-    width: 100%;
-    height: 320px;
-    object-fit: cover;
-    display: block;
-    background: #eeeeee;
-}
-
-.product-content {
-    padding: 20px;
-}
-
-.product-content h2 {
-    font-size: 21px;
-    margin-bottom: 10px;
-}
-
-.product-description {
-    color: #666;
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 15px;
-}
-
-.product-price {
-    font-size: 23px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-
-/* =========================
-   WHATSAPP PRODUCT BUTTON
-========================= */
-
-.whatsapp-btn {
-    width: 100%;
-    background: #25D366;
-    color: white;
-    border: none;
-    padding: 14px;
-    border-radius: 9px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.whatsapp-btn:hover {
-    background: #1ebe5d;
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-footer {
-    background: #111827;
-    color: white;
-    text-align: center;
-    padding: 20px;
-    font-size: 14px;
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 900px) {
-
-    .product-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-}
-
-@media (max-width: 600px) {
-
-    .customer-box {
-        padding: 25px 20px;
-    }
-
-    .customer-box h1 {
-        font-size: 24px;
-    }
-
-    .product-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .product-image {
-        height: 350px;
-    }
-
-    .products-title h1 {
-        font-size: 27px;
-    }
-
-}
-
-
-#diwaliIntro{position:fixed;inset:0;z-index:9999;overflow:hidden;background:radial-gradient(circle at 50% 45%,rgba(255,184,77,.18),transparent 28%),linear-gradient(135deg,#14051f,#260817 48%,#080b18);color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;transition:opacity .8s ease,visibility .8s ease}#diwaliIntro.hide{opacity:0;visibility:hidden;pointer-events:none}.intro-content{position:relative;z-index:3;padding:25px;animation:introIn 1.2s ease both}.intro-diya{font-size:52px;margin-bottom:8px;filter:drop-shadow(0 0 18px #ffb300)}.intro-content h1{font-size:clamp(34px,7vw,68px);margin:0 0 12px}.intro-content p{font-size:clamp(15px,2.5vw,22px);opacity:.9;margin-bottom:26px}.intro-btn{border:0;border-radius:999px;padding:14px 28px;background:#ffb300;color:#281000;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 0 25px rgba(255,179,0,.45)}.firework{position:absolute;width:6px;height:6px;border-radius:50%;animation:burst 2.8s infinite ease-out}.firework:before,.firework:after{content:"";position:absolute;inset:-4px;border-radius:50%;box-shadow:0 -55px 0 1px #ffd166,39px -39px 0 1px #ff7b00,55px 0 0 1px #ffe66d,39px 39px 0 1px #ff4d6d,0 55px 0 1px #ffd166,-39px 39px 0 1px #ff7b00,-55px 0 0 1px #ffe66d,-39px -39px 0 1px #ff4d6d}.firework:after{transform:rotate(22deg) scale(.7)}.fw1{left:18%;top:25%;animation-delay:.2s}.fw2{right:18%;top:20%;animation-delay:1s}.fw3{left:12%;bottom:22%;animation-delay:1.7s}.fw4{right:12%;bottom:25%;animation-delay:2.2s}@keyframes burst{0%,18%{transform:scale(.15);opacity:0}30%{transform:scale(1);opacity:1}65%{transform:scale(1.25);opacity:.75}100%{transform:scale(1.5);opacity:0}}@keyframes introIn{from{opacity:0;transform:translateY(25px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
-/* Extra Diwali festive effects */
-.spark-dot{position:absolute;width:5px;height:5px;border-radius:50%;background:#ffd166;box-shadow:0 0 12px #ffd166;animation:sparkFloat 2s infinite ease-in-out;z-index:2}.sd1{left:28%;bottom:16%;animation-delay:.2s}.sd2{left:40%;bottom:12%;animation-delay:.8s}.sd3{right:35%;bottom:14%;animation-delay:1.2s}.sd4{right:25%;bottom:18%;animation-delay:1.8s}
-.diya{position:absolute;bottom:7%;font-size:42px;filter:drop-shadow(0 0 16px #ff9d00);animation:diyaGlow 1.3s infinite alternate;z-index:3}.diya1{left:7%}.diya2{right:7%}.diya3{left:48%;bottom:4%;font-size:34px}@keyframes diyaGlow{from{transform:scale(.95);filter:drop-shadow(0 0 7px #ff9d00)}to{transform:scale(1.08);filter:drop-shadow(0 0 24px #ffd166)}}
-.sparkler{position:absolute;width:3px;height:75px;background:linear-gradient(#fff,#ffb300);border-radius:50%;bottom:10%;animation:sparkler 1s infinite alternate;box-shadow:0 0 14px #ffd166}.sparkler:before{content:"✦ ✧ ✦";position:absolute;top:-28px;left:-14px;color:#ffd166;font-size:20px;letter-spacing:4px;white-space:nowrap;filter:drop-shadow(0 0 7px #ff8c00)}.sp1{left:23%;transform:rotate(-7deg)}.sp2{right:23%;transform:rotate(7deg);animation-delay:.45s}@keyframes sparkler{from{opacity:.55;transform:scaleY(.92)}to{opacity:1;transform:scaleY(1.08)}}
-.crackerBurst{position:absolute;width:8px;height:8px;border-radius:50%;background:#fff;animation:crackerPop 2.4s infinite ease-out;z-index:1}.cb1{left:34%;top:30%;animation-delay:.7s}.cb2{right:34%;top:34%;animation-delay:1.5s}.cb3{left:50%;top:18%;animation-delay:2.1s}@keyframes crackerPop{0%{box-shadow:0 0 0 0 rgba(255,209,102,0);opacity:0;transform:scale(.2)}20%{opacity:1}65%{box-shadow:0 -42px 0 #ffd166,30px -30px 0 #ff7b00,42px 0 0 #ffe66d,30px 30px 0 #ff4d6d,0 42px 0 #ffd166,-30px 30px 0 #ff7b00,-42px 0 0 #ffe66d,-30px -30px 0 #ff4d6d;opacity:.9}100%{box-shadow:0 -62px 0 rgba(255,209,102,0),44px -44px 0 rgba(255,123,0,0),62px 0 0 rgba(255,230,109,0),44px 44px 0 rgba(255,77,109,0),0 62px 0 rgba(255,209,102,0);opacity:0;transform:scale(1.3)}}
-.location-note{display:block;margin-top:7px;color:#777;font-size:12px}.gps-btn{width:100%;border:1px solid #e5a400;background:#fff8df;color:#8a5700;padding:13px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}.gps-status{margin-top:8px;color:#666;font-size:13px;line-height:1.4}
-</style>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#160b22">
+  <meta name="description" content="Diwali Crackers Gift Boxes for Hyderabad and Secunderabad. Explore festive gift boxes and build your cart.">
+  <title>Diwali Crackers Gift Box | Hyderabad & Secunderabad</title>
+  <style>
+    :root{--ink:#20162b;--muted:#716779;--gold:#ffbf36;--gold-dark:#e49a00;--plum:#190d27;--cream:#fffaf0;--line:#eee5d7;--green:#177a4b}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#fffdf8;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}.topbar{background:var(--plum);color:#fff;text-align:center;padding:10px 16px;font-size:13px}.site-header{position:sticky;top:0;z-index:20;background:#fffdf8ed;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.nav{max-width:1180px;margin:auto;padding:15px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{font-weight:900;letter-spacing:-.5px;font-size:clamp(17px,2.6vw,23px);display:flex;align-items:center;gap:9px}.brand-mark{font-size:27px}.nav-actions{display:flex;align-items:center;gap:10px}.btn{border:0;border-radius:12px;padding:12px 17px;font-weight:800;transition:transform .15s,background .15s}.btn:active{transform:scale(.98)}.btn-gold{background:var(--gold);color:#2a1900}.btn-gold:hover{background:#ffd36e}.btn-dark{background:var(--plum);color:#fff}.btn-outline{background:#fff;border:1px solid var(--line);color:var(--ink)}.cart-count{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:20px;background:#fff;color:#23142f;margin-left:5px;font-size:12px}
+    .hero{background:radial-gradient(ellipse at 80% 20%,#61304f 0,transparent 38%),radial-gradient(ellipse at 5% 90%,#50301a 0,transparent 38%),linear-gradient(120deg,#170b25,#2c102b 65%,#140b20);color:#fff;overflow:hidden;position:relative}.hero:after{content:"✦  ·  ✧  ·  ✦";position:absolute;right:7%;top:18%;font-size:clamp(30px,6vw,70px);color:#ffca62;opacity:.65;letter-spacing:12px;transform:rotate(-12deg)}.hero-inner{max-width:1180px;margin:auto;padding:clamp(55px,9vw,105px) 22px;position:relative;z-index:1}.eyebrow{display:inline-block;border:1px solid #ffcf6c80;background:#ffffff0c;border-radius:100px;padding:8px 13px;color:#ffdc92;font-size:12px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase}.hero h1{font-size:clamp(38px,7vw,76px);line-height:1.04;letter-spacing:-2.8px;max-width:760px;margin:22px 0 17px}.hero h1 span{color:var(--gold)}.hero p{color:#eee0ed;font-size:clamp(15px,2vw,19px);line-height:1.7;max-width:600px;margin:0 0 28px}.hero-buttons{display:flex;flex-wrap:wrap;gap:12px}.hero .btn-outline{background:#ffffff10;border-color:#ffffff55;color:#fff}.hero-notes{display:flex;gap:22px;flex-wrap:wrap;margin-top:34px;color:#eadfeb;font-size:13px}.hero-notes span:before{content:"✓";color:#ffd36e;font-weight:900;margin-right:7px}
+    main{max-width:1180px;margin:auto;padding:54px 22px 70px}.section-heading{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:25px}.section-heading h2{font-size:clamp(27px,4vw,40px);letter-spacing:-1.2px;margin:0 0 7px}.section-heading p{color:var(--muted);margin:0;line-height:1.6}.catalog-status{font-size:13px;color:var(--muted);padding-bottom:5px}.product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.product-card{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:white;display:flex;flex-direction:column;min-width:0;box-shadow:0 8px 28px #26152a08;transition:transform .2s,box-shadow .2s}.product-card:hover{transform:translateY(-4px);box-shadow:0 16px 35px #26152a12}.product-visual{height:255px;background:linear-gradient(135deg,#fff3d4,#f7e6ed);display:grid;place-items:center;overflow:hidden;position:relative}.product-visual img{width:100%;height:100%;object-fit:cover}.product-placeholder{font-size:74px;filter:drop-shadow(0 10px 10px #8a4b2430)}.product-content{padding:20px;display:flex;flex-direction:column;flex:1}.product-content h3{font-size:20px;margin:0 0 8px;letter-spacing:-.4px}.product-description{font-size:14px;color:var(--muted);line-height:1.55;margin:0 0 18px;flex:1}.product-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}.price{font-size:25px;font-weight:900;letter-spacing:-.6px}.stock{font-size:12px;color:var(--green);font-weight:800}.stock.out{color:#b42318}.add-btn{width:100%;display:flex;justify-content:center;gap:8px;align-items:center}.add-btn:disabled{opacity:.45;cursor:not-allowed}.state-box{grid-column:1/-1;text-align:center;padding:38px 18px;border:1px dashed #dbcdb9;border-radius:18px;color:var(--muted);line-height:1.6}.safety-note{margin-top:26px;background:var(--cream);border:1px solid #f1dfb4;border-radius:14px;padding:15px 17px;color:#68532b;font-size:13px;line-height:1.6}
+    .footer{background:#170b22;color:#e8ddec;padding:30px 22px;text-align:center;font-size:13px;line-height:1.8}.footer strong{color:#ffcf6c}
+    .overlay{position:fixed;inset:0;background:#12091c9c;z-index:40;display:none;align-items:stretch;justify-content:flex-end}.overlay.open{display:flex}.drawer{background:#fffdf8;width:min(100%,510px);height:100%;overflow:auto;padding:25px;box-shadow:-20px 0 50px #0002}.drawer-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}.drawer-head h2{margin:0;font-size:27px}.icon-btn{width:40px;height:40px;border:1px solid var(--line);border-radius:12px;background:white;font-size:22px}.cart-list{display:grid;gap:12px}.cart-row{display:grid;grid-template-columns:1fr auto;gap:10px;border-bottom:1px solid var(--line);padding:14px 0}.cart-row h3{font-size:15px;margin:0 0 5px}.cart-row small{color:var(--muted)}.qty-controls{display:flex;align-items:center;gap:8px;margin-top:10px}.qty-controls button{border:1px solid var(--line);background:#fff;border-radius:8px;width:29px;height:29px;font-weight:900}.cart-total{display:flex;justify-content:space-between;font-weight:900;font-size:20px;border-top:1px solid var(--line);padding-top:18px;margin-top:15px}.empty-cart{text-align:center;padding:36px 10px;color:var(--muted)}.drawer-actions{display:grid;gap:10px;margin-top:18px}.field{display:grid;gap:7px;margin:14px 0}.field label{font-size:13px;font-weight:800}.field input,.field select,.field textarea{width:100%;border:1px solid #d8ccdd;border-radius:11px;padding:12px 13px;background:#fff;min-height:46px;color:var(--ink)}.field textarea{min-height:90px;resize:vertical}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.checkout-info{font-size:13px;line-height:1.6;background:#fff4d7;padding:12px;border-radius:10px;color:#674b10;margin:14px 0}.form-error{color:#b42318;font-size:13px;line-height:1.5}.hidden{display:none!important}.toast{position:fixed;z-index:60;bottom:20px;left:50%;transform:translateX(-50%);background:#20162b;color:white;padding:12px 17px;border-radius:12px;box-shadow:0 8px 25px #0002;max-width:calc(100% - 30px);font-size:14px}
+    #diwaliIntro{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 45%,#ffb84d30,transparent 30%),linear-gradient(135deg,#14051f,#260817 48%,#080b18);color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;transition:opacity .65s,visibility .65s}#diwaliIntro.hide{opacity:0;visibility:hidden;pointer-events:none}.intro-content{padding:24px;animation:introIn 1s ease both}.intro-diya{font-size:52px;filter:drop-shadow(0 0 18px #ffb300)}.intro-content h2{font-size:clamp(34px,7vw,65px);line-height:1.08;margin:12px 0}.intro-content p{color:#f2e5f0;margin:0 0 24px}.intro-stars{font-size:24px;color:#ffd166;letter-spacing:15px;margin-bottom:15px}@keyframes introIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+    @media(max-width:850px){.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.product-visual{height:225px}.hero h1{letter-spacing:-1.7px}}
+    @media(max-width:560px){.nav{padding:12px 15px}.brand{font-size:16px}.brand-mark{font-size:22px}.nav-actions .btn{padding:10px 11px;font-size:13px}.hero-inner{padding:55px 18px 58px}.hero:after{right:-18%;top:7%;opacity:.3}.hero-notes{gap:10px;display:grid}main{padding:38px 15px 48px}.section-heading{display:block}.catalog-status{margin-top:10px}.product-grid{grid-template-columns:1fr;gap:16px}.product-visual{height:260px}.form-grid{grid-template-columns:1fr}.drawer{padding:20px}.section-heading h2{letter-spacing:-.6px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  </style>
 </head>
-
-
-<body><div id="diwaliIntro"><span class="firework fw1"></span><span class="firework fw2"></span><span class="firework fw3"></span><span class="firework fw4"></span><div class="diya diya1">🪔</div><div class="diya diya2">🪔</div><div class="diya diya3">🪔</div><div class="sparkler sp1"></div><div class="sparkler sp2"></div><span class="crackerBurst cb1"></span><span class="crackerBurst cb2"></span><span class="crackerBurst cb3"></span><span class="spark-dot sd1"></span><span class="spark-dot sd2"></span><span class="spark-dot sd3"></span><span class="spark-dot sd4"></span><div class="intro-content"><div class="intro-diya">🪔</div><h1>Diwali Crackers Gift Box</h1><p>Celebrate Diwali with joy, sparkle & family-friendly gifting.</p><button class="intro-btn" onclick="enterDiwali()">Explore Gift Boxes →</button></div></div>
-
-
-<!-- ==================================================
-     HEADER
-================================================== -->
-
-<header>
-
-    <div class="logo">
-        🪔 Diwali Crackers Gift Box
+<body>
+  <div id="diwaliIntro" aria-label="Diwali welcome">
+    <div class="intro-content">
+      <div class="intro-stars">✦ ✧ ✦</div><div class="intro-diya">🪔</div>
+      <h2>Diwali Crackers<br><span style="color:#ffbf36">Gift Box</span></h2>
+      <p>Make every celebration sparkle.</p>
+      <button class="btn btn-gold" id="exploreBtn">Explore Gift Boxes →</button>
     </div>
-
-</header>
-
-
-
-<!-- ==================================================
-     STEP 1
-     CUSTOMER DETAILS
-================================================== -->
-
-<section
-    id="customerPage"
-    class="page active customer-page"
->
-
-    <div class="customer-box">
-
-        <h1>
-            Welcome 👋
-        </h1>
-
-        <p class="customer-subtitle">
-            Please enter your details to continue.
-        </p>
-
-
-        <!-- NAME -->
-
-        <div class="form-group">
-
-            <label>
-                Name <span class="required">*</span>
-            </label>
-
-            <input
-                type="text"
-                id="customerName"
-                placeholder="Enter your name"
-            >
-
-        </div>
-
-
-        <!-- CONTACT NUMBER -->
-
-        <div class="form-group">
-
-            <label>
-                Contact Number <span class="required">*</span>
-            </label>
-
-            <input
-                type="tel"
-                id="customerPhone"
-                placeholder="Enter 10-digit mobile number"
-                maxlength="10"
-            >
-
-        </div>
-
-
-        <!-- DELIVERY AREA -->
-        <div class="form-group">
-            <label>Delivery Area <span class="required">*</span></label>
-            <select id="customerArea">
-                <option value="">-- Select Delivery Area --</option>
-                <option>Hyderabad</option>
-                <option>Secunderabad</option>
-            </select>
-            <small class="location-note">Currently delivering only in Hyderabad & Secunderabad.</small>
-        </div>
-
-        <!-- GPS LOCATION -->
-        <div class="form-group">
-            <label>Delivery Location <span class="required">*</span></label>
-            <button type="button" class="gps-btn" onclick="getCustomerLocation()">📍 Use My Current Location</button>
-            <div id="gpsStatus" class="gps-status">Tap the button to share your delivery location.</div>
-            <input type="hidden" id="customerLatitude">
-            <input type="hidden" id="customerLongitude">
-        </div>
-
-        <!-- SAVE & CONTINUE -->
-
-        <button
-            class="save-btn"
-            onclick="saveCustomerAndSendWhatsApp()"
-        >
-
-            Save & Continue →
-
-        </button>
-
+  </div>
+  <div class="topbar">Festive gifting in Hyderabad &amp; Secunderabad · Delivery area is confirmed manually</div>
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <div class="brand"><span class="brand-mark">🪔</span><span>Diwali Crackers Gift Box</span></div>
+      <div class="nav-actions"><button class="btn btn-outline" id="cartButton" aria-label="Open shopping cart">🛒 Cart <span class="cart-count" id="cartCount">0</span></button></div>
+    </nav>
+  </header>
+  <section class="hero">
+    <div class="hero-inner">
+      <span class="eyebrow">✨ The festive collection</span>
+      <h1>Bring home the <span>Diwali</span> feeling.</h1>
+      <p>Explore festive gift boxes, choose your favourites and add them to your cart. Share delivery details at checkout after you’ve made your selection.</p>
+      <div class="hero-buttons"><button class="btn btn-gold" id="shopNow">Explore gift boxes ↓</button><button class="btn btn-outline" id="heroCart">View my cart 🛒</button></div>
+      <div class="hero-notes"><span>Product selection first</span><span>Delivery checked manually</span><span>Hyderabad &amp; Secunderabad</span></div>
     </div>
+  </section>
+  <main id="catalog">
+    <div class="section-heading"><div><h2>Find your festive favourite</h2><p>Choose a gift box to get started. Prices and availability are loaded from our product catalogue.</p></div><div class="catalog-status" id="catalogStatus" role="status">Connecting to product catalogue…</div></div>
+    <div class="product-grid" id="productGrid" aria-live="polite"><div class="state-box">Loading gift boxes…</div></div>
+    <div class="safety-note"><strong>Delivery &amp; product note:</strong> Orders are subject to manual delivery-area confirmation and applicable local laws. Product availability and delivery are confirmed by the seller before payment.</div>
+  </main>
+  <footer class="footer"><strong>🪔 Diwali Crackers Gift Box</strong><br>Serving Hyderabad &amp; Secunderabad<br>© 2026 Diwali Crackers Gift Box</footer>
 
-</section>
-
-
-
-<!-- ==================================================
-     STEP 3
-     PRODUCTS ONLY
-================================================== -->
-
-<section
-    id="productsPage"
-    class="page products-page"
->
-
-    <div class="products-container">
-
-
-        <div class="products-title">
-
-            <h1>
-                Our Products
-            </h1>
-
-            <p>
-                Choose a product to know more.
-            </p>
-
+  <div class="overlay" id="cartOverlay" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+    <aside class="drawer">
+      <div class="drawer-head"><h2 id="drawerTitle">Your cart</h2><button class="icon-btn" id="closeCart" aria-label="Close cart">×</button></div>
+      <div id="cartContents"></div>
+    </aside>
+  </div>
+  <div class="overlay" id="checkoutOverlay" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+    <aside class="drawer">
+      <div class="drawer-head"><h2 id="checkoutTitle">Delivery details</h2><button class="icon-btn" id="closeCheckout" aria-label="Close checkout">×</button></div>
+      <p style="color:var(--muted);line-height:1.6;margin-top:-8px">Your details are requested only after you choose products. We’ll need to confirm delivery before payment is enabled.</p>
+      <div class="checkout-info">This is the first website integration step. Secure order creation and Razorpay payment will be enabled only after the server-side Supabase Edge Functions are configured. Do not send payment or secret keys through this page.</div>
+      <form id="checkoutForm">
+        <div class="field"><label for="customerName">Full name *</label><input id="customerName" name="customerName" autocomplete="name" required maxlength="100" placeholder="Your name"></div>
+        <div class="field"><label for="customerPhone">Mobile number *</label><input id="customerPhone" name="customerPhone" type="tel" inputmode="numeric" autocomplete="tel" pattern="[0-9]{10}" maxlength="10" required placeholder="10-digit mobile number"></div>
+        <div class="field"><label for="customerAddress">Full delivery address *</label><textarea id="customerAddress" name="customerAddress" autocomplete="street-address" maxlength="500" required placeholder="House/flat, street, landmark"></textarea></div>
+        <div class="form-grid">
+          <div class="field"><label for="customerArea">Delivery area *</label><select id="customerArea" name="customerArea" required><option value="">Select area</option><option value="Hyderabad">Hyderabad</option><option value="Secunderabad">Secunderabad</option></select></div>
+          <div class="field"><label for="customerPincode">PIN code</label><input id="customerPincode" name="customerPincode" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="6-digit PIN"></div>
         </div>
-
-
-        <div class="product-grid">
-
-
-            <!-- PRODUCT 1 -->
-
-            <div class="product-card">
-
-                <img
-                    src="images/product1.jpg"
-                    alt="Product 1"
-                    class="product-image"
-                >
-
-                <div class="product-content">
-
-                    <h2>
-                        Product 1
-                    </h2>
-
-                    <p class="product-description">
-                        Premium quality product.
-                        Contact us for more details.
-                    </p>
-
-                    <div class="product-price">
-                        ₹849
-                    </div>
-
-                    <button
-                        class="whatsapp-btn"
-                        onclick="productWhatsApp(
-                            'Product 1',
-                            '₹849'
-                        )"
-                    >
-
-                        💬 Enquire on WhatsApp
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- PRODUCT 2 -->
-
-            <div class="product-card">
-
-                <img
-                    src="images/product2.jpg"
-                    alt="Product 2"
-                    class="product-image"
-                >
-
-                <div class="product-content">
-
-                    <h2>
-                        Product 2
-                    </h2>
-
-                    <p class="product-description">
-                        Stylish and premium
-                        quality product.
-                    </p>
-
-                    <div class="product-price">
-                        ₹999
-                    </div>
-
-                    <button
-                        class="whatsapp-btn"
-                        onclick="productWhatsApp(
-                            'Product 2',
-                            '₹999'
-                        )"
-                    >
-
-                        💬 Enquire on WhatsApp
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- PRODUCT 3 -->
-
-            <div class="product-card">
-
-                <img
-                    src="images/product3.jpg"
-                    alt="Product 3"
-                    class="product-image"
-                >
-
-                <div class="product-content">
-
-                    <h2>
-                        Product 3
-                    </h2>
-
-                    <p class="product-description">
-                        New arrival with
-                        premium quality.
-                    </p>
-
-                    <div class="product-price">
-                        ₹1,299
-                    </div>
-
-                    <button
-                        class="whatsapp-btn"
-                        onclick="productWhatsApp(
-                            'Product 3',
-                            '₹1,299'
-                        )"
-                    >
-
-                        💬 Enquire on WhatsApp
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- ==================================================
-     FOOTER
-================================================== -->
-
-<footer>
-
-    © 2026 Diwali Crackers Gift Box
-
-</footer>
-
-
-
-<script>function enterDiwali(){const e=document.getElementById('diwaliIntro');if(e)e.classList.add('hide');setTimeout(()=>{if(e)e.remove()},900)}window.addEventListener('load',()=>setTimeout(()=>{const e=document.getElementById('diwaliIntro');if(e)e.classList.add('hide');setTimeout(()=>{if(e)e.remove()},900)},10000));
-function getCustomerLocation() {
-    const status = document.getElementById("gpsStatus");
-    if (!navigator.geolocation) { status.textContent = "GPS is not supported by this browser."; return; }
-    status.textContent = "Requesting your location…";
-    navigator.geolocation.getCurrentPosition(function(position) {
-        const lat = position.coords.latitude.toFixed(6);
-        const lon = position.coords.longitude.toFixed(6);
-        document.getElementById("customerLatitude").value = lat;
-        document.getElementById("customerLongitude").value = lon;
-        status.textContent = "✓ Location captured. Google Maps location is ready.";
-        const mapsPreview = document.getElementById("gpsStatus");
-        mapsPreview.innerHTML = '✓ Location captured successfully. <a href="https://www.google.com/maps?q=' + lat + ',' + lon + '" target="_blank" rel="noopener">View on Google Maps →</a>';
-    }, function(error) {
-        status.textContent = error.code === 1 ? "Location permission denied. Please allow access and try again." : "Could not get your location. Please try again.";
-    }, {enableHighAccuracy:true, timeout:10000, maximumAge:60000});
-}
-</script><script>
-
-
-/* ==================================================
-   SELLER WHATSAPP NUMBER
-================================================== */
-
-/*
-
-   Seller WhatsApp:
-   7731048881
-
-   India country code = 91
-
-   Final WhatsApp number:
-   917731048881
-*/
-
-const sellerWhatsApp = "917731048881";
-
-
-
-/* ==================================================
-   STEP 1
-   SAVE CUSTOMER DETAILS
-   SEND TO SELLER WHATSAPP
-   THEN SHOW PRODUCTS
-================================================== */
-
-function saveCustomerAndSendWhatsApp() {
-
-
-    /* GET CUSTOMER DETAILS */
-
-    const name =
-        document
-        .getElementById("customerName")
-        .value
-        .trim();
-
-
-    const phone =
-        document
-        .getElementById("customerPhone")
-        .value
-        .trim();
-
-
-    const area = document.getElementById("customerArea").value;
-    const latitude = document.getElementById("customerLatitude").value;
-    const longitude = document.getElementById("customerLongitude").value;
-    const location = latitude && longitude ? "GPS: " + latitude + ", " + longitude : "";
-    const mapsLink = latitude && longitude
-        ? "https://www.google.com/maps?q=" + latitude + "," + longitude
-        : "";
-
-
-
-    /* =========================
-       VALIDATION
-    ========================= */
-
-    if (name === "") {
-
-        alert("Please enter your name.");
-
+        <div class="field"><label for="deliveryNotes">Delivery notes (optional)</label><textarea id="deliveryNotes" name="deliveryNotes" maxlength="300" placeholder="Landmark or delivery instructions"></textarea></div>
+        <div class="field"><label for="customerMaps">Google Maps link (optional)</label><input id="customerMaps" name="customerMaps" type="url" placeholder="Paste a location link if useful"></div>
+        <div id="checkoutMessage" class="form-error" role="status"></div>
+        <button class="btn btn-dark" type="submit" style="width:100%">Review delivery request</button>
+        <button class="btn btn-outline" type="button" id="backToCart" style="width:100%;margin-top:9px">Back to cart</button>
+      </form>
+    </aside>
+  </div>
+  <div class="toast hidden" id="toast" role="status"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Browser-safe Supabase project URL and publishable key only. Never put service_role or payment secrets here.
+    const SUPABASE_URL = "https://zauxvekgomywxmgtaife.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_DGZOVQSV8SLej_vLqjPhfQ_gktGghO-";
+    const supabaseClient = window.supabase && window.supabase.createClient
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)
+      : null;
+
+    const state = { products: [], cart: {} };
+    const $ = (id) => document.getElementById(id);
+    const money = (paise) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(Number(paise || 0) / 100);
+    const safeText = (value) => String(value ?? "").replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
+    let toastTimer;
+    function toast(message) {
+      const el = $("toast"); el.textContent = message; el.classList.remove("hidden");
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.add("hidden"), 3200);
+    }
+    function imageMarkup(product) {
+      const url = typeof product.image_url === "string" ? product.image_url.trim() : "";
+      if (url) return '<img src="' + safeText(url) + '" alt="' + safeText(product.name) + '" loading="lazy" onerror="this.remove();this.parentElement.innerHTML=\'<span class=&quot;product-placeholder&quot; aria-hidden=&quot;true&quot;>🎁</span>\'">';
+      return '<span class="product-placeholder" aria-hidden="true">🎁</span>';
+    }
+    function renderProducts() {
+      const grid = $("productGrid");
+      if (!state.products.length) {
+        grid.innerHTML = '<div class="state-box">No gift boxes are available right now. Please check back soon.</div>';
         return;
-
+      }
+      grid.innerHTML = state.products.map(product => {
+        const stock = Math.max(0, Number(product.stock_quantity || 0));
+        const qtyInCart = state.cart[product.id] || 0;
+        const disabled = !product.is_active || stock < 1 || qtyInCart >= stock;
+        return '<article class="product-card"><div class="product-visual">' + imageMarkup(product) + '</div><div class="product-content"><h3>' + safeText(product.name) + '</h3><p class="product-description">' + safeText(product.description || "A festive gift box for your Diwali celebrations.") + '</p><div class="product-bottom"><span class="price">' + money(product.price_paise) + '</span><span class="stock ' + (stock ? "" : "out") + '">' + (stock ? (stock <= 5 ? "Only " + stock + " left" : "In stock") : "Out of stock") + '</span></div><button class="btn btn-dark add-btn" data-add="' + safeText(product.id) + '" ' + (disabled ? "disabled" : "") + '>' + (disabled ? "Unavailable" : (qtyInCart ? "Add another · " + qtyInCart + " in cart" : "+ Add to cart")) + '</button></div></article>';
+      }).join("");
     }
-
-
-    if (phone === "") {
-
-        alert("Please enter your contact number.");
-
+    function cartEntries() {
+      return Object.entries(state.cart).map(([id, quantity]) => {
+        const product = state.products.find(p => p.id === id);
+        return product ? { product, quantity } : null;
+      }).filter(Boolean);
+    }
+    function renderCart() {
+      const entries = cartEntries();
+      const count = entries.reduce((sum, item) => sum + item.quantity, 0);
+      const total = entries.reduce((sum, item) => sum + Number(item.product.price_paise) * item.quantity, 0);
+      $("cartCount").textContent = String(count);
+      if (!entries.length) {
+        $("cartContents").innerHTML = '<div class="empty-cart"><div style="font-size:48px;margin-bottom:12px">🛍️</div><strong>Your cart is empty</strong><p>Choose a gift box from the collection to get started.</p><button class="btn btn-gold" id="browseProducts" style="margin-top:8px">Browse gift boxes</button></div>';
+      } else {
+        $("cartContents").innerHTML = '<div class="cart-list">' + entries.map(({product,quantity}) => '<div class="cart-row"><div><h3>' + safeText(product.name) + '</h3><small>' + money(product.price_paise) + ' each</small><div class="qty-controls"><button data-qty="' + safeText(product.id) + '" data-delta="-1" aria-label="Decrease quantity">−</button><span>' + quantity + '</span><button data-qty="' + safeText(product.id) + '" data-delta="1" aria-label="Increase quantity" ' + (quantity >= Number(product.stock_quantity || 0) ? "disabled" : "") + '>+</button><button class="btn btn-outline" style="padding:5px 8px;font-size:12px" data-remove="' + safeText(product.id) + '">Remove</button></div></div><strong>' + money(Number(product.price_paise) * quantity) + '</strong></div>').join("") + '</div><div class="cart-total"><span>Subtotal</span><span>' + money(total) + '</span></div><p style="color:var(--muted);font-size:12px;line-height:1.5">Delivery fees, if any, are confirmed after the delivery address is reviewed.</p><div class="drawer-actions"><button class="btn btn-gold" id="checkoutButton">Continue to delivery details →</button><button class="btn btn-outline" id="continueShopping">Continue shopping</button></div>';
+      }
+    }
+    function openCart() { renderCart(); $("cartOverlay").classList.add("open"); document.body.style.overflow = "hidden"; }
+    function closeCart() { $("cartOverlay").classList.remove("open"); document.body.style.overflow = ""; }
+    function openCheckout() { if (!cartEntries().length) { toast("Add a gift box to your cart first."); return; } closeCart(); $("checkoutMessage").textContent = ""; $("checkoutOverlay").classList.add("open"); document.body.style.overflow = "hidden"; }
+    function closeCheckout() { $("checkoutOverlay").classList.remove("open"); document.body.style.overflow = ""; }
+    function addToCart(id) {
+      const product = state.products.find(p => p.id === id);
+      if (!product || !product.is_active) return;
+      const current = state.cart[id] || 0;
+      if (current >= Number(product.stock_quantity || 0)) { toast("That is the available stock for this item."); return; }
+      state.cart[id] = current + 1; renderProducts(); renderCart(); toast(product.name + " added to cart.");
+    }
+    async function loadProducts() {
+      if (!supabaseClient) {
+        $("catalogStatus").textContent = "Catalogue connection unavailable";
+        $("productGrid").innerHTML = '<div class="state-box">The catalogue could not connect. Please refresh this page or try again shortly.</div>';
         return;
-
+      }
+      try {
+        const { data, error } = await supabaseClient.from("products").select("id,name,slug,description,price_paise,image_url,stock_quantity,is_active,display_order").eq("is_active", true).order("display_order", { ascending: true });
+        if (error) throw error;
+        state.products = (data || []).filter(p => Number(p.price_paise) >= 0);
+        $("catalogStatus").textContent = state.products.length + " gift boxes";
+        renderProducts(); renderCart();
+      } catch (error) {
+        console.error("Product catalogue load failed:", error);
+        $("catalogStatus").textContent = "Could not load products";
+        $("productGrid").innerHTML = '<div class="state-box">We could not load the catalogue right now. Please refresh to try again.</div>';
+      }
     }
-
-
-    if (!/^[0-9]{10}$/.test(phone)) {
-
-        alert(
-            "Please enter a valid 10-digit mobile number."
-        );
-
-        return;
-
-    }
-
-
-    if (area === "") {
-        alert("Please select your delivery area.");
-        return;
-    }
-    if (location === "") {
-        alert("Please tap 'Use My Current Location' first.");
-        return;
-    }
-
-    /* ==================================================
-       SAVE CUSTOMER DETAILS
-    ================================================== */
-
-    localStorage.setItem(
-        "customerName",
-        name
-    );
-
-    localStorage.setItem(
-        "customerPhone",
-        phone
-    );
-
-    localStorage.setItem(
-        "customerLocation",
-        location
-    );
-
-    localStorage.setItem("customerArea", area);
-    localStorage.setItem("customerLatitude", latitude);
-    localStorage.setItem("customerLongitude", longitude);
-
-
-
-    /* ==================================================
-       CREATE SELLER WHATSAPP MESSAGE
-    ================================================== */
-
-    const message =
-
-`🛍️ NEW CUSTOMER
-
-👤 Name: ${name}
-
-📱 Contact Number: ${phone}
-
-📍 Location: ${location}
-
-📍 Delivery Area: ${area}
-
-🛰️ GPS Location: ${location}
-
-🗺️ Google Maps: ${mapsLink}
-
-A new customer has submitted their details through the website.
-
-Please contact the customer.`;
-
-
-
-    /* ==================================================
-       ENCODE MESSAGE
-    ================================================== */
-
-    const encodedMessage =
-        encodeURIComponent(message);
-
-
-
-    /* ==================================================
-       SELLER WHATSAPP LINK
-    ================================================== */
-
-    const whatsappURL =
-        "https://wa.me/" +
-        sellerWhatsApp +
-        "?text=" +
-        encodedMessage;
-
-
-
-    /* ==================================================
-       OPEN SELLER WHATSAPP
-    ================================================== */
-
-    window.open(
-        whatsappURL,
-        "_blank"
-    );
-
-
-
-    /* ==================================================
-       HIDE CUSTOMER DETAILS
-       SHOW PRODUCTS ONLY
-    ================================================== */
-
-    document
-        .getElementById("customerPage")
-        .classList.remove("active");
-
-
-    document
-        .getElementById("productsPage")
-        .classList.add("active");
-
-
-    window.scrollTo(
-        0,
-        0
-    );
-
-}
-
-
-
-/* ==================================================
-   PRODUCT WHATSAPP
-================================================== */
-
-function productWhatsApp(
-    productName,
-    price
-) {
-
-
-    const name =
-        localStorage.getItem(
-            "customerName"
-        );
-
-
-    const phone =
-        localStorage.getItem(
-            "customerPhone"
-        );
-
-
-    const location =
-        localStorage.getItem(
-            "customerLocation"
-        );
-
-
-    const area = localStorage.getItem("customerArea");
-        const latitude = localStorage.getItem("customerLatitude");
-        const longitude = localStorage.getItem("customerLongitude");
-
-
-
-    const message =
-
-`🛒 PRODUCT ENQUIRY
-
-👤 Customer Name: ${name}
-
-📱 Contact Number: ${phone}
-
-📍 Location: ${location}
-
-📍 Delivery Area: ${area}
-
-🛰️ GPS Location: ${location}
-
-🗺️ Google Maps: ${mapsLink}
-
-🛍️ Product: ${productName}
-
-💰 Price: ${price}
-
-Please contact the customer regarding this product.`;
-
-
-
-    const encodedMessage =
-        encodeURIComponent(message);
-
-
-    const whatsappURL =
-        "https://wa.me/" +
-        sellerWhatsApp +
-        "?text=" +
-        encodedMessage;
-
-
-    window.open(
-        whatsappURL,
-        "_blank"
-    );
-
-}
-
-
-
-/* ==================================================
-   PAGE LOAD
-================================================== */
-
-window.addEventListener(
-    "load",
-    function() {
-
-
-        const name =
-            localStorage.getItem(
-                "customerName"
-            );
-
-
-        const phone =
-            localStorage.getItem(
-                "customerPhone"
-            );
-
-
-        const location =
-            localStorage.getItem(
-                "customerLocation"
-            );
-
-
-        const area = localStorage.getItem("customerArea");
-        const latitude = localStorage.getItem("customerLatitude");
-        const longitude = localStorage.getItem("customerLongitude");
-
-
-
-        /*
-           If details were already saved,
-           show PRODUCTS ONLY.
-
-           Customer details will NOT be displayed.
-        */
-
-        if (name && phone && area && latitude && longitude) {
-
-            document
-                .getElementById("customerPage")
-                .classList.remove("active");
-
-
-            document
-                .getElementById("productsPage")
-                .classList.add("active");
-
-        }
-
-    }
-);
-
-</script>
-
-
+    $("exploreBtn").addEventListener("click", () => $("diwaliIntro").classList.add("hide"));
+    window.addEventListener("load", () => setTimeout(() => $("diwaliIntro")?.classList.add("hide"), 5000));
+    $("shopNow").addEventListener("click", () => $("catalog").scrollIntoView({ behavior: "smooth" }));
+    $("cartButton").addEventListener("click", openCart); $("heroCart").addEventListener("click", openCart);
+    $("closeCart").addEventListener("click", closeCart); $("closeCheckout").addEventListener("click", closeCheckout);
+    $("backToCart").addEventListener("click", () => { closeCheckout(); openCart(); });
+    $("cartOverlay").addEventListener("click", e => { if (e.target === $("cartOverlay")) closeCart(); });
+    $("checkoutOverlay").addEventListener("click", e => { if (e.target === $("checkoutOverlay")) closeCheckout(); });
+    $("productGrid").addEventListener("click", e => { const btn = e.target.closest("[data-add]"); if (btn) addToCart(btn.dataset.add); });
+    $("cartContents").addEventListener("click", e => {
+      if (e.target.id === "browseProducts" || e.target.id === "continueShopping") { closeCart(); $("catalog").scrollIntoView({behavior:"smooth"}); return; }
+      if (e.target.id === "checkoutButton") { openCheckout(); return; }
+      const qty = e.target.closest("[data-qty]");
+      if (qty) {
+        const id = qty.dataset.qty, delta = Number(qty.dataset.delta), product = state.products.find(p => p.id === id);
+        const next = (state.cart[id] || 0) + delta;
+        if (next <= 0) delete state.cart[id];
+        else if (product && next <= Number(product.stock_quantity || 0)) state.cart[id] = next;
+        else { toast("That is the available stock for this item."); return; }
+        renderProducts(); renderCart(); return;
+      }
+      const remove = e.target.closest("[data-remove]");
+      if (remove) { delete state.cart[remove.dataset.remove]; renderProducts(); renderCart(); }
+    });
+    $("checkoutForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const form = e.currentTarget;
+      if (!form.reportValidity()) return;
+      if (!cartEntries().length) { $("checkoutMessage").textContent = "Your cart is empty. Add a product before checkout."; return; }
+      // Do not insert orders directly from the browser. This needs a server-side Edge Function
+      // to re-check prices/stock and create a pending-delivery-review order securely.
+      $("checkoutMessage").textContent = "Your details are ready, but secure order submission is not enabled yet. The next setup step is the Supabase Edge Function that validates stock and prices, creates the order for manual delivery review, and only then enables verified Razorpay payment.";
+      toast("Delivery form is ready. Secure order submission is the next setup step.");
+    });
+    loadProducts();
+  </script>
 </body>
-
 </html>
