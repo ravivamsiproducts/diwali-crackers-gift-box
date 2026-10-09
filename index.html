@@ -9,7 +9,7 @@
   <style>
     :root{--ink:#20162b;--muted:#716779;--gold:#ffbf36;--gold-dark:#e49a00;--plum:#190d27;--cream:#fffaf0;--line:#eee5d7;--green:#177a4b}
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#fffdf8;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    button,input,select,textarea{font:inherit}button{cursor:pointer}.topbar{background:var(--plum);color:#fff;text-align:center;padding:10px 16px;font-size:13px}.site-header{position:sticky;top:0;z-index:20;background:#fffdf8ed;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.nav{max-width:1180px;margin:auto;padding:15px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}.nav-brand-group{display:flex;align-items:center;gap:12px;min-width:0}.brand{font-weight:900;letter-spacing:-.5px;font-size:clamp(17px,2.6vw,23px);display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);min-width:0}.brand-mark{font-size:27px;flex-shrink:0}.nav-actions{display:flex;align-items:center;gap:10px}.menu-wrap{position:relative;flex-shrink:0}.menu-toggle{width:44px;height:44px;display:grid;place-items:center;gap:4px;border:1px solid var(--line);border-radius:12px;background:#fffdf8;padding:10px}.menu-toggle span{display:block;width:19px;height:2px;background:var(--plum);border-radius:3px;transition:transform .18s,opacity .18s}.menu-toggle[aria-expanded="true"] span:first-child{transform:translateY(6px) rotate(45deg)}.menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}.menu-toggle[aria-expanded="true"] span:last-child{transform:translateY(-6px) rotate(-45deg)}.nav-menu{position:absolute;top:calc(100% + 12px);left:0;width:240px;padding:8px;background:#fffdf8;border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 40px #190d2720;display:none;z-index:30}.nav-menu.open{display:grid;gap:3px}.nav-menu a{display:flex;align-items:center;gap:10px;padding:13px 12px;border-radius:10px;color:var(--ink);font-size:14px;font-weight:750;text-decoration:none}.nav-menu a:hover,.nav-menu a:focus-visible{background:#fff3d4;outline:none}.hero-sparkler-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;overflow:hidden}.hero-inner{z-index:1}.btn{border:0;border-radius:12px;padding:12px 17px;font-weight:800;transition:transform .15s,background .15s}.btn:active{transform:scale(.98)}.btn-gold{background:var(--gold);color:#2a1900}.btn-gold:hover{background:#ffd36e}.btn-dark{background:var(--plum);color:#fff}.btn-outline{background:#fff;border:1px solid var(--line);color:var(--ink)}.cart-count{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:20px;background:#fff;color:#23142f;margin-left:5px;font-size:12px}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}.topbar{background:var(--plum);color:#fff;text-align:center;padding:10px 16px;font-size:13px}.site-header{position:sticky;top:0;z-index:20;background:#fffdf8ed;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.nav{max-width:1180px;margin:auto;padding:15px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}.nav-brand-group{display:flex;align-items:center;gap:12px;min-width:0}.brand{font-weight:900;letter-spacing:-.5px;font-size:clamp(17px,2.6vw,23px);display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);min-width:0}.brand-mark{font-size:27px;flex-shrink:0}.nav-actions{display:flex;align-items:center;gap:10px}.menu-wrap{position:relative;flex-shrink:0}.menu-toggle{width:44px;height:44px;display:grid;place-items:center;gap:4px;border:1px solid var(--line);border-radius:12px;background:#fffdf8;padding:10px}.menu-toggle span{display:block;width:19px;height:2px;background:var(--plum);border-radius:3px;transition:transform .18s,opacity .18s}.menu-toggle[aria-expanded="true"] span:first-child{transform:translateY(6px) rotate(45deg)}.menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}.menu-toggle[aria-expanded="true"] span:last-child{transform:translateY(-6px) rotate(-45deg)}.nav-menu{position:absolute;top:calc(100% + 12px);left:0;width:240px;padding:8px;background:#fffdf8;border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 40px #190d2720;display:none;z-index:30}.nav-menu.open{display:grid;gap:3px}.nav-menu a{display:flex;align-items:center;gap:10px;padding:13px 12px;border-radius:10px;color:var(--ink);font-size:14px;font-weight:750;text-decoration:none}.nav-menu a:hover,.nav-menu a:focus-visible{background:#fff3d4;outline:none}.hero-fireworks-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.48;overflow:hidden}.hero-inner{z-index:1}.btn{border:0;border-radius:12px;padding:12px 17px;font-weight:800;transition:transform .15s,background .15s}.btn:active{transform:scale(.98)}.btn-gold{background:var(--gold);color:#2a1900}.btn-gold:hover{background:#ffd36e}.btn-dark{background:var(--plum);color:#fff}.btn-outline{background:#fff;border:1px solid var(--line);color:var(--ink)}.cart-count{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:20px;background:#fff;color:#23142f;margin-left:5px;font-size:12px}
     .hero{background:radial-gradient(ellipse at 80% 20%,#61304f 0,transparent 38%),radial-gradient(ellipse at 5% 90%,#50301a 0,transparent 38%),linear-gradient(120deg,#170b25,#2c102b 65%,#140b20);color:#fff;overflow:hidden;position:relative}.hero:after{content:"✦  ·  ✧  ·  ✦";position:absolute;right:7%;top:18%;font-size:clamp(30px,6vw,70px);color:#ffca62;opacity:.65;letter-spacing:12px;transform:rotate(-12deg)}.hero-inner{max-width:1180px;margin:auto;padding:clamp(28px,4.5vw,52px) 22px clamp(55px,9vw,105px);position:relative;z-index:1}.eyebrow{display:inline-block;border:1px solid #ffcf6c80;background:#ffffff0c;border-radius:100px;padding:8px 13px;color:#ffdc92;font-size:12px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase}.hero h1{font-size:clamp(38px,7vw,76px);line-height:1.04;letter-spacing:-2.8px;max-width:760px;margin:22px 0 17px}.hero h1 span{color:var(--gold)}.hero p{color:#eee0ed;font-size:clamp(15px,2vw,19px);line-height:1.7;max-width:600px;margin:0 0 28px}.hero-buttons{display:flex;flex-wrap:wrap;gap:12px}.hero .btn-outline{background:#ffffff10;border-color:#ffffff55;color:#fff}.hero-notes{display:flex;gap:22px;flex-wrap:wrap;margin-top:34px;color:#eadfeb;font-size:13px}.hero-notes span:before{content:"✓";color:#ffd36e;font-weight:900;margin-right:7px}
     main{max-width:1180px;margin:auto;padding:54px 22px 70px}.section-heading{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:25px}.section-heading h2{font-size:clamp(27px,4vw,40px);letter-spacing:-1.2px;margin:0 0 7px}.section-heading p{color:var(--muted);margin:0;line-height:1.6}.catalog-status{font-size:13px;color:var(--muted);padding-bottom:5px}.product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.product-card{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:white;display:flex;flex-direction:column;min-width:0;box-shadow:0 8px 28px #26152a08;transition:transform .2s,box-shadow .2s}.product-card:hover{transform:translateY(-4px);box-shadow:0 16px 35px #26152a12}.product-visual{height:255px;background:linear-gradient(135deg,#fff3d4,#f7e6ed);display:grid;place-items:center;overflow:hidden;position:relative}.product-visual img{width:100%;height:100%;object-fit:cover}.product-placeholder{font-size:74px;filter:drop-shadow(0 10px 10px #8a4b2430)}.product-content{padding:20px;display:flex;flex-direction:column;flex:1}.product-content h3{font-size:20px;margin:0 0 8px;letter-spacing:-.4px}.product-description{font-size:14px;color:var(--muted);line-height:1.55;margin:0 0 18px;flex:1}.product-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}.price{font-size:25px;font-weight:900;letter-spacing:-.6px}.stock{font-size:12px;color:var(--green);font-weight:800}.stock.out{color:#b42318}.add-btn{width:100%;display:flex;justify-content:center;gap:8px;align-items:center}.add-btn:disabled{opacity:.45;cursor:not-allowed}.state-box{grid-column:1/-1;text-align:center;padding:38px 18px;border:1px dashed #dbcdb9;border-radius:18px;color:var(--muted);line-height:1.6}.safety-note{margin-top:26px;background:var(--cream);border:1px solid #f1dfb4;border-radius:14px;padding:15px 17px;color:#68532b;font-size:13px;line-height:1.6}
     .footer{background:#170b22;color:#e8ddec;padding:30px 22px;text-align:center;font-size:13px;line-height:1.8}.footer strong{color:#ffcf6c}
@@ -130,7 +130,7 @@
     </nav>
   </header>
   <section class="hero">
-    <canvas id="heroSparklerCanvas" class="hero-sparkler-canvas" aria-hidden="true"></canvas>
+    <canvas id="heroFireworksCanvas" class="hero-fireworks-canvas" aria-hidden="true"></canvas>
     <div class="hero-inner">
       <span class="eyebrow">✨ The festive collection</span>
       <h1>Bring home the <span>Diwali</span> feeling.</h1>
@@ -337,133 +337,86 @@
     siteMenu.querySelectorAll("[data-menu-link]").forEach(link => link.addEventListener("click", () => closeSiteMenu()));
     document.addEventListener("click", e => { if (!e.target.closest(".menu-wrap")) closeSiteMenu(); });
     document.addEventListener("keydown", e => { if (e.key === "Escape") closeSiteMenu(); });
-    // Festive sparkler trail travels from Explore gift boxes to View my cart.
-    function startHeroSparklerAnimation() {
+    // Subtle Diwali fireworks glow in the hero background; never crosses or points at controls.
+    function startHeroBackgroundFireworks() {
       const hero = document.querySelector(".hero");
-      const canvas = $("heroSparklerCanvas");
-      const source = $("shopNow");
-      const target = $("heroCart");
-      if (!hero || !canvas || !source || !target || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const canvas = $("heroFireworksCanvas");
+      if (!hero || !canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
-      let timer = 0;
-      let running = false;
-      const resize = () => {
+      let width = 0, height = 0, lastBurst = 0, frame = 0, active = true;
+      const particles = [];
+      const colors = ["#ffd166", "#ff9f68", "#ff69b4", "#b8a0ff", "#8de8c7", "#fff0b8"];
+      function resize() {
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = Math.round(hero.clientWidth * dpr);
-        canvas.height = Math.round(hero.clientHeight * dpr);
-        canvas.style.width = hero.clientWidth + "px";
-        canvas.style.height = hero.clientHeight + "px";
+        width = hero.clientWidth;
+        height = hero.clientHeight;
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      };
-      function drawSpark(x, y, radius, rotation, color, alpha) {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(rotation);
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = color;
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = color;
-        ctx.beginPath();
-        ctx.moveTo(0, -radius * 1.8);
-        ctx.lineTo(radius * .42, -radius * .42);
-        ctx.lineTo(radius * 1.8, 0);
-        ctx.lineTo(radius * .42, radius * .42);
-        ctx.lineTo(0, radius * 1.8);
-        ctx.lineTo(-radius * .42, radius * .42);
-        ctx.lineTo(-radius * 1.8, 0);
-        ctx.lineTo(-radius * .42, -radius * .42);
-        ctx.closePath();
-        ctx.fill();
-        ctx.restore();
       }
-      function play() {
-        if (running || document.hidden || !hero.getClientRects().length) return;
-        const heroRect = hero.getBoundingClientRect();
-        if (heroRect.bottom <= 0 || heroRect.top >= window.innerHeight) return;
-        const a = source.getBoundingClientRect();
-        const b = target.getBoundingClientRect();
-        if (!a.width || !b.width) return;
-        resize();
-        running = true;
-        const start = { x: a.left + a.width / 2 - heroRect.left, y: a.top + a.height / 2 - heroRect.top };
-        const end = { x: b.left + b.width / 2 - heroRect.left, y: b.top + b.height / 2 - heroRect.top };
-        const dx = end.x - start.x;
-        const dy = end.y - start.y;
-        const bend = Math.max(42, Math.min(115, Math.abs(dx) * .35 + Math.abs(dy) * .18));
-        const side = (start.x + end.x) / 2 < hero.clientWidth / 2 ? 1 : -1;
-        const p1 = { x: start.x + dx * .28 + side * bend, y: start.y + dy * .22 - bend * .42 };
-        const p2 = { x: start.x + dx * .72 - side * bend, y: start.y + dy * .78 + bend * .42 };
-        const colors = ["#ffd166", "#fff3c4", "#ff8c42", "#ff5db1", "#a78bfa"];
-        const sparks = Array.from({ length: 48 }, (_, i) => ({
-          offset: i / 48,
-          size: 1.1 + Math.random() * 2.2,
-          color: colors[i % colors.length],
-          spin: (Math.random() - .5) * 5,
-          drift: (Math.random() - .5) * 18
-        }));
-        const duration = 2200;
-        let frame = 0;
-        function point(t) {
-          const u = 1 - t;
-          return {
-            x: u*u*u*start.x + 3*u*u*t*p1.x + 3*u*t*t*p2.x + t*t*t*end.x,
-            y: u*u*u*start.y + 3*u*u*t*p1.y + 3*u*t*t*p2.y + t*t*t*end.y
-          };
-        }
-        function animate(now) {
-          const progress = Math.min(1, (now - begun) / duration);
-          ctx.clearRect(0, 0, hero.clientWidth, hero.clientHeight);
-          // Draw a glowing, curved trail with a rotating sparkler head.
-          ctx.save();
-          ctx.beginPath();
-          for (let i = 0; i <= 42; i++) {
-            const p = point(i / 42);
-            if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
-          }
-          ctx.strokeStyle = "#ffd166";
-          ctx.globalAlpha = .12 * (1 - progress * .35);
-          ctx.lineWidth = 7;
-          ctx.shadowBlur = 22;
-          ctx.shadowColor = "#ffb52e";
-          ctx.stroke();
-          ctx.restore();
-          sparks.forEach((spark, i) => {
-            const t = Math.max(0, Math.min(1, progress * 1.12 - spark.offset * .72));
-            if (t <= 0 || t > 1) return;
-            const p = point(t);
-            const q = point(Math.min(1, t + .008));
-            const angle = Math.atan2(q.y - p.y, q.x - p.x);
-            const fade = Math.min(1, (1 - t) * 2.5 + .15) * Math.min(1, t * 10 + .2);
-            drawSpark(p.x + Math.sin(t * 14 + i) * spark.drift * .14, p.y + Math.cos(t * 12 + i) * spark.drift * .14, spark.size, angle + now * .006 * spark.spin, spark.color, fade);
+      function burst() {
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        // Keep most bursts near the edges so the headline and buttons remain easy to read.
+        const x = width * (Math.random() < .5 ? .07 + Math.random() * .25 : .68 + Math.random() * .25);
+        const y = height * (.12 + Math.random() * .43);
+        const count = 18 + Math.floor(Math.random() * 13);
+        const power = 0.45 + Math.random() * .7;
+        for (let i = 0; i < count; i++) {
+          const angle = Math.PI * 2 * i / count + Math.random() * .12;
+          const speed = power * (.45 + Math.random() * .8);
+          particles.push({
+            x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+            life: 38 + Math.random() * 24, max: 62,
+            size: .7 + Math.random() * 1.25, color
           });
-          if (progress < 1) {
-            frame = window.requestAnimationFrame(animate);
-          } else {
-            // A small celebratory sparkle at the cart button.
-            for (let i = 0; i < 18; i++) {
-              const angle = Math.PI * 2 * i / 18;
-              drawSpark(end.x + Math.cos(angle) * (8 + (i % 3) * 4), end.y + Math.sin(angle) * (8 + (i % 3) * 4), 2.2, angle + now * .004, colors[i % colors.length], .85);
-            }
-            window.setTimeout(() => {
-              ctx.clearRect(0, 0, hero.clientWidth, hero.clientHeight);
-              running = false;
-              timer = window.setTimeout(play, 7200);
-            }, 260);
-          }
         }
-        const begun = performance.now();
+      }
+      function animate(now) {
+        if (!active) return;
+        if (document.hidden || !hero.getClientRects().length ||
+            hero.getBoundingClientRect().bottom < 0 || hero.getBoundingClientRect().top > window.innerHeight) {
+          ctx.clearRect(0, 0, width, height);
+          frame = window.requestAnimationFrame(animate);
+          return;
+        }
+        ctx.clearRect(0, 0, width, height);
+        if (now - lastBurst > 1350 + Math.random() * 650) {
+          lastBurst = now;
+          burst();
+          if (Math.random() > .68) burst();
+        }
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vx *= .985;
+          p.vy *= .985;
+          p.life--;
+          const alpha = Math.max(0, p.life / p.max) * .72;
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = p.color;
+          ctx.shadowBlur = 7;
+          ctx.shadowColor = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          if (p.life <= 0) particles.splice(i, 1);
+        }
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
         frame = window.requestAnimationFrame(animate);
       }
       resize();
       window.addEventListener("resize", resize, { passive: true });
-      // Wait for the welcome screen to disappear, then play a short loop with breathing room.
-      timer = window.setTimeout(play, 5700);
       document.addEventListener("visibilitychange", () => {
-        if (!document.hidden && !running) timer = window.setTimeout(play, 700);
+        if (!document.hidden && active && !frame) frame = window.requestAnimationFrame(animate);
       });
+      frame = window.requestAnimationFrame(animate);
     }
-    startHeroSparklerAnimation();
+    startHeroBackgroundFireworks();
     $("shopNow").addEventListener("click", () => $("catalog").scrollIntoView({ behavior: "smooth" }));
     $("cartButton").addEventListener("click", openCart); $("heroCart").addEventListener("click", openCart);
     $("closeCart").addEventListener("click", closeCart); $("closeCheckout").addEventListener("click", closeCheckout);
