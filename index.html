@@ -197,8 +197,8 @@
   <div class="overlay" id="checkoutOverlay" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
     <aside class="drawer">
       <div class="drawer-head"><h2 id="checkoutTitle">Delivery details</h2><button class="icon-btn" id="closeCheckout" aria-label="Close checkout">×</button></div>
-      <p style="color:var(--muted);line-height:1.6;margin-top:-8px">Your details are requested only after you choose products. Delivery eligibility is checked automatically from your PIN code.</p>
-      <div class="checkout-info">We automatically check your PIN code against our Hyderabad &amp; Secunderabad delivery zones. Secure order submission and Razorpay payment are not enabled yet; they require server-side Supabase Edge Functions. Never enter payment secrets on this page.</div>
+      <p style="color:var(--muted);line-height:1.6;margin-top:-8px">Your details are collected only after you add products to your cart. Check your locality, full address and PIN before continuing to payment.</p>
+      <div class="checkout-info">PIN code is used for address details, not an automatic rejection. Delivery availability may be confirmed by our team. Payment details are handled securely by Razorpay.</div>
       <form id="checkoutForm">
         <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden"><label for="companyWebsite">Leave this field empty</label><input id="companyWebsite" name="companyWebsite" type="text" tabindex="-1" autocomplete="off"></div>
         <div class="field"><label for="customerName">Full name *</label><input id="customerName" name="customerName" autocomplete="name" required maxlength="100" placeholder="Your name"></div>
@@ -235,7 +235,7 @@
         <div class="field"><label for="deliveryNotes">Delivery notes (optional)</label><textarea id="deliveryNotes" name="deliveryNotes" maxlength="300" placeholder="Landmark or delivery instructions"></textarea></div>
         <div class="field"><label for="customerMaps">Google Maps delivery location (optional)</label><input id="customerMaps" name="customerMaps" type="url" placeholder="Paste a Google Maps location link"><button class="btn btn-outline" type="button" id="useCurrentLocation" style="width:100%;margin-top:8px">📍 Use my current location</button><small id="locationStatus" role="status" style="font-size:12px;color:var(--muted)">You can share your location to help us find the delivery address. Browser location permission is required.</small></div>
         <div id="checkoutMessage" class="form-error" role="status"></div>
-        <button class="btn btn-dark" type="submit" style="width:100%">Send delivery enquiry</button>
+        <button class="btn btn-dark" type="submit" style="width:100%">Continue to payment</button>
         <button class="btn btn-outline" type="button" id="backToCart" style="width:100%;margin-top:9px">Back to cart</button>
       </form>
     </aside>
@@ -516,24 +516,9 @@
       const remove = e.target.closest("[data-remove]");
       if (remove) { delete state.cart[remove.dataset.remove]; renderProducts(); renderCart(); }
     });
-    // Serviceable PIN codes for the Hyderabad & Secunderabad delivery zone.
-    // Keep this allowlist aligned with the actual delivery routes before expanding coverage.
-    const SERVICEABLE_PINCODES = new Set([
-      "500001","500002","500003","500004","500005","500006","500007","500008","500009",
-      "500010","500011","500012","500013","500014","500015","500016","500017","500018",
-      "500019","500020","500022","500023","500024","500025","500026","500027","500028",
-      "500029","500031","500032","500033","500034","500036","500038","500040","500041",
-      "500044","500045","500047","500053","500056","500057","500058","500059","500061",
-      "500063","500064","500065","500066","500067","500068","500069","500073","500076",
-      "500077","500078","500079","500080","500081","500082","500083","500084","500085",
-      "500086","500087","500088","500089","500090","500091","500092","500093","500094",
-      "500095","500096","500098","500100","500101","500102","500103","500104","500105",
-      "500106","500107","500108","500109","500110","500111","500112","500113","500114",
-      "500115","500116","500117","500118","500119"
-    ]);
     function checkPincode() {
       const input = $("customerPincode");
-      const pin = input.value.replace(/\D/g, "").slice(0, 6);
+      const pin = input.value.replace(/\\D/g, "").slice(0, 6);
       if (input.value !== pin) input.value = pin;
       input.setCustomValidity("");
       if (pin.length !== 6) {
@@ -558,56 +543,89 @@
         status.textContent = error.code === 1 ? "Location permission was denied. You can paste a Google Maps link instead." : "Could not get your location. Try again or paste a Google Maps link.";
       }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
     });
+    async function loadRazorpay() {
+      if (window.Razorpay) return true;
+      return await new Promise(resolve => {
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        document.head.appendChild(script);
+      });
+    }
     $("checkoutForm").addEventListener("submit", async e => {
       e.preventDefault();
       const form = e.currentTarget;
-      if (!form.reportValidity()) return;
-      if (!checkPincode()) return;
+      if (!form.reportValidity() || !checkPincode()) return;
       const entries = cartEntries();
       if (!entries.length) { $("checkoutMessage").textContent = "Your cart is empty. Add a product before checkout."; return; }
       const mapsUrl = $("customerMaps").value.trim();
       if (mapsUrl) {
         try {
-          const parsed = new URL(mapsUrl);
-          const host = parsed.hostname.toLowerCase();
+          const parsed = new URL(mapsUrl), host = parsed.hostname.toLowerCase();
           if (parsed.protocol !== "https:" || !(host === "google.com" || host.endsWith(".google.com") || host === "maps.app.goo.gl" || host === "goo.gl")) {
-            $("checkoutMessage").textContent = "Please enter a valid HTTPS Google Maps link, or clear the location field.";
-            return;
+            $("checkoutMessage").textContent = "Please enter a valid Google Maps link, or clear the location field."; return;
           }
         } catch (_) { $("checkoutMessage").textContent = "Please enter a valid Google Maps link, or clear the location field."; return; }
       }
       if (!supabaseClient) { $("checkoutMessage").textContent = "We cannot connect securely right now. Please try again later."; return; }
-      const submitButton = form.querySelector('button[type="submit"]');
-      submitButton.disabled = true;
-      submitButton.textContent = "Sending request…";
-      $("checkoutMessage").textContent = "Submitting your delivery enquiry securely…";
+      const button = form.querySelector('button[type="submit"]');
+      button.disabled = true; button.textContent = "Preparing payment…";
+      $("checkoutMessage").textContent = "Preparing secure checkout…";
       try {
         const payload = {
           customer_name: $("customerName").value.trim(),
           phone: $("customerPhone").value.trim(),
           address: $("customerAddress").value.trim(),
           locality: $("customerArea").value,
+          zone_name: $("customerArea").selectedOptions[0]?.parentElement?.label || "",
           pincode: $("customerPincode").value.trim(),
           delivery_notes: $("deliveryNotes").value.trim(),
           maps_url: mapsUrl || null,
           company_website: $("companyWebsite").value,
           items: entries.map(({product, quantity}) => ({ product_id: product.id, quantity }))
         };
-        const { data, error } = await supabaseClient.functions.invoke("submit-lead", { body: payload });
+        const { data, error } = await supabaseClient.functions.invoke("create-payment-order", { body: payload });
         if (error) throw error;
-        if (!data || !data.success) throw new Error(data?.error || "We could not submit your request.");
-        $("checkoutMessage").textContent = "Thank you! Your delivery enquiry was received. Reference: " + data.reference + ". Our team will contact you to confirm availability and next steps. This is not a confirmed order or payment.";
-        toast("Delivery enquiry sent successfully.");
-        state.cart = {};
-        renderProducts(); renderCart();
-        form.reset();
-        $("locationStatus").textContent = "You can share your location to help us find the delivery address. Browser location permission is required.";
+        if (!data?.success) throw new Error(data?.error || "Could not start payment.");
+        if (!(await loadRazorpay())) throw new Error("Razorpay checkout could not load. Please check your internet connection.");
+        const options = {
+          key: data.razorpay_key_id, amount: data.amount, currency: data.currency,
+          name: "Diwali Crackers Gift Box", description: data.description || "Gift box order",
+          order_id: data.razorpay_order_id, prefill: { name: data.customer_name, contact: data.phone },
+          notes: { order_number: data.order_number },
+          theme: { color: "#190d27" },
+          modal: { ondismiss: () => { $("checkoutMessage").textContent = "Payment window closed. Your cart is still available; you can try again."; } },
+          handler: async response => {
+            $("checkoutMessage").textContent = "Verifying payment securely…";
+            try {
+              const { data: verified, error: verifyError } = await supabaseClient.functions.invoke("verify-payment", {
+                body: { order_id: data.order_id, razorpay_order_id: response.razorpay_order_id, razorpay_payment_id: response.razorpay_payment_id, razorpay_signature: response.razorpay_signature }
+              });
+              if (verifyError) throw verifyError;
+              if (!verified?.success) throw new Error(verified?.error || "Payment verification failed.");
+              $("checkoutMessage").textContent = "Payment verified. Order reference: " + data.order_number + ". Our team will confirm delivery details.";
+              toast("Payment verified successfully.");
+              state.cart = {}; renderProducts(); renderCart(); form.reset();
+              $("locationStatus").textContent = "You can share your location to help us find the delivery address. Browser location permission is required.";
+            } catch (verifyErr) {
+              console.error("Payment verification failed:", verifyErr);
+              $("checkoutMessage").textContent = "Payment may have been made, but verification is pending. Save your Razorpay payment ID: " + response.razorpay_payment_id + " and contact customer care.";
+            }
+          }
+        };
+        const checkout = new window.Razorpay(options);
+        checkout.on("payment.failed", response => {
+          const description = response?.error?.description || "Payment failed.";
+          $("checkoutMessage").textContent = description + " No successful payment was confirmed. You can try again.";
+        });
+        checkout.open();
+        $("checkoutMessage").textContent = "Complete your payment in the secure Razorpay window.";
       } catch (error) {
-        console.error("Delivery enquiry submission failed:", error);
-        $("checkoutMessage").textContent = (error && error.message && !/non-2xx|functionshttp/i.test(error.message)) ? "Enquiry not sent: " + error.message + ". Please check your details and try again. No payment has been taken." : "We could not send your enquiry right now. Please check your details and try again, or contact us by WhatsApp. No payment has been taken.";
+        console.error("Payment checkout failed:", error);
+        $("checkoutMessage").textContent = error?.message || "Could not start checkout. Please try again. No payment has been taken.";
       } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = "Send delivery enquiry";
+        button.disabled = false; button.textContent = "Continue to payment";
       }
     });
     loadProducts();

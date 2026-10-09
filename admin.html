@@ -22,7 +22,8 @@
 <section id="dashboard" class="hidden">
 <div class="panel dashboard-head"><div><div class="eyebrow">Store management</div><h1>Product dashboard</h1><p id="signedInAs" class="muted"></p></div><div class="toolbar"><button id="refreshBtn" class="btn outline">↻ Refresh</button><button id="logoutBtn" class="btn dark">Sign out</button></div></div>
 <div class="notice">Customer enquiries contain private contact and delivery details. Use them only to respond to the customer and coordinate delivery. Do not share or export this information unnecessarily.</div>
-<section class="panel" style="margin-top:18px"><div class="section-title"><div><div class="eyebrow">Customer follow-up</div><h2>Delivery enquiries</h2></div><span id="leadCount" class="muted">—</span></div><p class="muted">These are enquiries only, not confirmed orders or paid transactions. Contact the customer to confirm availability before changing the status.</p><div id="leadList" class="products"><p class="muted">Loading enquiries…</p></div><div id="leadMsg" class="msg" role="status"></div></section>
+<section class="panel" style="margin-top:18px"><div class="section-title"><div><div class="eyebrow">Checkout & payments</div><h2>Orders</h2></div><span id="orderCount" class="muted">—</span></div><p class="muted">Paid status is updated only after server-side Razorpay verification. Delivery may still need manual confirmation.</p><div id="orderList" class="products"><p class="muted">Loading orders…</p></div><div id="orderMsg" class="msg" role="status"></div></section>
+ <section class="panel" style="margin-top:18px"><div class="section-title"><div><div class="eyebrow">Customer follow-up</div><h2>Delivery enquiries</h2></div><span id="leadCount" class="muted">—</span></div><p class="muted">These are enquiries only, not confirmed orders or paid transactions. Contact the customer to confirm availability before changing the status.</p><div id="leadList" class="products"><p class="muted">Loading enquiries…</p></div><div id="leadMsg" class="msg" role="status"></div></section>
 <div class="grid" style="margin-top:18px">
 <section class="panel"><div class="eyebrow">Catalogue editor</div><h2 id="editorTitle">Add a product</h2>
 <form id="productForm">
@@ -51,7 +52,7 @@ const SUPABASE_PUBLISHABLE_KEY="sb_publishable_DGZOVQSV8SLej_vLqjPhfQ_gktGghO-";
 // Publishable key is intended for browser use; table/storage RLS must enforce admin permissions.
 const client=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 const $=id=>document.getElementById(id);
-let currentUser=null,products=[],leads=[];
+let currentUser=null,products=[],leads=[],orders=[];
 const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const formatPrice=p=>new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:2}).format(Number(p||0)/100);
 function message(id,text,kind=""){const el=$(id);el.textContent=text;el.className="msg "+kind}
@@ -61,7 +62,7 @@ async function checkAdmin(){
  if(!session){showLogin();return}
  const {data:allowed,error}=await client.rpc("is_admin");
  if(error||allowed!==true){await client.auth.signOut();showLogin();message("loginMsg","This account is not enabled as an admin. Check public.admin_users and is_active.","error");return}
- currentUser=session.user;showDashboard();await Promise.all([loadProducts(),loadLeads()]);
+ currentUser=session.user;showDashboard();await Promise.all([loadProducts(),loadLeads(),loadOrders()]);
 }
 function showLogin(){$("loginPanel").classList.remove("hidden");$("dashboard").classList.add("hidden")}
 function showDashboard(){$("loginPanel").classList.add("hidden");$("dashboard").classList.remove("hidden");$("signedInAs").textContent="Signed in as "+(currentUser?.email||"admin")}
@@ -74,6 +75,40 @@ async function loadProducts(){
  $("productList").innerHTML=products.map(p=>'<article class="product"><div class="thumb">'+(p.image_url?'<img src="'+escapeHtml(p.image_url)+'" alt="">':"🎁")+'</div><div><h3>'+escapeHtml(p.name)+'</h3><small>'+formatPrice(p.price_paise)+' · Stock '+Number(p.stock_quantity||0)+'<br>'+escapeHtml(p.slug)+'</small><br><span class="status '+(p.is_active?"":"off")+'">'+(p.is_active?"ACTIVE":"HIDDEN")+'</span></div><div class="product-actions"><button class="btn outline" data-edit="'+escapeHtml(p.id)+'">Edit</button><button class="btn '+(p.is_active?"outline":"gold")+'" data-toggle="'+escapeHtml(p.id)+'">'+(p.is_active?"Hide":"Activate")+'</button></div></article>').join("");
 }
 
+const orderStatuses=["pending_delivery_review","paid","processing","dispatched","delivered","rejected","cancelled","payment_failed"];
+const deliveryStatuses=["pending_review","approved","rejected"];
+async function loadOrders(){
+ const list=$("orderList");if(!list)return;list.innerHTML='<p class="muted">Loading orders…</p>';message("orderMsg","");
+ const {data,error}=await client.from("orders").select("id,order_number,customer_name,customer_phone,delivery_address,delivery_area,zone_name,delivery_pincode,delivery_notes,maps_url,delivery_status,order_status,subtotal_paise,total_paise,created_at,payment_reference").order("created_at",{ascending:false}).limit(100);
+ if(error){list.innerHTML="";$("orderCount").textContent="";message("orderMsg","Could not load orders: "+error.message,"error");return}
+ orders=data||[];$("orderCount").textContent=orders.length+" orders";
+ if(!orders.length){list.innerHTML='<p class="muted">No checkout orders yet.</p>';return}
+ const ids=orders.map(o=>o.id);
+ const [payRes,itemRes]=await Promise.all([
+  client.from("payments").select("order_id,payment_status,gateway_payment_id,amount_paise").in("order_id",ids),
+  client.from("order_items").select("order_id,product_name,quantity,unit_price_paise").in("order_id",ids)
+ ]);
+ if(payRes.error||itemRes.error){message("orderMsg","Orders loaded, but payment or item details could not be loaded.","error")}
+ const payments=payRes.data||[],items=itemRes.data||[];
+ list.innerHTML=orders.map(o=>{
+  const pay=payments.find(p=>p.order_id===o.id),lines=items.filter(i=>i.order_id===o.id).map(i=>escapeHtml(i.product_name)+" × "+Number(i.quantity)).join(", ");
+  const map=o.maps_url?'<a href="'+escapeHtml(o.maps_url)+'" target="_blank" rel="noopener noreferrer">Open Google Maps ↗</a>':"No map link";
+  const ds=deliveryStatuses.map(v=>'<option value="'+v+'" '+(o.delivery_status===v?"selected":"")+'>'+v.replaceAll("_"," ")+'</option>').join("");
+  const os=orderStatuses.map(v=>'<option value="'+v+'" '+(o.order_status===v?"selected":"")+'>'+v.replaceAll("_"," ")+'</option>').join("");
+  return '<article class="lead-card"><div class="lead-head"><div><h3>'+escapeHtml(o.order_number)+' <span class="status">'+escapeHtml(pay?.payment_status||"payment pending")+'</span></h3><small>'+escapeHtml(formatDate(o.created_at))+' · '+escapeHtml(o.zone_name||"Zone not set")+' · '+escapeHtml(o.delivery_area)+' · PIN '+escapeHtml(o.delivery_pincode||"")+'</small></div><strong>'+formatPrice(o.total_paise)+'</strong></div><p><b>Customer:</b> '+escapeHtml(o.customer_name)+' · <a href="tel:'+escapeHtml(o.customer_phone)+'">'+escapeHtml(o.customer_phone)+'</a> · <a href="https://wa.me/91'+escapeHtml(o.customer_phone)+'" target="_blank" rel="noopener noreferrer">WhatsApp</a></p><p><b>Address:</b> '+escapeHtml(o.delivery_address)+'</p><p><b>Items:</b> '+lines+'</p><p>'+map+'</p>'+(o.delivery_notes?'<p><b>Delivery notes:</b> '+escapeHtml(o.delivery_notes)+'</p>':"")+'<p><b>Payment ID:</b> '+escapeHtml(pay?.gateway_payment_id||o.payment_reference||"Not verified")+'</p><div class="field"><label>Delivery status</label><select data-order-delivery="'+escapeHtml(o.id)+'">'+ds+'</select></div><div class="field"><label>Order status</label><select data-order-status="'+escapeHtml(o.id)+'">'+os+'</select></div><button class="btn gold" data-save-order="'+escapeHtml(o.id)+'">Save order status</button></article>';
+ }).join("");
+}
+$("orderList").addEventListener("click",async e=>{
+ const btn=e.target.closest("[data-save-order]");if(!btn)return;const id=btn.dataset.saveOrder;
+ const delivery_status=$("orderList").querySelector('[data-order-delivery="'+CSS.escape(id)+'"]')?.value;
+ const order_status=$("orderList").querySelector('[data-order-status="'+CSS.escape(id)+'"]')?.value;
+ if(!deliveryStatuses.includes(delivery_status)||!orderStatuses.includes(order_status)){message("orderMsg","Choose valid statuses.","error");return}
+ const order=orders.find(o=>o.id===id);
+ if(order?.order_status==="paid"&&order_status==="pending_delivery_review"){message("orderMsg","A verified paid order cannot be reset to pending payment.","error");return}
+ btn.disabled=true;const {error}=await client.from("orders").update({delivery_status,order_status,updated_at:new Date().toISOString()}).eq("id",id);btn.disabled=false;
+ if(error){message("orderMsg","Could not save order: "+error.message,"error");return}
+ message("orderMsg","Order status saved.","success");await loadOrders();
+});
 const leadStatuses=[["new_lead","New lead"],["contacted","Contacted"],["order_confirmed","Order confirmed"],["out_for_delivery","Out for delivery"],["delivered","Delivered"],["cancelled","Cancelled"]];
 function formatDate(value){try{return new Intl.DateTimeFormat("en-IN",{dateStyle:"medium",timeStyle:"short"}).format(new Date(value))}catch(_){return String(value||"")}}
 async function loadLeads(){
@@ -114,7 +149,7 @@ async function uploadImage(file){
  if(error)throw new Error("Image upload failed: "+error.message);
  return client.storage.from("product-images").getPublicUrl(path).data.publicUrl;
 }
-$("loginForm").addEventListener("submit",async e=>{e.preventDefault();message("loginMsg","Signing in…");const {data,error}=await client.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error){message("loginMsg",error.message,"error");return}const {data:allowed,error:checkError}=await client.rpc("is_admin");if(checkError||allowed!==true){await client.auth.signOut();message("loginMsg","Sign-in succeeded, but this account is not authorized as an active admin.","error");return}currentUser=data.user;showDashboard();await Promise.all([loadProducts(),loadLeads()])});
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();message("loginMsg","Signing in…");const {data,error}=await client.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error){message("loginMsg",error.message,"error");return}const {data:allowed,error:checkError}=await client.rpc("is_admin");if(checkError||allowed!==true){await client.auth.signOut();message("loginMsg","Sign-in succeeded, but this account is not authorized as an active admin.","error");return}currentUser=data.user;showDashboard();await Promise.all([loadProducts(),loadLeads(),loadOrders()])});
 $("productName").addEventListener("input",()=>{if(!$("productId").value)$("productSlug").value=slugify($("productName").value)});
 $("productForm").addEventListener("submit",async e=>{
  e.preventDefault();if(!currentUser){message("productMsg","Please sign in first.","error");return}
@@ -138,7 +173,7 @@ $("productList").addEventListener("click",async e=>{
  if(error)message("listMsg","Could not update product: "+error.message,"error");else message("listMsg",p.name+(p.is_active?" hidden from storefront.":" is now active."),"success");
  await loadProducts();
 });
-$("resetBtn").addEventListener("click",clearForm);$("refreshBtn").addEventListener("click",async()=>{await Promise.all([loadProducts(),loadLeads()])});$("logoutBtn").addEventListener("click",async()=>{await client.auth.signOut();currentUser=null;showLogin();message("loginMsg","You have signed out.","success")});
+$("resetBtn").addEventListener("click",clearForm);$("refreshBtn").addEventListener("click",async()=>{await Promise.all([loadProducts(),loadLeads(),loadOrders()])});$("logoutBtn").addEventListener("click",async()=>{await client.auth.signOut();currentUser=null;showLogin();message("loginMsg","You have signed out.","success")});
 if(!client){message("loginMsg","Supabase client could not load. Check your internet connection and refresh.","error")}else{checkAdmin()}
 </script>
 </body>
