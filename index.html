@@ -652,10 +652,16 @@
               });
               if (verifyError) throw verifyError;
               if (!verified?.success) throw new Error(verified?.error || "Payment verification failed.");
-              $("checkoutMessage").textContent = "Payment verified. Order reference: " + data.order_number + ". Our team will confirm delivery details.";
-              toast("Payment verified successfully.");
               state.cart = {}; renderProducts(); renderCart(); form.reset();
               $("locationStatus").textContent = "You can share your location to help us find the delivery address. Browser location permission is required.";
+              $("checkoutMessage").textContent = "Payment successful! Order reference: " + data.order_number + ". Thank you for shopping with us.";
+              closeCheckout();
+              toast("Payment successful! Order " + data.order_number + " confirmed.");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              setTimeout(() => {
+                const catalog = $("catalog");
+                if (catalog) catalog.scrollIntoView({ behavior: "smooth", block: "start" });
+              }, 250);
             } catch (verifyErr) {
               console.error("Payment verification failed:", verifyErr);
               $("checkoutMessage").textContent = "Payment may have been made, but verification is pending. Save your Razorpay payment ID: " + response.razorpay_payment_id + " and contact customer care.";
