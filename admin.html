@@ -136,7 +136,7 @@ async function loadProducts(){
  const {data,error}=await client.from("products").select("id,name,slug,description,price_paise,compare_price_paise,image_url,stock_quantity,is_active,display_order").order("display_order",{ascending:true});
  if(error){$("productList").innerHTML="";message("listMsg","Could not load products: "+error.message,"error");return}
  products=data||[];$("productCount").textContent=products.length+" products";
- const movementResult=await client.from("inventory_movements").select("id,product_id,order_id,movement_type,quantity_change,stock_after,note,created_at").order("created_at",{ascending:false}).limit(100);
+ const movementResult=await client.from("inventory_movements").select("id,product_id,order_id,movement_type,quantity_change,stock_after,note,created_at").order("created_at",{ascending:false}).limit(1000);
  inventoryMovements=movementResult.error?[]:(movementResult.data||[]);
  renderInventory();
  if(movementResult.error)message("listMsg","Stock levels loaded, but movement history could not be read: "+movementResult.error.message,"error");
@@ -160,7 +160,7 @@ function renderInventory(){
  if(alert){alert.classList.toggle("hidden",issues.length===0);alert.textContent=issues.length?("⚠ Inventory attention required: "+issues.length+" paid order(s) had a stock shortage at payment verification. Open the movement history and resolve these orders before fulfilment."):"";}
  const history=$("inventoryHistory");if(!history)return;
  if(!inventoryMovements.length){history.innerHTML='<p class="muted" style="padding:14px">No stock movements recorded yet. New verified paid orders will appear here automatically.</p>';return}
- history.innerHTML='<table><thead><tr><th>DATE</th><th>PRODUCT</th><th>MOVEMENT</th><th>CHANGE</th><th>STOCK AFTER</th><th>ORDER / NOTE</th></tr></thead><tbody>'+inventoryMovements.map(m=>{
+ history.innerHTML='<table><thead><tr><th>DATE</th><th>PRODUCT</th><th>MOVEMENT</th><th>CHANGE</th><th>STOCK AFTER</th><th>ORDER / NOTE</th></tr></thead><tbody>'+inventoryMovements.slice(0,100).map(m=>{
   const p=products.find(x=>x.id===m.product_id),type=String(m.movement_type||"adjustment"),labels={sale:"Sale / paid order",restock:"Restock",adjustment:"Manual adjustment",return:"Return",stock_issue:"STOCK ISSUE"};
   const change=type==="stock_issue"?"Review required":(Number(m.quantity_change)>0?"+" : "")+String(m.quantity_change)+" units";
   return '<tr><td>'+escapeHtml(formatDate(m.created_at))+'</td><td><strong>'+escapeHtml(p?.name||"Unknown product")+'</strong></td><td class="movement-'+escapeHtml(type)+'">'+escapeHtml(labels[type]||type)+'</td><td>'+escapeHtml(change)+'</td><td>'+Number(m.stock_after||0)+' units</td><td>'+escapeHtml(m.order_id?("Order "+m.order_id.slice(0,8)):m.note||"—")+(m.note?'<br><small class="muted">'+escapeHtml(m.note)+'</small>':"")+'</td></tr>';
