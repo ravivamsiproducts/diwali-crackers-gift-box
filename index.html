@@ -626,7 +626,15 @@
           items: entries.map(({product, quantity}) => ({ product_id: product.id, quantity }))
         };
         const { data, error } = await supabaseClient.functions.invoke("create-payment-order", { body: payload });
-        if (error) throw error;
+        if (error) {
+          let serverMessage = "";
+          try {
+            const response = error.context;
+            const details = response && typeof response.clone === "function" ? await response.clone().json() : null;
+            serverMessage = typeof details?.error === "string" ? details.error : "";
+          } catch (_) {}
+          throw new Error(serverMessage || error.message || "Could not start payment. Please check your checkout details and try again.");
+        }
         if (!data?.success) throw new Error(data?.error || "Could not start payment.");
         if (!(await loadRazorpay())) throw new Error("Razorpay checkout could not load. Please check your internet connection.");
         const options = {
@@ -664,10 +672,10 @@
       } catch (error) {
         console.error("Payment checkout failed:", error);
         const rawMessage = String(error?.message || "");
-        if (/non-2xx|functionshttp/i.test(rawMessage)) {
-          $("checkoutMessage").textContent = "Online payment setup is incomplete. Please contact the store team. No payment has been taken.";
+        if (/online payment is not configured/i.test(rawMessage)) {
+          $("checkoutMessage").textContent = rawMessage + " No payment has been taken.";
         } else {
-          $("checkoutMessage").textContent = rawMessage || "Could not start checkout. Please try again. No payment has been taken.";
+          $("checkoutMessage").textContent = rawMessage || "Could not start checkout. Please check your details and try again. No payment has been taken.";
         }
       } finally {
         button.disabled = false; button.textContent = "Continue to payment";
