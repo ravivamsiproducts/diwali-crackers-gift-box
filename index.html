@@ -654,9 +654,15 @@
               if (!verified?.success) throw new Error(verified?.error || "Payment verification failed.");
               state.cart = {}; renderProducts(); renderCart(); form.reset();
               $("locationStatus").textContent = "You can share your location to help us find the delivery address. Browser location permission is required.";
-              $("checkoutMessage").textContent = "Payment successful! Order reference: " + data.order_number + ". Thank you for shopping with us.";
-              closeCheckout();
-              toast("Payment successful! Order " + data.order_number + " confirmed.");
+              if (verified.stock_issue) {
+                $("checkoutMessage").textContent = "Payment successful! Order reference: " + data.order_number + ". Your payment is verified, but the requested stock needs store confirmation. Please contact customer care before fulfilment.";
+                closeCheckout();
+                toast("Payment verified. Store confirmation is needed for order " + data.order_number + ".");
+              } else {
+                $("checkoutMessage").textContent = "Payment successful! Order reference: " + data.order_number + ". Thank you for shopping with us.";
+                closeCheckout();
+                toast("Payment successful! Order " + data.order_number + " confirmed.");
+              }
               window.scrollTo({ top: 0, behavior: "smooth" });
               setTimeout(() => {
                 const catalog = $("catalog");
