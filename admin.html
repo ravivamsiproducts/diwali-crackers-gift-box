@@ -37,7 +37,7 @@
 <div class="field"><label for="productStock">Stock quantity *</label><input id="productStock" type="number" min="0" step="1" required value="10"></div>
 <div class="field"><label for="productOrder">Display order</label><input id="productOrder" type="number" min="0" step="1" value="1"></div>
 <div class="field"><label for="productActive">Visibility</label><select id="productActive"><option value="true">Active / visible</option><option value="false">Inactive / hidden</option></select></div>
-<div class="field wide"><label for="productImage">Product image (JPG, PNG or WebP, max 5 MB)</label><input id="productImage" type="file" accept="image/jpeg,image/png,image/webp"><small id="imageHint" class="muted">Choose an image to upload. Existing image stays if no new image is selected.</small></div>
+<div class="field wide"><label for="productImages">Product photos (select up to 4 images)</label><input id="productImages" type="file" accept="image/jpeg,image/png,image/webp" multiple><small id="imageHint" class="muted">Select 1–4 JPG, PNG or WebP images, up to 5 MB each. Selecting new photos replaces the current gallery; leave empty to keep existing photos.</small><div id="productImagePreview" class="admin-image-preview"></div></div>
 </div>
 <div class="toolbar"><button id="saveBtn" class="btn gold" type="submit">Save product</button><button id="resetBtn" class="btn outline" type="button">Clear form</button></div>
 <div id="productMsg" class="msg" role="status"></div>
@@ -56,7 +56,8 @@ const $=id=>document.getElementById(id);
 document.addEventListener("click",e=>{const btn=e.target.closest("[data-target]");if(!btn)return;document.querySelectorAll(".nav-item").forEach(n=>n.classList.toggle("active",n===btn));const target=$(btn.dataset.target);if(target)target.scrollIntoView({behavior:"smooth",block:"start"});});
 let currentUser=null,products=[],leads=[],orders=[];
 const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const formatPrice=p=>new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:2}).format(Number(p||0)/100);
+function getProductImages(value){if(typeof value!=="string"||!value.trim())return[];try{const parsed=JSON.parse(value);if(Array.isArray(parsed))return parsed.filter(x=>typeof x==="string"&&x.trim()).slice(0,4)}catch{}return[value.trim()]}
+ const formatPrice=p=>new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:2}).format(Number(p||0)/100);
 function message(id,text,kind=""){const el=$(id);el.textContent=text;el.className="msg "+kind}
 function slugify(s){return s.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
 async function checkAdmin(){
@@ -164,19 +165,20 @@ $("leadList").addEventListener("click",async e=>{
  message("leadMsg","Enquiry status and notes saved.","success");await loadLeads();
 });
 
-function clearForm(){$("productForm").reset();$("productId").value="";$("productComparePrice").value="";$("productStock").value="10";$("productOrder").value=String(Math.max(1,products.length+1));$("productActive").value="true";$("editorTitle").textContent="Add a product";$("saveBtn").textContent="Save product";$("imageHint").textContent="Choose an image to upload. Existing image stays if no new image is selected.";message("productMsg","")}
+function clearForm(){$("productForm").reset();$("productId").value="";$("productComparePrice").value="";$("productImagePreview").innerHTML="";$("productStock").value="10";$("productOrder").value=String(Math.max(1,products.length+1));$("productActive").value="true";$("editorTitle").textContent="Add a product";$("saveBtn").textContent="Save product";$("imageHint").textContent="Choose an image to upload. Existing image stays if no new image is selected.";message("productMsg","")}
 function editProduct(id){const p=products.find(x=>x.id===id);if(!p)return;$("productId").value=p.id;$("productName").value=p.name;$("productSlug").value=p.slug;$("productDescription").value=p.description||"";$("productPrice").value=(Number(p.price_paise)/100).toFixed(2);$("productComparePrice").value=p.compare_price_paise==null?"":(Number(p.compare_price_paise)/100).toFixed(2);$("productStock").value=p.stock_quantity??0;$("productOrder").value=p.display_order??0;$("productActive").value=String(!!p.is_active);$("productImage").value="";$("imageHint").textContent=p.image_url?"Current image is set. Choose a new file to replace it.":"No image currently set.";$("editorTitle").textContent="Edit product";$("saveBtn").textContent="Update product";message("productMsg","");$("productForm").scrollIntoView({behavior:"smooth",block:"start"})}
 async function uploadImage(file){
- if(!file)return null;
- if(!["image/jpeg","image/png","image/webp"].includes(file.type))throw new Error("Please select a JPG, PNG or WebP image.");
- if(file.size>5*1024*1024)throw new Error("Image is larger than 5 MB.");
- const ext=({ "image/jpeg":"jpg","image/png":"png","image/webp":"webp"})[file.type];
+ if(!["image/jpeg","image/png","image/webp"].includes(file.type))throw new Error("Please select JPG, PNG or WebP images.");
+ if(file.size>5*1024*1024)throw new Error("Each image must be 5 MB or smaller.");
+ const ext=({"image/jpeg":"jpg","image/png":"png","image/webp":"webp"})[file.type];
  const path="products/"+crypto.randomUUID()+"."+ext;
  const {error}=await client.storage.from("product-images").upload(path,file,{contentType:file.type,upsert:false});
  if(error)throw new Error("Image upload failed: "+error.message);
  return client.storage.from("product-images").getPublicUrl(path).data.publicUrl;
 }
+
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();message("loginMsg","Signing in…");const {data,error}=await client.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error){message("loginMsg",error.message,"error");return}const {data:allowed,error:checkError}=await client.rpc("is_admin");if(checkError||allowed!==true){await client.auth.signOut();message("loginMsg","Sign-in succeeded, but this account is not authorized as an active admin.","error");return}currentUser=data.user;showDashboard();await Promise.all([loadProducts(),loadLeads(),loadOrders()])});
+$("productImages").addEventListener("change",()=>{const files=Array.from($("productImages").files||[]);if(files.length>4){$("productImages").value="";$("productImagePreview").innerHTML="";message("productMsg","Please select no more than 4 product photos.","error");return}const urls=files.map(file=>URL.createObjectURL(file));$("productImagePreview").innerHTML=urls.map(url=>'<img src="'+url+'" alt="Selected product photo">').join("");if(files.length)$("imageHint").textContent=files.length+" photo(s) selected. Saving will replace the current gallery."});
 $("productName").addEventListener("input",()=>{if(!$("productId").value)$("productSlug").value=slugify($("productName").value)});
 $("productForm").addEventListener("submit",async e=>{
  e.preventDefault();if(!currentUser){message("productMsg","Please sign in first.","error");return}
@@ -184,7 +186,7 @@ $("productForm").addEventListener("submit",async e=>{
  if(!Number.isFinite(price)||price<=0||!Number.isInteger(stock)||stock<0||!Number.isInteger(order)||order<0||(comparePrice!==null&&(!Number.isFinite(comparePrice)||comparePrice<=price))){message("productMsg","Check the selling price, compare price (must be higher than selling price), stock and display order.","error");return}
  $("saveBtn").disabled=true;message("productMsg","Saving product…");
  try{
-  let image_url=null;const file=$("productImage").files[0];if(file)image_url=await uploadImage(file);
+  let image_url=null;const files=Array.from($("productImages").files||[]);if(files.length>4)throw new Error("Please select no more than 4 product photos.");if(files.length){const urls=[];for(const file of files)urls.push(await uploadImage(file));image_url=urls.length===1?urls[0]:JSON.stringify(urls)}
   const payload={name,slug,description:$("productDescription").value.trim(),price_paise:Math.round(price*100),compare_price_paise:comparePrice===null?null:Math.round(comparePrice*100),stock_quantity:stock,is_active:$("productActive").value==="true",display_order:order,updated_at:new Date().toISOString()};
   if(image_url)payload.image_url=image_url;
   let result=id?await client.from("products").update(payload).eq("id",id).select("id").single():await client.from("products").insert(payload).select("id").single();
