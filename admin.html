@@ -23,6 +23,7 @@
 .admin-main[data-view="payments"] #ordersAnchor .section-title .eyebrow{font-size:11px}
 
 @media(max-width:850px){.admin-layout{grid-template-columns:1fr}.sidebar{padding:12px;gap:6px}.side-brand{padding:8px 10px 12px}.side-label{display:none}.nav-list{display:flex;overflow-x:auto;gap:6px}.nav-item{width:auto;white-space:nowrap;padding:10px 12px}.admin-main{padding:18px 12px 40px}}@media(max-width:720px){.grid,.form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}.panel{padding:18px}.product{grid-template-columns:55px minmax(0,1fr)}.thumb{width:55px;height:55px}.product-actions{grid-column:1/-1;justify-content:flex-start}.top{padding:15px}.brand{font-size:16px}}
+.inventory-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 24px}.inventory-stat{border:1px solid #e1e8f2;border-radius:14px;padding:16px;background:linear-gradient(145deg,#fff,#f8fbff);display:grid;gap:6px}.inventory-stat span{font-size:12px;font-weight:800;color:#64748b}.inventory-stat strong{font-size:28px;line-height:1.1;color:#172033}.inventory-stat small{font-size:12px;color:#718096}.inventory-subhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:20px 0 12px}.inventory-subhead h3{margin:0;font-size:16px}.stock-badge{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:5px 9px;font-size:11px;font-weight:850;background:#e7f8ed;color:#166534}.stock-badge.low{background:#fff4d6;color:#8a5a00}.stock-badge.out{background:#ffe9e7;color:#b42318}.inventory-alert{margin:12px 0;padding:12px 14px;border:1px solid #fecaca;background:#fff1f2;color:#9f1239;border-radius:12px;font-size:13px;line-height:1.5}.inventory-history{overflow:auto;border:1px solid var(--line);border-radius:12px}.inventory-history table{width:100%;border-collapse:collapse;min-width:760px}.inventory-history th,.inventory-history td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}.inventory-history th{font-size:11px;letter-spacing:.05em;color:#64748b;background:#f8fafc}.inventory-history tr:last-child td{border-bottom:0}.movement-sale{color:#166534;font-weight:850}.movement-stock_issue{color:#b42318;font-weight:900}.movement-restock,.movement-return{color:#1d4ed8;font-weight:850}@media(max-width:850px){.inventory-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:420px){.inventory-stat{padding:12px}.inventory-stat strong{font-size:23px}.inventory-subhead{align-items:flex-start;flex-direction:column}}
 .orders-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:18px 0}.orders-toolbar input{flex:1;min-width:240px;border:1px solid #d7e0ed;border-radius:12px;padding:13px 16px;font:inherit}.orders-toolbar select{border:1px solid #d7e0ed;border-radius:12px;padding:13px 16px;background:#fff;font:inherit}.orders-table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff}.orders-table{width:100%;border-collapse:collapse;min-width:1050px}.orders-table th,.orders-table td{padding:16px 18px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}.orders-table th{color:#64748b;font-size:12px;letter-spacing:.06em;font-weight:800}.orders-table tr:last-child td{border-bottom:0}
 .orders-table tbody tr{--row-bg:#fff;--row-border:#e6eaf0;background:var(--row-bg);transition:background-color .18s ease,box-shadow .18s ease}
 .orders-table tbody tr td{background:var(--row-bg);border-bottom-color:var(--row-border)}
@@ -71,7 +72,20 @@
 <div class="toolbar"><button id="saveBtn" class="btn gold" type="submit">Save product</button><button id="resetBtn" class="btn outline" type="button">Clear form</button></div>
 <div id="productMsg" class="msg" role="status"></div>
 </form></section>
-<section id="inventoryAnchor" class="panel nav-target"><div class="section-title"><div><div class="eyebrow">Live catalogue & stock</div><h2>Products / Inventory</h2></div><span id="productCount" class="muted">—</span></div><div id="productList" class="products"><p class="muted">Loading products…</p></div><div id="listMsg" class="msg" role="status"></div></section>
+<section id="inventoryAnchor" class="panel nav-target">
+<div class="section-title"><div><div class="eyebrow">Stock control & movement history</div><h2>Inventory Overview</h2><p class="muted">Current stock is updated automatically after a verified successful payment. Pending or unpaid checkouts do not reduce stock.</p></div><span id="productCount" class="muted">—</span></div>
+<div id="inventoryStats" class="inventory-stats">
+<div class="inventory-stat"><span>Total products</span><strong id="invTotal">—</strong><small>Active catalogue items</small></div>
+<div class="inventory-stat"><span>Low stock</span><strong id="invLow">—</strong><small>5 units or fewer</small></div>
+<div class="inventory-stat"><span>Out of stock</span><strong id="invOut">—</strong><small>Needs replenishment</small></div>
+<div class="inventory-stat"><span>Units sold</span><strong id="invSold">—</strong><small>Verified paid orders</small></div>
+</div>
+<div id="inventoryAlert" class="inventory-alert hidden" role="status"></div>
+<div class="inventory-subhead"><h3>Product stock levels</h3><span class="muted">Available quantity now</span></div>
+<div id="productList" class="products"><p class="muted">Loading products…</p></div>
+<div class="inventory-subhead" style="margin-top:26px"><h3>Recent stock movements</h3><span class="muted">Latest 100 entries</span></div>
+<div id="inventoryHistory" class="inventory-history"><p class="muted">Loading inventory history…</p></div>
+<div id="listMsg" class="msg" role="status"></div></section>
 </div>
 </div></div></section>
 </main>
@@ -102,7 +116,7 @@ function setAdminView(view,button){
  window.scrollTo({top:0,behavior:"smooth"});
 }
 document.addEventListener("click",e=>{const btn=e.target.closest("[data-target]");if(!btn)return;setAdminView(({overviewAnchor:"dashboard",productsAnchor:"products",ordersAnchor:"orders",customersAnchor:"customers",inventoryAnchor:"inventory",paymentsAnchor:"payments"})[btn.dataset.target]||"dashboard",btn);});
-let currentUser=null,products=[],leads=[],orders=[];
+let currentUser=null,products=[],leads=[],orders=[],inventoryMovements=[];
 const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function getProductImages(value){if(typeof value!=="string"||!value.trim())return[];try{const parsed=JSON.parse(value);if(Array.isArray(parsed))return parsed.filter(x=>typeof x==="string"&&x.trim()).slice(0,4)}catch{}return[value.trim()]}
  const formatPrice=p=>new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:2}).format(Number(p||0)/100);
@@ -118,12 +132,39 @@ async function checkAdmin(){
 function showLogin(){$("loginPanel").classList.remove("hidden");$("dashboard").classList.add("hidden")}
 function showDashboard(){$("loginPanel").classList.add("hidden");$("dashboard").classList.remove("hidden");$("signedInAs").textContent="Signed in as "+(currentUser?.email||"admin");const first=document.querySelector('.nav-item[data-target="overviewAnchor"]');setAdminView("dashboard",first)}
 async function loadProducts(){
- $("productList").innerHTML='<p class="muted">Loading products…</p>';message("listMsg","");
+ $("productList").innerHTML='<p class="muted">Loading products…</p>';if($("inventoryHistory"))$("inventoryHistory").innerHTML='<p class="muted" style="padding:14px">Loading inventory history…</p>';message("listMsg","");
  const {data,error}=await client.from("products").select("id,name,slug,description,price_paise,compare_price_paise,image_url,stock_quantity,is_active,display_order").order("display_order",{ascending:true});
  if(error){$("productList").innerHTML="";message("listMsg","Could not load products: "+error.message,"error");return}
  products=data||[];$("productCount").textContent=products.length+" products";
+ const movementResult=await client.from("inventory_movements").select("id,product_id,order_id,movement_type,quantity_change,stock_after,note,created_at").order("created_at",{ascending:false}).limit(100);
+ inventoryMovements=movementResult.error?[]:(movementResult.data||[]);
+ renderInventory();
+ if(movementResult.error)message("listMsg","Stock levels loaded, but movement history could not be read: "+movementResult.error.message,"error");
  if(!products.length){$("productList").innerHTML='<p class="muted">No products yet. Add your first product using the form.</p>';return}
- $("productList").innerHTML=products.map(p=>'<article class="product"><div class="thumb">'+(p.image_url?'<img src="'+escapeHtml(p.image_url)+'" alt="">':"🎁")+'</div><div><h3>'+escapeHtml(p.name)+'</h3><small>'+formatPrice(p.price_paise)+(Number(p.compare_price_paise)>Number(p.price_paise)?' · <span style="color:#dc2626;text-decoration:line-through">'+formatPrice(p.compare_price_paise)+'</span> · '+Math.round((1-Number(p.price_paise)/Number(p.compare_price_paise))*100)+'% off':'')+' · Stock '+Number(p.stock_quantity||0)+'<br>'+escapeHtml(p.slug)+'</small><br><span class="status '+(p.is_active?"":"off")+'">'+(p.is_active?"ACTIVE":"HIDDEN")+'</span></div><div class="product-actions"><button class="btn outline" data-edit="'+escapeHtml(p.id)+'">Edit</button><button class="btn '+(p.is_active?"outline":"gold")+'" data-toggle="'+escapeHtml(p.id)+'">'+(p.is_active?"Hide":"Activate")+'</button></div></article>').join("");
+ const soldByProduct=new Map();
+ inventoryMovements.filter(m=>m.movement_type==="sale").forEach(m=>soldByProduct.set(m.product_id,(soldByProduct.get(m.product_id)||0)+Math.abs(Number(m.quantity_change)||0)));
+ $("productList").innerHTML=products.map(p=>{
+  const stock=Number(p.stock_quantity||0),stockClass=stock===0?"out":stock<=5?"low":"";
+  return '<article class="product"><div class="thumb">'+(p.image_url?'<img src="'+escapeHtml(p.image_url)+'" alt="">':"🎁")+'</div><div><h3>'+escapeHtml(p.name)+'</h3><small>'+formatPrice(p.price_paise)+(Number(p.compare_price_paise)>Number(p.price_paise)?' · <span style="color:#dc2626;text-decoration:line-through">'+formatPrice(p.compare_price_paise)+'</span> · '+Math.round((1-Number(p.price_paise)/Number(p.compare_price_paise))*100)+'% off':'')+'<br>'+escapeHtml(p.slug)+'<br>Sold via paid orders: '+(soldByProduct.get(p.id)||0)+' units</small><br><span class="stock-badge '+stockClass+'">'+(stock===0?"● OUT OF STOCK":stock<=5?"● LOW STOCK · ":"● IN STOCK · ")+(stock===0?"":stock+" units")+'</span> <span class="status '+(p.is_active?"":"off")+'">'+(p.is_active?"ACTIVE":"HIDDEN")+'</span></div><div class="product-actions"><button class="btn outline" data-edit="'+escapeHtml(p.id)+'">Edit</button><button class="btn '+(p.is_active?"outline":"gold")+'" data-toggle="'+escapeHtml(p.id)+'">'+(p.is_active?"Hide":"Activate")+'</button></div></article>';
+ }).join("");
+}
+function renderInventory(){
+ const active=products.filter(p=>p.is_active),low=active.filter(p=>Number(p.stock_quantity)>0&&Number(p.stock_quantity)<=5),out=active.filter(p=>Number(p.stock_quantity)<=0);
+ const sold=inventoryMovements.filter(m=>m.movement_type==="sale").reduce((n,m)=>n+Math.abs(Number(m.quantity_change)||0),0);
+ if($("invTotal"))$("invTotal").textContent=String(active.length);
+ if($("invLow"))$("invLow").textContent=String(low.length);
+ if($("invOut"))$("invOut").textContent=String(out.length);
+ if($("invSold"))$("invSold").textContent=String(sold);
+ const issues=inventoryMovements.filter(m=>m.movement_type==="stock_issue");
+ const alert=$("inventoryAlert");
+ if(alert){alert.classList.toggle("hidden",issues.length===0);alert.textContent=issues.length?("⚠ Inventory attention required: "+issues.length+" paid order(s) had a stock shortage at payment verification. Open the movement history and resolve these orders before fulfilment."):"";}
+ const history=$("inventoryHistory");if(!history)return;
+ if(!inventoryMovements.length){history.innerHTML='<p class="muted" style="padding:14px">No stock movements recorded yet. New verified paid orders will appear here automatically.</p>';return}
+ history.innerHTML='<table><thead><tr><th>DATE</th><th>PRODUCT</th><th>MOVEMENT</th><th>CHANGE</th><th>STOCK AFTER</th><th>ORDER / NOTE</th></tr></thead><tbody>'+inventoryMovements.map(m=>{
+  const p=products.find(x=>x.id===m.product_id),type=String(m.movement_type||"adjustment"),labels={sale:"Sale / paid order",restock:"Restock",adjustment:"Manual adjustment",return:"Return",stock_issue:"STOCK ISSUE"};
+  const change=type==="stock_issue"?"Review required":(Number(m.quantity_change)>0?"+" : "")+String(m.quantity_change)+" units";
+  return '<tr><td>'+escapeHtml(formatDate(m.created_at))+'</td><td><strong>'+escapeHtml(p?.name||"Unknown product")+'</strong></td><td class="movement-'+escapeHtml(type)+'">'+escapeHtml(labels[type]||type)+'</td><td>'+escapeHtml(change)+'</td><td>'+Number(m.stock_after||0)+' units</td><td>'+escapeHtml(m.order_id?("Order "+m.order_id.slice(0,8)):m.note||"—")+(m.note?'<br><small class="muted">'+escapeHtml(m.note)+'</small>':"")+'</td></tr>';
+ }).join("")+'</tbody></table>';
 }
 
 const orderStatuses=["pending_delivery_review","paid","processing","dispatched","delivered","cancelled","rejected","payment_failed"];
