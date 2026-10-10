@@ -155,7 +155,7 @@ async function loadProducts(){
  $("productList").innerHTML='<p class="muted">Loading products…</p>';if($("inventoryHistory"))$("inventoryHistory").innerHTML='<p class="muted" style="padding:14px">Loading inventory history…</p>';message("listMsg","");
  const {data,error}=await client.from("products").select("id,name,slug,description,price_paise,compare_price_paise,image_url,stock_quantity,is_active,display_order").order("display_order",{ascending:true});
  if(error){$("productList").innerHTML="";message("listMsg","Could not load products: "+error.message,"error");return}
- products=data||[];$("productCount").textContent=products.length+" products";
+ products=(data||[]).sort((a,b)=>Number(!!b.is_active)-Number(!!a.is_active)||Number(a.display_order||0)-Number(b.display_order||0)||String(a.name||"").localeCompare(String(b.name||""));$("productCount").textContent=products.length+" products";
  const movementResult=await client.from("inventory_movements").select("id,product_id,order_id,movement_type,quantity_change,stock_after,note,created_at").order("created_at",{ascending:false}).limit(1000);
  inventoryMovements=movementResult.error?[]:(movementResult.data||[]);
  renderInventory();
