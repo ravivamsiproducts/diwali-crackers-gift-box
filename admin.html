@@ -32,7 +32,8 @@
 <div class="field"><label for="productSlug">URL slug *</label><input id="productSlug" maxlength="160" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" placeholder="diwali-gift-box-classic"><small class="muted">Lowercase letters, numbers and hyphens only.</small></div>
 <div class="field"><label for="productDescription">Description</label><textarea id="productDescription" maxlength="1000" placeholder="A short product description"></textarea></div>
 <div class="form-grid">
-<div class="field"><label for="productPrice">Price in ₹ *</label><input id="productPrice" type="number" min="0.01" step="0.01" required placeholder="849"></div>
+<div class="field"><label for="productPrice">Selling price in ₹ *</label><input id="productPrice" type="number" min="0.01" step="0.01" required placeholder="699"></div>
+ <div class="field"><label for="productComparePrice">Compare price in ₹</label><input id="productComparePrice" type="number" min="0" step="0.01" placeholder="849"><small class="muted">Optional original price. Must be higher than the selling price to show a discount.</small></div>
 <div class="field"><label for="productStock">Stock quantity *</label><input id="productStock" type="number" min="0" step="1" required value="10"></div>
 <div class="field"><label for="productOrder">Display order</label><input id="productOrder" type="number" min="0" step="1" value="1"></div>
 <div class="field"><label for="productActive">Visibility</label><select id="productActive"><option value="true">Active / visible</option><option value="false">Inactive / hidden</option></select></div>
@@ -69,11 +70,11 @@ function showLogin(){$("loginPanel").classList.remove("hidden");$("dashboard").c
 function showDashboard(){$("loginPanel").classList.add("hidden");$("dashboard").classList.remove("hidden");$("signedInAs").textContent="Signed in as "+(currentUser?.email||"admin")}
 async function loadProducts(){
  $("productList").innerHTML='<p class="muted">Loading products…</p>';message("listMsg","");
- const {data,error}=await client.from("products").select("id,name,slug,description,price_paise,image_url,stock_quantity,is_active,display_order").order("display_order",{ascending:true});
+ const {data,error}=await client.from("products").select("id,name,slug,description,price_paise,compare_price_paise,image_url,stock_quantity,is_active,display_order").order("display_order",{ascending:true});
  if(error){$("productList").innerHTML="";message("listMsg","Could not load products: "+error.message,"error");return}
  products=data||[];$("productCount").textContent=products.length+" products";
  if(!products.length){$("productList").innerHTML='<p class="muted">No products yet. Add your first product using the form.</p>';return}
- $("productList").innerHTML=products.map(p=>'<article class="product"><div class="thumb">'+(p.image_url?'<img src="'+escapeHtml(p.image_url)+'" alt="">':"🎁")+'</div><div><h3>'+escapeHtml(p.name)+'</h3><small>'+formatPrice(p.price_paise)+' · Stock '+Number(p.stock_quantity||0)+'<br>'+escapeHtml(p.slug)+'</small><br><span class="status '+(p.is_active?"":"off")+'">'+(p.is_active?"ACTIVE":"HIDDEN")+'</span></div><div class="product-actions"><button class="btn outline" data-edit="'+escapeHtml(p.id)+'">Edit</button><button class="btn '+(p.is_active?"outline":"gold")+'" data-toggle="'+escapeHtml(p.id)+'">'+(p.is_active?"Hide":"Activate")+'</button></div></article>').join("");
+ $("productList").innerHTML=products.map(p=>'<article class="product"><div class="thumb">'+(p.image_url?'<img src="'+escapeHtml(p.image_url)+'" alt="">':"🎁")+'</div><div><h3>'+escapeHtml(p.name)+'</h3><small>'+formatPrice(p.price_paise)+(Number(p.compare_price_paise)>Number(p.price_paise)?' · <span style="color:#dc2626;text-decoration:line-through">'+formatPrice(p.compare_price_paise)+'</span> · '+Math.round((1-Number(p.price_paise)/Number(p.compare_price_paise))*100)+'% off':'')+' · Stock '+Number(p.stock_quantity||0)+'<br>'+escapeHtml(p.slug)+'</small><br><span class="status '+(p.is_active?"":"off")+'">'+(p.is_active?"ACTIVE":"HIDDEN")+'</span></div><div class="product-actions"><button class="btn outline" data-edit="'+escapeHtml(p.id)+'">Edit</button><button class="btn '+(p.is_active?"outline":"gold")+'" data-toggle="'+escapeHtml(p.id)+'">'+(p.is_active?"Hide":"Activate")+'</button></div></article>').join("");
 }
 
 const orderStatuses=["pending_delivery_review","paid","processing","dispatched","delivered","cancelled","rejected","payment_failed"];
@@ -163,8 +164,8 @@ $("leadList").addEventListener("click",async e=>{
  message("leadMsg","Enquiry status and notes saved.","success");await loadLeads();
 });
 
-function clearForm(){$("productForm").reset();$("productId").value="";$("productStock").value="10";$("productOrder").value=String(Math.max(1,products.length+1));$("productActive").value="true";$("editorTitle").textContent="Add a product";$("saveBtn").textContent="Save product";$("imageHint").textContent="Choose an image to upload. Existing image stays if no new image is selected.";message("productMsg","")}
-function editProduct(id){const p=products.find(x=>x.id===id);if(!p)return;$("productId").value=p.id;$("productName").value=p.name;$("productSlug").value=p.slug;$("productDescription").value=p.description||"";$("productPrice").value=(Number(p.price_paise)/100).toFixed(2);$("productStock").value=p.stock_quantity??0;$("productOrder").value=p.display_order??0;$("productActive").value=String(!!p.is_active);$("productImage").value="";$("imageHint").textContent=p.image_url?"Current image is set. Choose a new file to replace it.":"No image currently set.";$("editorTitle").textContent="Edit product";$("saveBtn").textContent="Update product";message("productMsg","");$("productForm").scrollIntoView({behavior:"smooth",block:"start"})}
+function clearForm(){$("productForm").reset();$("productId").value="";$("productComparePrice").value="";$("productStock").value="10";$("productOrder").value=String(Math.max(1,products.length+1));$("productActive").value="true";$("editorTitle").textContent="Add a product";$("saveBtn").textContent="Save product";$("imageHint").textContent="Choose an image to upload. Existing image stays if no new image is selected.";message("productMsg","")}
+function editProduct(id){const p=products.find(x=>x.id===id);if(!p)return;$("productId").value=p.id;$("productName").value=p.name;$("productSlug").value=p.slug;$("productDescription").value=p.description||"";$("productPrice").value=(Number(p.price_paise)/100).toFixed(2);$("productComparePrice").value=p.compare_price_paise==null?"":(Number(p.compare_price_paise)/100).toFixed(2);$("productStock").value=p.stock_quantity??0;$("productOrder").value=p.display_order??0;$("productActive").value=String(!!p.is_active);$("productImage").value="";$("imageHint").textContent=p.image_url?"Current image is set. Choose a new file to replace it.":"No image currently set.";$("editorTitle").textContent="Edit product";$("saveBtn").textContent="Update product";message("productMsg","");$("productForm").scrollIntoView({behavior:"smooth",block:"start"})}
 async function uploadImage(file){
  if(!file)return null;
  if(!["image/jpeg","image/png","image/webp"].includes(file.type))throw new Error("Please select a JPG, PNG or WebP image.");
@@ -179,12 +180,12 @@ $("loginForm").addEventListener("submit",async e=>{e.preventDefault();message("l
 $("productName").addEventListener("input",()=>{if(!$("productId").value)$("productSlug").value=slugify($("productName").value)});
 $("productForm").addEventListener("submit",async e=>{
  e.preventDefault();if(!currentUser){message("productMsg","Please sign in first.","error");return}
- const id=$("productId").value||null, name=$("productName").value.trim(),slug=$("productSlug").value.trim(),price=Number($("productPrice").value),stock=Number($("productStock").value),order=Number($("productOrder").value);
- if(!Number.isFinite(price)||price<=0||!Number.isInteger(stock)||stock<0||!Number.isInteger(order)||order<0){message("productMsg","Check the price, stock and display order values.","error");return}
+ const id=$("productId").value||null, name=$("productName").value.trim(),slug=$("productSlug").value.trim(),price=Number($("productPrice").value),compareRaw=$("productComparePrice").value.trim(),comparePrice=compareRaw===""?null:Number(compareRaw),stock=Number($("productStock").value),order=Number($("productOrder").value);
+ if(!Number.isFinite(price)||price<=0||!Number.isInteger(stock)||stock<0||!Number.isInteger(order)||order<0||(comparePrice!==null&&(!Number.isFinite(comparePrice)||comparePrice<=price))){message("productMsg","Check the selling price, compare price (must be higher than selling price), stock and display order.","error");return}
  $("saveBtn").disabled=true;message("productMsg","Saving product…");
  try{
   let image_url=null;const file=$("productImage").files[0];if(file)image_url=await uploadImage(file);
-  const payload={name,slug,description:$("productDescription").value.trim(),price_paise:Math.round(price*100),stock_quantity:stock,is_active:$("productActive").value==="true",display_order:order,updated_at:new Date().toISOString()};
+  const payload={name,slug,description:$("productDescription").value.trim(),price_paise:Math.round(price*100),compare_price_paise:comparePrice===null?null:Math.round(comparePrice*100),stock_quantity:stock,is_active:$("productActive").value==="true",display_order:order,updated_at:new Date().toISOString()};
   if(image_url)payload.image_url=image_url;
   let result=id?await client.from("products").update(payload).eq("id",id).select("id").single():await client.from("products").insert(payload).select("id").single();
   if(result.error)throw result.error;
