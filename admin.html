@@ -23,7 +23,7 @@
 .admin-main[data-view="payments"] #ordersAnchor .section-title .eyebrow{font-size:11px}
 
 
-.inventory-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 24px}.inventory-stat{border:1px solid #e1e8f2;border-radius:14px;padding:16px;background:linear-gradient(145deg,#fff,#f8fbff);display:grid;gap:6px}.inventory-stat span{font-size:12px;font-weight:800;color:#64748b}.inventory-stat strong{font-size:28px;line-height:1.1;color:#172033}.inventory-stat small{font-size:12px;color:#718096}.inventory-subhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:20px 0 12px}.inventory-subhead h3{margin:0;font-size:16px}.stock-badge{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:5px 9px;font-size:11px;font-weight:850;background:#e7f8ed;color:#166534}.stock-badge.low{background:#fff4d6;color:#8a5a00}.stock-badge.out{background:#ffe9e7;color:#b42318}.inventory-alert{margin:12px 0;padding:12px 14px;border:1px solid #fecaca;background:#fff1f2;color:#9f1239;border-radius:12px;font-size:13px;line-height:1.5}.inventory-history{overflow:auto;border:1px solid var(--line);border-radius:12px}.inventory-history table{width:100%;border-collapse:collapse;min-width:760px}.inventory-history th,.inventory-history td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}.inventory-history th{font-size:11px;letter-spacing:.05em;color:#64748b;background:#f8fafc}.inventory-history tr:last-child td{border-bottom:0}.movement-sale{color:#166534;font-weight:850}.movement-stock_issue{color:#b42318;font-weight:900}.movement-restock,.movement-return{color:#1d4ed8;font-weight:850}
+.inventory-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0 24px}.inventory-stat{border:1px solid #e1e8f2;border-radius:14px;padding:16px;background:linear-gradient(145deg,#fff,#f8fbff);display:grid;gap:6px}.inventory-stat span{font-size:12px;font-weight:800;color:#64748b}.inventory-stat strong{font-size:28px;line-height:1.1;color:#172033}.inventory-stat small{font-size:12px;color:#718096}.inventory-subhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:20px 0 12px}.inventory-subhead h3{margin:0;font-size:16px}.stock-badge{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:5px 9px;font-size:11px;font-weight:850;background:#e7f8ed;color:#166534}.stock-badge.low{background:#fff4d6;color:#8a5a00}.stock-badge.out{background:#ffe9e7;color:#b42318}.inventory-alert{margin:12px 0;padding:12px 14px;border:1px solid #fecaca;background:#fff1f2;color:#9f1239;border-radius:12px;font-size:13px;line-height:1.5}.inventory-history{overflow:auto;border:1px solid var(--line);border-radius:12px}.inventory-history table{width:100%;border-collapse:collapse;min-width:760px}.inventory-history th,.inventory-history td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}.inventory-history th{font-size:11px;letter-spacing:.05em;color:#64748b;background:#f8fafc}.inventory-history tr:last-child td{border-bottom:0}.movement-sale{color:#166534;font-weight:850}.movement-stock_issue{color:#b42318;font-weight:900}.movement-restock,.movement-return{color:#1d4ed8;font-weight:850}
 .orders-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:18px 0}.orders-toolbar input{flex:1;min-width:240px;border:1px solid #d7e0ed;border-radius:12px;padding:13px 16px;font:inherit}.orders-toolbar select{border:1px solid #d7e0ed;border-radius:12px;padding:13px 16px;background:#fff;font:inherit}.orders-table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff}.orders-table{width:100%;border-collapse:collapse;min-width:1050px}.orders-table th,.orders-table td{padding:16px 18px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}.orders-table th{color:#64748b;font-size:12px;letter-spacing:.06em;font-weight:800}.orders-table tr:last-child td{border-bottom:0}
 .orders-table tbody tr{--row-bg:#fff;--row-border:#e6eaf0;background:var(--row-bg);transition:background-color .18s ease,box-shadow .18s ease}
 .orders-table tbody tr td{background:var(--row-bg);border-bottom-color:var(--row-border)}
@@ -54,7 +54,7 @@
  .admin-main{min-width:0}
  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
- .inventory-stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .inventory-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 </style>
 </head>
@@ -95,10 +95,12 @@
 <section id="inventoryAnchor" class="panel nav-target">
 <div class="section-title"><div><div class="eyebrow">Stock control & movement history</div><h2>Inventory Overview</h2><p class="muted">Current stock is updated automatically after a verified successful payment. Pending or unpaid checkouts do not reduce stock.</p></div><span id="productCount" class="muted">—</span></div>
 <div id="inventoryStats" class="inventory-stats">
-<div class="inventory-stat"><span>Total products</span><strong id="invTotal">—</strong><small>Active catalogue items</small></div>
-<div class="inventory-stat"><span>Low stock</span><strong id="invLow">—</strong><small>5 units or fewer</small></div>
-<div class="inventory-stat"><span>Out of stock</span><strong id="invOut">—</strong><small>Needs replenishment</small></div>
-<div class="inventory-stat"><span>Units sold</span><strong id="invSold">—</strong><small>Verified paid orders</small></div>
+<div class="inventory-stat"><span>Live products</span><strong id="invLive">—</strong><small>Active and visible in store</small></div>
+<div class="inventory-stat"><span>Total products</span><strong id="invTotal">—</strong><small>Active + hidden products</small></div>
+<div class="inventory-stat"><span>Units sold</span><strong id="invSold">—</strong><small>Recorded sale movements</small></div>
+<div class="inventory-stat"><span>Stock available</span><strong id="invAvailable">—</strong><small>Units across live products</small></div>
+<div class="inventory-stat"><span>Low stock</span><strong id="invLow">—</strong><small>1–5 units remaining</small></div>
+<div class="inventory-stat"><span>Out of stock</span><strong id="invOut">—</strong><small>Live products needing restock</small></div>
 </div>
 <div id="inventoryAlert" class="inventory-alert hidden" role="status"></div>
 <div class="inventory-subhead"><h3>Product stock levels</h3><span class="muted">Available quantity now</span></div>
@@ -170,8 +172,11 @@ async function loadProducts(){
 }
 function renderInventory(){
  const active=products.filter(p=>p.is_active),low=active.filter(p=>Number(p.stock_quantity)>0&&Number(p.stock_quantity)<=5),out=active.filter(p=>Number(p.stock_quantity)<=0);
+ const available=active.reduce((n,p)=>n+Math.max(0,Number(p.stock_quantity)||0),0);
  const sold=inventoryMovements.filter(m=>m.movement_type==="sale").reduce((n,m)=>n+Math.abs(Number(m.quantity_change)||0),0);
- if($("invTotal"))$("invTotal").textContent=String(active.length);
+ if($("invLive"))$("invLive").textContent=String(active.length);
+ if($("invTotal"))$("invTotal").textContent=String(products.length);
+ if($("invAvailable"))$("invAvailable").textContent=String(available);
  if($("invLow"))$("invLow").textContent=String(low.length);
  if($("invOut"))$("invOut").textContent=String(out.length);
  if($("invSold"))$("invSold").textContent=String(sold);
