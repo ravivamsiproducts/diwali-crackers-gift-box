@@ -15,7 +15,9 @@
 .admin-main[data-view="dashboard"] .dashboard-title,.admin-main[data-view="dashboard"] .notice{display:block}
 .admin-main[data-view]:not([data-view="dashboard"]) .dashboard-title,.admin-main[data-view]:not([data-view="dashboard"]) .dashboard-head>.notice{display:none!important}
 .admin-main[data-view="products"] #inventoryAnchor{display:none!important}
-.admin-main[data-view="inventory"] #productsAnchor>section.panel:first-child{display:none!important}
+.admin-main[data-view="inventory"] #productsAnchor{grid-template-columns:minmax(0,1fr)}
+.admin-main[data-view="inventory"] #productsAnchor>section.panel:first-child{display:block!important;grid-column:1/-1}
+.admin-main[data-view="inventory"] #inventoryAnchor{grid-column:1/-1}
 .admin-main[data-view="inventory"] #productsAnchor{display:block!important}
 .admin-main[data-view="inventory"] #inventoryAnchor{display:block!important}
 .admin-main[data-view="inventory"] #productsAnchor>.panel{width:100%}
@@ -167,7 +169,7 @@ async function loadProducts(){
  inventoryMovements.filter(m=>m.movement_type==="sale").forEach(m=>soldByProduct.set(m.product_id,(soldByProduct.get(m.product_id)||0)+Math.abs(Number(m.quantity_change)||0)));
  $("productList").innerHTML=products.map(p=>{
   const stock=Number(p.stock_quantity||0),stockClass=stock===0?"out":stock<=5?"low":"";
-  return '<article class="product"><div class="thumb">'+(p.image_url?'<img src="'+escapeHtml(p.image_url)+'" alt="">':"🎁")+'</div><div><h3>'+escapeHtml(p.name)+'</h3><small>'+formatPrice(p.price_paise)+(Number(p.compare_price_paise)>Number(p.price_paise)?' · <span style="color:#dc2626;text-decoration:line-through">'+formatPrice(p.compare_price_paise)+'</span> · '+Math.round((1-Number(p.price_paise)/Number(p.compare_price_paise))*100)+'% off':'')+'<br>'+escapeHtml(p.slug)+'<br>Sold via paid orders: '+(soldByProduct.get(p.id)||0)+' units</small><br><span class="stock-badge '+stockClass+'">'+(stock===0?"● OUT OF STOCK":stock<=5?"● LOW STOCK · ":"● IN STOCK · ")+(stock===0?"":stock+" units")+'</span> <span class="status '+(p.is_active?"":"off")+'">'+(p.is_active?"ACTIVE":"HIDDEN")+'</span></div><div class="product-actions"><button class="btn outline" data-edit="'+escapeHtml(p.id)+'">Edit</button><button class="btn '+(p.is_active?"outline":"gold")+'" data-toggle="'+escapeHtml(p.id)+'">'+(p.is_active?"Hide":"Activate")+'</button></div></article>';
+  return '<article class="product"><div class="thumb">'+(p.image_url?'<img src="'+escapeHtml(p.image_url)+'" alt="">':"🎁")+'</div><div><h3>'+escapeHtml(p.name)+'</h3><small>'+formatPrice(p.price_paise)+(Number(p.compare_price_paise)>Number(p.price_paise)?' · <span style="color:#dc2626;text-decoration:line-through">'+formatPrice(p.compare_price_paise)+'</span> · '+Math.round((1-Number(p.price_paise)/Number(p.compare_price_paise))*100)+'% off':'')+'<br>'+escapeHtml(p.slug)+'<br>Sold via paid orders: '+(soldByProduct.get(p.id)||0)+' units</small><br><span class="stock-badge '+stockClass+'">'+(stock===0?"● OUT OF STOCK":stock<=5?"● LOW STOCK · ":"● IN STOCK · ")+(stock===0?"":stock+" units")+'</span> <span class="status '+(p.is_active?"":"off")+'">'+(p.is_active?"ACTIVE":"HIDDEN")+'</span></div><div class="product-actions"><button class="btn outline" data-edit="'+escapeHtml(p.id)+'">Edit</button><button class="btn '+(p.is_active?"outline":"gold")+'" data-toggle="'+escapeHtml(p.id)+'">'+(p.is_active?"Hide":"Activate")+'</button><button class="btn outline" style="color:#b42318;border-color:#fecaca" data-delete="'+escapeHtml(p.id)+'">Delete</button></div></article>';
  }).join("");
 }
 function renderInventory(){
@@ -282,7 +284,7 @@ $("leadList").addEventListener("click",async e=>{
 });
 
 function clearForm(){$("productForm").reset();$("productId").value="";$("productComparePrice").value="";$("productImagePreview").innerHTML="";$("productStock").value="10";$("productOrder").value=String(Math.max(1,products.length+1));$("productActive").value="true";$("editorTitle").textContent="Add a product";$("saveBtn").textContent="Save product";$("imageHint").textContent="Choose an image to upload. Existing image stays if no new image is selected.";message("productMsg","")}
-function editProduct(id){const p=products.find(x=>x.id===id);if(!p)return;$("productId").value=p.id;$("productName").value=p.name;$("productSlug").value=p.slug;$("productDescription").value=p.description||"";$("productPrice").value=(Number(p.price_paise)/100).toFixed(2);$("productComparePrice").value=p.compare_price_paise==null?"":(Number(p.compare_price_paise)/100).toFixed(2);$("productStock").value=p.stock_quantity??0;$("productOrder").value=p.display_order??0;$("productActive").value=String(!!p.is_active);$("productImage").value="";$("imageHint").textContent=p.image_url?"Current image is set. Choose a new file to replace it.":"No image currently set.";$("editorTitle").textContent="Edit product";$("saveBtn").textContent="Update product";message("productMsg","");$("productForm").scrollIntoView({behavior:"smooth",block:"start"})}
+function editProduct(id){const p=products.find(x=>x.id===id);if(!p)return;$("productId").value=p.id;$("productName").value=p.name;$("productSlug").value=p.slug;$("productDescription").value=p.description||"";$("productPrice").value=(Number(p.price_paise)/100).toFixed(2);$("productComparePrice").value=p.compare_price_paise==null?"":(Number(p.compare_price_paise)/100).toFixed(2);$("productStock").value=p.stock_quantity??0;$("productOrder").value=p.display_order??0;$("productActive").value=String(!!p.is_active);$("productImages").value="";$("imageHint").textContent=p.image_url?"Current image is set. Choose a new file to replace it.":"No image currently set.";$("editorTitle").textContent="Edit product";$("saveBtn").textContent="Update product";message("productMsg","");$("productForm").scrollIntoView({behavior:"smooth",block:"start"})}
 async function uploadImage(file){
  if(!["image/jpeg","image/png","image/webp"].includes(file.type))throw new Error("Please select JPG, PNG or WebP images.");
  if(file.size>5*1024*1024)throw new Error("Each image must be 5 MB or smaller.");
@@ -312,10 +314,21 @@ $("productForm").addEventListener("submit",async e=>{
 });
 $("productList").addEventListener("click",async e=>{
  const edit=e.target.closest("[data-edit]");if(edit){editProduct(edit.dataset.edit);return}
- const toggle=e.target.closest("[data-toggle]");if(!toggle)return;
- const p=products.find(x=>x.id===toggle.dataset.toggle);if(!p)return;
- toggle.disabled=true;const {error}=await client.from("products").update({is_active:!p.is_active,updated_at:new Date().toISOString()}).eq("id",p.id);
- if(error)message("listMsg","Could not update product: "+error.message,"error");else message("listMsg",p.name+(p.is_active?" hidden from storefront.":" is now active."),"success");
+ const toggle=e.target.closest("[data-toggle]");
+ if(toggle){
+  const p=products.find(x=>x.id===toggle.dataset.toggle);if(!p)return;
+  toggle.disabled=true;const {error}=await client.from("products").update({is_active:!p.is_active,updated_at:new Date().toISOString()}).eq("id",p.id);
+  if(error)message("listMsg","Could not update product: "+error.message,"error");else message("listMsg",p.name+(p.is_active?" hidden from storefront.":" is now active."),"success");
+  await loadProducts();return;
+ }
+ const del=e.target.closest("[data-delete]");if(!del)return;
+ const p=products.find(x=>x.id===del.dataset.delete);if(!p)return;
+ if(!confirm('Delete "'+p.name+'" permanently? This cannot be undone. If it is linked to existing orders, deletion may be blocked to preserve order history.'))return;
+ del.disabled=true;message("listMsg","Deleting product…");
+ const {error}=await client.from("products").delete().eq("id",p.id);
+ if(error){message("listMsg","Could not delete product: "+error.message+" Existing order or inventory history links may prevent deletion.","error");del.disabled=false;return}
+ message("listMsg",p.name+" deleted successfully.","success");
+ if($("productId").value===p.id)clearForm();
  await loadProducts();
 });
 $("resetBtn").addEventListener("click",clearForm);$("refreshBtn").addEventListener("click",async()=>{await Promise.all([loadProducts(),loadLeads(),loadOrders()])});$("logoutBtn").addEventListener("click",async()=>{await client.auth.signOut();currentUser=null;showLogin();message("loginMsg","You have signed out.","success")});
