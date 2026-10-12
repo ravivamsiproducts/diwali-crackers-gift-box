@@ -258,7 +258,7 @@ $("orderList").addEventListener("click",e=>{
   const customerPhone=phone.length===10?"91"+phone:phone.length===12&&phone.startsWith("91")?phone:"";
   if(!customerPhone){message("orderMsg","Customer phone number is missing or invalid. Check the order details before sending.","error");return}
   const lines=(o._items||[]).map(i=>i.product_name+" × "+Number(i.quantity)+" — "+formatPrice(i.unit_price_paise)).join("\n")||"Product details unavailable";
-  const messageText="Hello "+(o.customer_name||"Customer")+",\\n\\nThank you for your order with Diwali Crackers Gift Box!\\n\\nOrder ID: "+o.order_number+"\\nOrder details: "+lines+"\\nTotal paid: "+formatPrice(o.total_paise)+"\\nPayment status: CONFIRMED\\nPayment method: "+(pay.gateway||"Razorpay")+"\\n\\nWe will share delivery updates when available.\\nSupport WhatsApp: 9030696155\\n\\nThank you,\\nDiwali Crackers Gift Box";
+  const messageText="Hello "+(o.customer_name||"Customer")+",\n\nThank you for your order with Diwali Crackers Gift Box!\n\nOrder ID: "+o.order_number+"\nOrder details: "+lines+"\nTotal paid: "+formatPrice(o.total_paise)+"\nPayment status: CONFIRMED\nPayment method: "+(pay.gateway||"Razorpay")+"\n\nWe will share delivery updates when available.\nSupport WhatsApp: 9030696155\n\nThank you,\nDiwali Crackers Gift Box";
   window.open("https://wa.me/"+customerPhone+"?text="+encodeURIComponent(messageText),"_blank","noopener,noreferrer");
   return;
  }
