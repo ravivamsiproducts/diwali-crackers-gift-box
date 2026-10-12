@@ -274,20 +274,61 @@ $("orderList").addEventListener("click",e=>{
 });
 const leadStatuses=[["new_lead","New lead"],["contacted","Contacted"],["order_confirmed","Order confirmed"],["out_for_delivery","Out for delivery"],["delivered","Delivered"],["cancelled","Cancelled"]];
 function formatDate(value){try{return new Intl.DateTimeFormat("en-IN",{dateStyle:"medium",timeStyle:"short"}).format(new Date(value))}catch(_){return String(value||"")}}
+const paymentFollowupStatuses=[["not_contacted","Not contacted"],["contacted","Contacted"],["payment_guidance_sent","Payment guidance sent"],["converted","Order completed"],["not_interested","Not interested"]];
 async function loadLeads(){
- const list=$("leadList");if(!list)return;list.innerHTML='<p class="muted">Loading enquiries…</p>';message("leadMsg","");
- const {data,error}=await client.from("customer_leads").select("id,reference,customer_name,phone,address,locality,pincode,delivery_notes,maps_url,items,subtotal_paise,status,admin_notes,created_at").order("created_at",{ascending:false}).limit(100);
- if(error){list.innerHTML="";$("leadCount").textContent="";message("leadMsg","Could not load enquiries. Apply the customer_leads database migration in Supabase first. Details: "+error.message,"error");return}
- leads=data||[];$("leadCount").textContent=leads.length+" enquiries";
- if(!leads.length){list.innerHTML='<p class="muted">No customer enquiries yet.</p>';return}
- list.innerHTML=leads.map(l=>{
+ const list=$("leadList");if(!list)return;list.innerHTML='<p class="muted">Loading customer follow-ups…</p>';message("leadMsg","");
+ const [leadRes,orderRes]=await Promise.all([
+  client.from("customer_leads").select("id,reference,customer_name,phone,address,locality,pincode,delivery_notes,maps_url,items,subtotal_paise,status,admin_notes,created_at").order("created_at",{ascending:false}).limit(100),
+  client.from("orders").select("id,order_number,customer_name,customer_phone,delivery_address,delivery_area,zone_name,delivery_pincode,delivery_notes,maps_url,order_status,subtotal_paise,total_paise,created_at,follow_up_status,follow_up_notes").order("created_at",{ascending:false}).limit(100)
+ ]);
+ if(leadRes.error||orderRes.error){list.innerHTML="";$("leadCount").textContent="";message("leadMsg","Could not load customer follow-ups: "+(leadRes.error?.message||orderRes.error?.message),"error");return}
+ leads=leadRes.data||[];
+ const allOrders=orderRes.data||[],ids=allOrders.map(o=>o.id);
+ let payments=[],items=[];
+ if(ids.length){
+  const [payRes,itemRes]=await Promise.all([
+   client.from("payments").select("order_id,gateway,payment_status,amount_paise").in("order_id",ids),
+   client.from("order_items").select("order_id,product_name,quantity,unit_price_paise").in("order_id",ids)
+  ]);
+  if(payRes.error||itemRes.error)message("leadMsg","Some payment or product details could not be loaded.","error");
+  payments=payRes.data||[];items=itemRes.data||[];
+ }
+ const unpaid=allOrders.map(o=>({...o,_payment:payments.find(p=>p.order_id===o.id)||null,_items:items.filter(i=>i.order_id===o.id)}))
+  .filter(o=>!["captured","paid","success"].includes(String(o._payment?.payment_status||"").toLowerCase())&&!["cancelled","rejected","delivered"].includes(String(o.order_status||"").toLowerCase()));
+ $("leadCount").textContent=unpaid.length+" payment follow-ups · "+leads.length+" enquiries";
+ const followupCards=unpaid.length?unpaid.map(o=>{
+  const p=o._payment,ps=String(p?.payment_status||"not recorded").toLowerCase();
+  const itemText=o._items.length?o._items.map(i=>i.product_name+" × "+Number(i.quantity)).join(", "):"Product details unavailable";
+  const options=paymentFollowupStatuses.map(([v,label])=>'<option value="'+v+'" '+((o.follow_up_status||"not_contacted")===v?"selected":"")+'>'+label+'</option>').join("");
+  const phone=String(o.customer_phone||"").replace(/\\D/g,"");
+  const waPhone=phone.length===10?"91"+phone:phone.length===12&&phone.startsWith("91")?phone:"";
+  const msgText="Hello "+(o.customer_name||"Customer")+", this is Diwali Crackers Gift Box. We noticed that payment for order "+o.order_number+" may not have completed. Items: "+itemText+". Total: "+formatPrice(o.total_paise)+". Payment status: "+ps+". If you would still like to place the order, reply here and we can guide you through the available checkout steps. Support WhatsApp: 9030696155.";
+  const wa=waPhone?'<a class="btn outline" href="https://wa.me/'+waPhone+'?text='+encodeURIComponent(msgText)+'" target="_blank" rel="noopener noreferrer">WhatsApp follow-up ↗</a>':'<span class="muted">Phone missing/invalid</span>';
+  const itemLines=o._items.map(i=>escapeHtml(i.product_name)+" × "+Number(i.quantity)+" — "+formatPrice(i.unit_price_paise)).join("<br>")||"Product details unavailable";
+  const map=o.maps_url?'<a href="'+escapeHtml(o.maps_url)+'" target="_blank" rel="noopener noreferrer">Open Google Maps ↗</a>':"Location link not provided";
+  return '<article class="lead-card"><div class="lead-head"><div><h3>'+escapeHtml(o.customer_name)+' <span class="status off">Payment '+escapeHtml(ps)+'</span></h3><small>'+escapeHtml(formatDate(o.created_at))+' · Order '+escapeHtml(o.order_number)+'</small></div><strong>'+formatPrice(o.total_paise)+'</strong></div><p><b>Customer phone:</b> <a href="tel:'+escapeHtml(o.customer_phone)+'">'+escapeHtml(o.customer_phone)+'</a></p><p><b>Delivery address:</b> '+escapeHtml(o.delivery_address)+'<br>'+escapeHtml(o.delivery_area||"")+' · '+escapeHtml(o.zone_name||"")+' · PIN '+escapeHtml(o.delivery_pincode||"")+'</p><p><b>Items:</b><br>'+itemLines+'</p><p>'+map+'</p>'+(o.delivery_notes?'<p><b>Delivery notes:</b> '+escapeHtml(o.delivery_notes)+'</p>':"")+'<div class="toolbar">'+wa+'</div><div class="field"><label>Follow-up status</label><select data-followup-status="'+escapeHtml(o.id)+'">'+options+'</select></div><div class="field"><label>Internal follow-up notes (admin only)</label><textarea data-followup-notes="'+escapeHtml(o.id)+'" maxlength="2000" placeholder="Customer contacted, requested payment help, call back time…">'+escapeHtml(o.follow_up_notes||"")+'</textarea></div><button class="btn gold" data-save-followup="'+escapeHtml(o.id)+'">Save follow-up</button></article>';
+ }).join(""):'<p class="muted">No unpaid or incomplete payment attempts found.</p>';
+ const enquiryCards=leads.length?leads.map(l=>{
   const items=Array.isArray(l.items)?l.items.map(x=>escapeHtml(x.name)+" × "+Number(x.quantity||0)).join(", "):"";
   const map=l.maps_url?'<a href="'+escapeHtml(l.maps_url)+'" target="_blank" rel="noopener noreferrer">Open Google Maps location ↗</a>':"Location link not provided";
   const options=leadStatuses.map(([v,label])=>'<option value="'+v+'" '+(l.status===v?"selected":"")+'>'+label+'</option>').join("");
   return '<article class="lead-card"><div class="lead-head"><div><h3>'+escapeHtml(l.customer_name)+' <span class="status">'+escapeHtml(l.reference)+'</span></h3><small>'+escapeHtml(formatDate(l.created_at))+' · '+escapeHtml(l.locality)+' · PIN '+escapeHtml(l.pincode)+'</small></div><strong>'+formatPrice(l.subtotal_paise)+'</strong></div><p><b>Phone:</b> <a href="tel:'+escapeHtml(l.phone)+'">'+escapeHtml(l.phone)+'</a> · <a href="https://wa.me/91'+escapeHtml(l.phone)+'" target="_blank" rel="noopener noreferrer">WhatsApp</a></p><p><b>Address:</b> '+escapeHtml(l.address)+'</p><p><b>Items:</b> '+items+'</p><p>'+map+'</p>'+(l.delivery_notes?'<p><b>Delivery notes:</b> '+escapeHtml(l.delivery_notes)+'</p>':"")+'<div class="field"><label>Status</label><select data-lead-status="'+escapeHtml(l.id)+'">'+options+'</select></div><div class="field"><label>Internal follow-up notes (private to admins)</label><textarea data-lead-notes="'+escapeHtml(l.id)+'" maxlength="2000" placeholder="Call outcome, agreed delivery timing…">'+escapeHtml(l.admin_notes||"")+'</textarea></div><button class="btn gold" data-save-lead="'+escapeHtml(l.id)+'">Save enquiry update</button></article>';
- }).join("");
+ }).join(""):'<p class="muted">No separate delivery enquiries yet.</p>';
+ list.innerHTML='<div class="notice"><strong>Payment follow-ups</strong><br>These customers submitted checkout details and started an order, but no successful captured payment is recorded. Verify current payment status before contacting; payment may be pending.</div><div class="products" style="margin:12px 0 22px">'+followupCards+'</div><h3 style="margin:20px 0 10px">Delivery enquiries</h3><div class="products">'+enquiryCards+'</div>';
 }
 $("leadList").addEventListener("click",async e=>{
+ const follow=e.target.closest("[data-save-followup]");
+ if(follow){
+  const id=follow.dataset.saveFollowup;
+  const follow_up_status=$("leadList").querySelector('[data-followup-status="'+CSS.escape(id)+'"]')?.value;
+  const follow_up_notes=$("leadList").querySelector('[data-followup-notes="'+CSS.escape(id)+'"]')?.value.trim()||"";
+  if(!paymentFollowupStatuses.some(x=>x[0]===follow_up_status)){message("leadMsg","Choose a valid follow-up status.","error");return}
+  follow.disabled=true;message("leadMsg","Saving payment follow-up…");
+  const {error}=await client.from("orders").update({follow_up_status,follow_up_notes,updated_at:new Date().toISOString()}).eq("id",id);
+  follow.disabled=false;
+  if(error){message("leadMsg","Could not save payment follow-up: "+error.message,"error");return}
+  message("leadMsg","Payment follow-up saved.","success");await loadLeads();return;
+ }
  const btn=e.target.closest("[data-save-lead]");if(!btn)return;
  const id=btn.dataset.saveLead;
  const status=$("leadList").querySelector('[data-lead-status="'+CSS.escape(id)+'"]')?.value;
@@ -299,7 +340,6 @@ $("leadList").addEventListener("click",async e=>{
  if(error){message("leadMsg","Could not save enquiry: "+error.message,"error");return}
  message("leadMsg","Enquiry status and notes saved.","success");await loadLeads();
 });
-
 function clearForm(){$("productForm").reset();$("productId").value="";$("productComparePrice").value="";$("productImagePreview").innerHTML="";$("productStock").value="10";$("productOrder").value=String(Math.max(1,products.length+1));$("productActive").value="true";$("editorTitle").textContent="Add a product";$("saveBtn").textContent="Save product";$("imageHint").textContent="Choose an image to upload. Existing image stays if no new image is selected.";message("productMsg","")}
 function editProduct(id){const p=products.find(x=>x.id===id);if(!p)return;$("productId").value=p.id;$("productName").value=p.name;$("productSlug").value=p.slug;$("productDescription").value=p.description||"";$("productPrice").value=(Number(p.price_paise)/100).toFixed(2);$("productComparePrice").value=p.compare_price_paise==null?"":(Number(p.compare_price_paise)/100).toFixed(2);$("productStock").value=p.stock_quantity??0;$("productOrder").value=p.display_order??0;$("productActive").value=String(!!p.is_active);$("productImages").value="";$("imageHint").textContent=p.image_url?"Current image is set. Choose a new file to replace it.":"No image currently set.";$("editorTitle").textContent="Edit product";$("saveBtn").textContent="Update product";message("productMsg","");$("productForm").scrollIntoView({behavior:"smooth",block:"start"})}
 async function uploadImage(file){
