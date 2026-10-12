@@ -151,7 +151,7 @@
       <h1>Bring home the <span>Diwali</span> feeling.</h1>
       <div class="hero-offer-actions">
         <div class="offer-highlight" role="note" aria-label="Minimum 80 percent off">🎉 MINIMUM 80% OFF 🎉</div>
-        <div class="hero-buttons"><button class="btn btn-gold" id="shopNow">Explore gift boxes ↓</button><button class="btn btn-outline" id="heroCart">View my cart 🛒</button></div>
+        <div class="hero-buttons"><button class="btn btn-gold" id="shopNow">Explore gift boxes ↓</button></div>
       </div>
       <p>Explore our festive gift boxes, choose your favourites, and add them to your cart. Enter your delivery details at checkout. We’re preparing a trusted payment gateway for a secure payment experience. For your safety, never share your UPI PIN, OTP, or banking password on this website.</p>
       <div class="hero-notes"><span>Product selection first</span><span>Locality-based delivery check</span><span>Hyderabad &amp; Secunderabad</span></div>
@@ -555,7 +555,7 @@
     }
     startHeroBackgroundFireworks();
     $("shopNow").addEventListener("click", () => $("catalog").scrollIntoView({ behavior: "smooth" }));
-    $("cartButton").addEventListener("click", openCart); $("heroCart").addEventListener("click", openCart);
+    $("cartButton").addEventListener("click", openCart);
     $("closeCart").addEventListener("click", closeCart); $("closeCheckout").addEventListener("click", closeCheckout);
     $("backToCart").addEventListener("click", () => { closeCheckout(); openCart(); });
     $("cartOverlay").addEventListener("click", e => { if (e.target === $("cartOverlay")) closeCart(); });
