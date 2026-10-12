@@ -433,15 +433,16 @@
       window.requestAnimationFrame(stopWhenHidden);
     }
     startWelcomeFireworks();
-    function showProductsAfterWelcome() {
+    function showHomeAfterWelcome() {
       const intro = $("diwaliIntro");
       if (!intro || intro.classList.contains("hide")) return;
+      // Dismiss the welcome overlay and leave visitors on the homepage hero.
+      // Product catalogue navigation happens only when visitors choose Explore gift boxes.
       intro.classList.add("hide");
-      // Take customers straight to the catalogue after the festive welcome.
-      window.setTimeout(() => $("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" }), 180);
+      window.scrollTo({ top: 0, behavior: "auto" });
     }
-    $("exploreBtn").addEventListener("click", showProductsAfterWelcome);
-    window.addEventListener("load", () => window.setTimeout(showProductsAfterWelcome, 10000));
+    $("exploreBtn").addEventListener("click", showHomeAfterWelcome);
+    window.addEventListener("load", () => window.setTimeout(showHomeAfterWelcome, 10000));
     const menuToggle = $("menuToggle");
     const siteMenu = $("siteMenu");
     function closeSiteMenu() { siteMenu.classList.remove("open"); menuToggle.setAttribute("aria-expanded", "false"); menuToggle.setAttribute("aria-label", "Open navigation menu"); }
