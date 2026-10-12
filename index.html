@@ -19,6 +19,17 @@
     .intro-content .welcome-offer{display:flex;width:max-content;max-width:100%;font-size:clamp(14px,2.5vw,20px);padding:12px 22px}
     @keyframes offerPulse{0%,100%{transform:scale(1);opacity:1;box-shadow:0 0 0 4px #ffca6230,0 0 18px #ffbd4f70}50%{transform:scale(1.045);opacity:.78;box-shadow:0 0 0 8px #ffca621c,0 0 32px #ffbd4fcc}}
     @media(prefers-reduced-motion:reduce){.offer-highlight{animation:none}}
+    .catalog-contact{margin-top:28px;padding:24px;border:1px solid #f0dfbd;border-radius:18px;background:linear-gradient(120deg,#fff8e8,#fffdf8);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:22px;align-items:center}
+    .catalog-contact-copy h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.7px;margin:0 0 8px}
+    .catalog-contact-copy p{margin:0;color:var(--muted);font-size:14px;line-height:1.65}
+    .catalog-contact-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .catalog-contact-link{display:flex;align-items:center;gap:10px;min-width:0;padding:13px 11px;border:1px solid #eee0c9;border-radius:12px;background:#fff;color:var(--ink);text-decoration:none}
+    .catalog-contact-link>span:first-child{font-size:22px}
+    .catalog-contact-link strong,.catalog-contact-link small{display:block;overflow-wrap:anywhere}
+    .catalog-contact-link strong{font-size:13px;margin-bottom:4px}
+    .catalog-contact-link small{font-size:11px;line-height:1.4;color:var(--muted)}
+    .catalog-contact-link:hover{border-color:#e8bc5c;background:#fffaf0}
+    @media(max-width:760px){.catalog-contact{grid-template-columns:1fr;padding:18px}.catalog-contact-actions{grid-template-columns:1fr}.catalog-contact-link{padding:12px}}
     /* Page-by-page storefront: show one destination at a time, not a long scrolling page. */
     body.page-home #catalog,body.page-home .info-section,body.page-home .footer,
     body.page-catalog .hero,body.page-catalog .info-section,body.page-catalog .footer,
@@ -170,6 +181,18 @@
     <div class="section-heading"><div><h2>Find your festive favourite</h2><p>Choose a gift box to get started. Prices and availability are loaded from our product catalogue.</p></div><div class="catalog-status" id="catalogStatus" role="status">Connecting to product catalogue…</div></div>
     <div class="product-grid" id="productGrid" aria-live="polite"><div class="state-box">Loading gift boxes…</div></div>
     <div class="safety-note"><strong>Delivery &amp; product note:</strong> Select an approved Hyderabad or Secunderabad locality at checkout to confirm delivery eligibility. A 6-digit PIN code is required for address details but does not determine delivery eligibility. Product availability and applicable local laws still apply.</div>
+    <section class="catalog-contact" aria-labelledby="catalogContactTitle">
+      <div class="catalog-contact-copy">
+        <span class="info-eyebrow">Quick help</span>
+        <h2 id="catalogContactTitle">Questions about a gift box?</h2>
+        <p>Need product details or help before ordering? Contact us directly — we’ll be happy to help.</p>
+      </div>
+      <div class="catalog-contact-actions">
+        <a class="catalog-contact-link" href="https://wa.me/919030696155" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">💬</span><span><strong>WhatsApp us</strong><small>Quick message</small></span></a>
+        <a class="catalog-contact-link" href="tel:+919030696155"><span aria-hidden="true">📞</span><span><strong>Call us</strong><small>+91 90306 96155</small></span></a>
+        <a class="catalog-contact-link" href="mailto:ravivamsiproducts@gmail.com?subject=Gift%20Box%20Question"><span aria-hidden="true">✉️</span><span><strong>Email us</strong><small>ravivamsiproducts@gmail.com</small></span></a>
+      </div>
+    </section>
   </main>
     <section class="info-section" id="about" aria-labelledby="aboutTitle">
     <div class="info-inner">
