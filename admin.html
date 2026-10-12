@@ -304,7 +304,7 @@ async function loadLeads(){
   const p=o._payment,ps=String(p?.payment_status||"not recorded").toLowerCase();
   const itemText=o._items.length?o._items.map(i=>i.product_name+" × "+Number(i.quantity)).join(", "):"Product details unavailable";
   const options=paymentFollowupStatuses.map(([v,label])=>'<option value="'+v+'" '+((o.follow_up_status||"not_contacted")===v?"selected":"")+'>'+label+'</option>').join("");
-  const phone=String(o.customer_phone||"").replace(/\\D/g,"");
+  const phone=String(o.customer_phone||"").replace(/\D/g,"");
   const waPhone=phone.length===10?"91"+phone:phone.length===12&&phone.startsWith("91")?phone:"";
   const msgText="Hello "+(o.customer_name||"Customer")+", this is Diwali Crackers Gift Box. We noticed that payment for order "+o.order_number+" may not have completed. Items: "+itemText+". Total: "+formatPrice(o.total_paise)+". Payment status: "+ps+". If you would still like to place the order, reply here and we can guide you through the available checkout steps. Support WhatsApp: 9030696155.";
   const wa=waPhone?'<a class="btn outline" href="https://wa.me/'+waPhone+'?text='+encodeURIComponent(msgText)+'" target="_blank" rel="noopener noreferrer">WhatsApp follow-up ↗</a>':'<span class="muted">Phone missing/invalid</span>';
