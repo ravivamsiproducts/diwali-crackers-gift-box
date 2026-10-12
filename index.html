@@ -615,7 +615,16 @@
     $("checkoutForm").addEventListener("submit", async e => {
       e.preventDefault();
       const form = e.currentTarget;
-      if (!form.reportValidity() || !checkDeliveryLocality() || !checkPincode()) { form.reportValidity(); return; }
+      if (!checkDeliveryLocality()) {
+        $("checkoutMessage").textContent = "Please check your delivery details. (Locality must be within Hyderabad or Secunderabad.)";
+        $("customerArea").focus();
+        return;
+      }
+      if (!form.reportValidity() || !checkPincode()) {
+        $("checkoutMessage").textContent = "Check your name, 10-digit phone, full address, and other required details. (Locality must be within Hyderabad or Secunderabad. PIN code is optional.)";
+        form.reportValidity();
+        return;
+      }
       const entries = cartEntries();
       if (!entries.length) { $("checkoutMessage").textContent = "Your cart is empty. Add a product before checkout."; return; }
       const mapsUrl = $("customerMaps").value.trim();
