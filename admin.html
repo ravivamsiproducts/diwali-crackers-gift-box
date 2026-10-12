@@ -254,7 +254,7 @@ $("orderList").addEventListener("click",e=>{
   const o=orders.find(x=>x.id===whatsapp.dataset.whatsappOrder);if(!o)return;
   const pay=o._payment;
   if(!pay||!["captured","paid","success"].includes(String(pay.payment_status||"").toLowerCase())){message("orderMsg","WhatsApp payment confirmation is available only for captured/paid orders.","error");return}
-  const phone=String(o.customer_phone||"").replace(/\\D/g,"");
+  const phone=String(o.customer_phone||"").replace(/\D/g,"");
   const customerPhone=phone.length===10?"91"+phone:phone.length===12&&phone.startsWith("91")?phone:"";
   if(!customerPhone){message("orderMsg","Customer phone number is missing or invalid. Check the order details before sending.","error");return}
   const lines=(o._items||[]).map(i=>i.product_name+" × "+Number(i.quantity)+" — "+formatPrice(i.unit_price_paise)).join("\n")||"Product details unavailable";
@@ -294,7 +294,11 @@ async function loadLeads(){
   payments=payRes.data||[];items=itemRes.data||[];
  }
  const unpaid=allOrders.map(o=>({...o,_payment:payments.find(p=>p.order_id===o.id)||null,_items:items.filter(i=>i.order_id===o.id)}))
-  .filter(o=>!["captured","paid","success"].includes(String(o._payment?.payment_status||"").toLowerCase())&&!["cancelled","rejected","delivered"].includes(String(o.order_status||"").toLowerCase()));
+  .filter(o=>{
+   const paymentStatus=String(o._payment?.payment_status||"").toLowerCase(),orderStatus=String(o.order_status||"").toLowerCase();
+   if(["captured","paid","success"].includes(paymentStatus)||["paid","processing","dispatched","delivered","cancelled","rejected"].includes(orderStatus))return false;
+   return !paymentStatus||["created","failed","authorized"].includes(paymentStatus)||orderStatus==="payment_failed";
+  });
  $("leadCount").textContent=unpaid.length+" payment follow-ups · "+leads.length+" enquiries";
  const followupCards=unpaid.length?unpaid.map(o=>{
   const p=o._payment,ps=String(p?.payment_status||"not recorded").toLowerCase();
