@@ -113,7 +113,7 @@
       <button class="btn btn-gold" id="exploreBtn">Explore Gift Boxes →</button>
     </div>
   </div>
-  <div class="topbar">Festive gifting in Hyderabad &amp; Secunderabad · Instant PIN-code delivery check</div>
+  <div class="topbar">Festive gifting in Hyderabad &amp; Secunderabad · Approved locality delivery check</div>
   <header class="site-header">
     <nav class="nav" aria-label="Main navigation">
       <div class="nav-brand-group">
@@ -140,20 +140,20 @@
       <h1>Bring home the <span>Diwali</span> feeling.</h1>
       <p>Explore our festive gift boxes, choose your favourites, and add them to your cart. Enter your delivery details at checkout. We’re preparing a trusted payment gateway for a secure payment experience. For your safety, never share your UPI PIN, OTP, or banking password on this website.</p>
       <div class="hero-buttons"><button class="btn btn-gold" id="shopNow">Explore gift boxes ↓</button><button class="btn btn-outline" id="heroCart">View my cart 🛒</button></div>
-      <div class="hero-notes"><span>Product selection first</span><span>Automatic PIN-code check</span><span>Hyderabad &amp; Secunderabad</span></div>
+      <div class="hero-notes"><span>Product selection first</span><span>Locality-based delivery check</span><span>Hyderabad &amp; Secunderabad</span></div>
     </div>
   </section>
   <main id="catalog">
     <div class="section-heading"><div><h2>Find your festive favourite</h2><p>Choose a gift box to get started. Prices and availability are loaded from our product catalogue.</p></div><div class="catalog-status" id="catalogStatus" role="status">Connecting to product catalogue…</div></div>
     <div class="product-grid" id="productGrid" aria-live="polite"><div class="state-box">Loading gift boxes…</div></div>
-    <div class="safety-note"><strong>Delivery &amp; product note:</strong> Enter your PIN code at checkout to automatically check whether your address is in our Hyderabad &amp; Secunderabad delivery zone. Product availability and applicable local laws still apply.</div>
+    <div class="safety-note"><strong>Delivery &amp; product note:</strong> Select an approved Hyderabad or Secunderabad locality at checkout to confirm delivery eligibility. A 6-digit PIN code is required for address details but does not determine delivery eligibility. Product availability and applicable local laws still apply.</div>
   </main>
     <section class="info-section" id="about" aria-labelledby="aboutTitle">
     <div class="info-inner">
       <span class="info-eyebrow">Our story</span>
       <h2 id="aboutTitle">About Us</h2>
       <p class="info-lead">We provide festive Diwali crackers gift boxes for customers in selected Hyderabad and Secunderabad delivery areas.</p>
-      <p class="info-copy">Our goal is to make choosing a festive gift box simple and convenient. Browse the available collection, review product details and prices, and check your delivery PIN code at checkout.</p>
+      <p class="info-copy">Our goal is to make choosing a festive gift box simple and convenient. Browse the available collection, review product details and prices, and check your delivery locality at checkout.</p>
     </div>
   </section>
   <section class="info-section info-section-tint" id="contact" aria-labelledby="contactTitle">
@@ -235,7 +235,7 @@
           </optgroup>
         </select></div>
           <small style="font-size:12px;color:var(--muted)">Type a keyword to see matching approved localities, then select one. Only Hyderabad and Secunderabad delivery areas are supported.</small></div>
-        <div class="field"><label for="customerPincode">Delivery PIN code (optional)</label><input id="customerPincode" name="customerPincode" inputmode="numeric" autocomplete="postal-code" maxlength="6" pattern="[0-9]{6}" placeholder="Optional — 6 digits if provided"></div>
+        <div class="field"><label for="customerPincode">Delivery PIN code</label><input id="customerPincode" name="customerPincode" inputmode="numeric" autocomplete="postal-code" maxlength="6" pattern="[0-9]{6}" placeholder="Enter 6-digit PIN code" required></div>
         <div class="field"><label for="deliveryNotes">Delivery notes (optional)</label><textarea id="deliveryNotes" name="deliveryNotes" maxlength="300" placeholder="Landmark or delivery instructions"></textarea></div>
         <div class="field"><label for="customerMaps">Google Maps delivery location (optional)</label><input id="customerMaps" name="customerMaps" type="url" placeholder="Paste a Google Maps location link"><button class="btn btn-outline" type="button" id="useCurrentLocation" style="width:100%;margin-top:8px">📍 Use my current location</button><small id="locationStatus" role="status" style="font-size:12px;color:var(--muted)">You can share your location to help us find the delivery address. Browser location permission is required.</small></div>
         <div id="checkoutMessage" class="form-error" role="status"></div>
@@ -337,7 +337,7 @@
       if (!entries.length) {
         $("cartContents").innerHTML = '<div class="empty-cart"><div style="font-size:48px;margin-bottom:12px">🛍️</div><strong>Your cart is empty</strong><p>Choose a gift box from the collection to get started.</p><button class="btn btn-gold" id="browseProducts" style="margin-top:8px">Browse gift boxes</button></div>';
       } else {
-        $("cartContents").innerHTML = '<div class="cart-list">' + entries.map(({product,quantity}) => '<div class="cart-row"><div><h3>' + safeText(product.name) + '</h3><small>' + money(product.price_paise) + ' each</small><div class="qty-controls"><button data-qty="' + safeText(product.id) + '" data-delta="-1" aria-label="Decrease quantity">−</button><span>' + quantity + '</span><button data-qty="' + safeText(product.id) + '" data-delta="1" aria-label="Increase quantity" ' + (quantity >= Number(product.stock_quantity || 0) ? "disabled" : "") + '>+</button><button class="btn btn-outline" style="padding:5px 8px;font-size:12px" data-remove="' + safeText(product.id) + '">Remove</button></div></div><strong>' + money(Number(product.price_paise) * quantity) + '</strong></div>').join("") + '</div><div class="cart-total"><span>Subtotal</span><span>' + money(total) + '</span></div><p style="color:var(--muted);font-size:12px;line-height:1.5">Delivery eligibility is checked automatically using your PIN code.</p><div class="drawer-actions"><button class="btn btn-gold" id="checkoutButton">Continue to delivery details →</button><button class="btn btn-outline" id="continueShopping">Continue shopping</button></div>';
+        $("cartContents").innerHTML = '<div class="cart-list">' + entries.map(({product,quantity}) => '<div class="cart-row"><div><h3>' + safeText(product.name) + '</h3><small>' + money(product.price_paise) + ' each</small><div class="qty-controls"><button data-qty="' + safeText(product.id) + '" data-delta="-1" aria-label="Decrease quantity">−</button><span>' + quantity + '</span><button data-qty="' + safeText(product.id) + '" data-delta="1" aria-label="Increase quantity" ' + (quantity >= Number(product.stock_quantity || 0) ? "disabled" : "") + '>+</button><button class="btn btn-outline" style="padding:5px 8px;font-size:12px" data-remove="' + safeText(product.id) + '">Remove</button></div></div><strong>' + money(Number(product.price_paise) * quantity) + '</strong></div>').join("") + '</div><div class="cart-total"><span>Subtotal</span><span>' + money(total) + '</span></div><p style="color:var(--muted);font-size:12px;line-height:1.5">Delivery eligibility is based on selecting an approved Hyderabad/Secunderabad locality.</p><div class="drawer-actions"><button class="btn btn-gold" id="checkoutButton">Continue to delivery details →</button><button class="btn btn-outline" id="continueShopping">Continue shopping</button></div>';
       }
     }
     function openCart() { renderCart(); $("cartOverlay").classList.add("open"); document.body.style.overflow = "hidden"; }
@@ -609,10 +609,9 @@
       const input = $("customerPincode");
       const pin = input.value.trim();
       input.setCustomValidity("");
-      // PIN code is optional and is not used to determine delivery eligibility.
-      if (!pin) return true;
+      // PIN code is required and must contain exactly 6 digits; locality determines delivery eligibility.
       if (!/^[0-9]{6}$/.test(pin)) {
-        input.setCustomValidity("If provided, enter a 6-digit PIN code.");
+        input.setCustomValidity("Enter a valid 6-digit PIN code.");
         return false;
       }
       return true;
@@ -661,7 +660,7 @@
         return;
       }
       if (!form.reportValidity() || !checkPincode()) {
-        $("checkoutMessage").textContent = "Check your name, 10-digit phone, full address, and other required details. (Locality must be within Hyderabad or Secunderabad. PIN code is optional.)";
+        $("checkoutMessage").textContent = "Check your name, 10-digit phone, full address, and other required details. (Locality must be within Hyderabad or Secunderabad. Enter a 6-digit PIN code.)";
         form.reportValidity();
         return;
       }
