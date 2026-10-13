@@ -329,7 +329,7 @@
       const urls = productImageUrls(product.image_url);
       if (!urls.length) return '<span class="product-placeholder" aria-hidden="true">🎁</span>';
       if (urls.length === 1) return '<img src="' + safeText(urls[0]) + '" alt="' + safeText(product.name) + '" loading="lazy" onerror="this.remove();this.parentElement.innerHTML=\'<span class=&quot;product-placeholder&quot; aria-hidden=&quot;true&quot;>🎁</span>\'">';
-      return '<div class="product-gallery" role="region" aria-label="' + safeText(product.name) + ' photos" tabindex="0">' + urls.map((url,index) => '<img src="' + safeText(url) + '" alt="' + safeText(product.name) + ' photo ' + (index+1) + '" loading="lazy" onerror="this.style.display=\'none\'">').join("") + '</div><span class="product-gallery-count">Swipe · ' + urls.length + ' photos</span>';
+      return '<div class="product-gallery" role="region" aria-label="' + safeText(product.name) + ' photos" tabindex="0">' + urls.map((url,index) => '<img src="' + safeText(url) + '" alt="' + safeText(product.name) + ' photo ' + (index+1) + '" loading="lazy" onerror="this.style.display=\'none\'">').join("") + '</div>';
     }
     function renderProducts() {
       const grid = $("productGrid");
