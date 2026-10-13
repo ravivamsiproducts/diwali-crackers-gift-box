@@ -23,6 +23,9 @@
 .admin-main[data-view="inventory"] #productsAnchor>.panel{width:100%}
 .admin-main[data-view="payments"] #ordersAnchor .section-title h2{font-size:22px}
 .admin-main[data-view="payments"] #ordersAnchor .section-title .eyebrow{font-size:11px}
+.admin-main[data-view="settings"] #ordersAnchor,.admin-main[data-view="settings"] #customersAnchor,.admin-main[data-view="settings"] #productsAnchor,.admin-main[data-view="settings"] #inventoryAnchor{display:none!important}
+.admin-main[data-view="settings"] #offerSettingsAnchor{display:block!important}
+
 
 
 .inventory-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0 24px}.inventory-stat{border:1px solid #e1e8f2;border-radius:14px;padding:16px;background:linear-gradient(145deg,#fff,#f8fbff);display:grid;gap:6px}.inventory-stat span{font-size:12px;font-weight:800;color:#64748b}.inventory-stat strong{font-size:28px;line-height:1.1;color:#172033}.inventory-stat small{font-size:12px;color:#718096}.inventory-subhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:20px 0 12px}.inventory-subhead h3{margin:0;font-size:16px}.stock-badge{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:5px 9px;font-size:11px;font-weight:850;background:#e7f8ed;color:#166534}.stock-badge.low{background:#fff4d6;color:#8a5a00}.stock-badge.out{background:#ffe9e7;color:#b42318}.inventory-alert{margin:12px 0;padding:12px 14px;border:1px solid #fecaca;background:#fff1f2;color:#9f1239;border-radius:12px;font-size:13px;line-height:1.5}.inventory-history{overflow:auto;border:1px solid var(--line);border-radius:12px}.inventory-history table{width:100%;border-collapse:collapse;min-width:760px}.inventory-history th,.inventory-history td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}.inventory-history th{font-size:11px;letter-spacing:.05em;color:#64748b;background:#f8fafc}.inventory-history tr:last-child td{border-bottom:0}.movement-sale{color:#166534;font-weight:850}.movement-stock_issue{color:#b42318;font-weight:900}.movement-restock,.movement-return{color:#1d4ed8;font-weight:850}
@@ -72,8 +75,17 @@
 <button class="btn gold full" type="submit">Sign in securely</button><div id="loginMsg" class="msg" role="status"></div>
 </form>
 </section>
-<section id="dashboard" class="hidden"><div class="admin-layout"><aside class="sidebar"><div class="side-brand">🪔 Diwali Gift Box <span style="display:block;font-size:11px;color:#93a4bd;font-weight:600;letter-spacing:1px;margin-top:5px">ADMIN PANEL</span></div><div class="side-label">Store management</div><nav class="nav-list" aria-label="Admin navigation"><button type="button" class="nav-item active" data-target="overviewAnchor">📊 Dashboard</button><button type="button" class="nav-item" data-target="productsAnchor">📦 Products</button><button type="button" class="nav-item" data-target="ordersAnchor">🛒 Orders</button><button type="button" class="nav-item" data-target="customersAnchor">👤 Customers</button><button type="button" class="nav-item" data-target="inventoryAnchor">🧾 Inventory</button><button type="button" class="nav-item" data-target="paymentsAnchor">💳 Payments</button></nav><a href="./" style="margin-top:auto;padding:12px;color:#cbd5e1;text-decoration:none;font-weight:700">↗ View storefront</a></aside><div class="admin-main"><div id="overviewAnchor" class="nav-target"></div><div class="panel dashboard-head"><div style="display:flex;align-items:center;justify-content:flex-end;gap:12px;width:100%;margin-bottom:10px"><span id="signedInAs" class="muted" style="margin-right:auto"></span><button id="refreshBtn" class="btn outline">↻ Refresh</button><button id="logoutBtn" class="btn dark">Logout</button></div><div class="dashboard-title"><div><div class="eyebrow">Store management</div><h1>Product dashboard</h1></div></div>
+<section id="dashboard" class="hidden"><div class="admin-layout"><aside class="sidebar"><div class="side-brand">🪔 Diwali Gift Box <span style="display:block;font-size:11px;color:#93a4bd;font-weight:600;letter-spacing:1px;margin-top:5px">ADMIN PANEL</span></div><div class="side-label">Store management</div><nav class="nav-list" aria-label="Admin navigation"><button type="button" class="nav-item active" data-target="overviewAnchor">📊 Dashboard</button><button type="button" class="nav-item" data-target="productsAnchor">📦 Products</button><button type="button" class="nav-item" data-target="ordersAnchor">🛒 Orders</button><button type="button" class="nav-item" data-target="customersAnchor">👤 Customers</button><button type="button" class="nav-item" data-target="inventoryAnchor">🧾 Inventory</button><button type="button" class="nav-item" data-target="paymentsAnchor">💳 Payments</button><button type="button" class="nav-item" data-target="offerSettingsAnchor">🏷️ Offer badge</button></nav><a href="./" style="margin-top:auto;padding:12px;color:#cbd5e1;text-decoration:none;font-weight:700">↗ View storefront</a></aside><div class="admin-main"><div id="overviewAnchor" class="nav-target"></div><div class="panel dashboard-head"><div style="display:flex;align-items:center;justify-content:flex-end;gap:12px;width:100%;margin-bottom:10px"><span id="signedInAs" class="muted" style="margin-right:auto"></span><button id="refreshBtn" class="btn outline">↻ Refresh</button><button id="logoutBtn" class="btn dark">Logout</button></div><div class="dashboard-title"><div><div class="eyebrow">Store management</div><h1>Product dashboard</h1></div></div>
 <div class="notice">Customer enquiries contain private contact and delivery details. Use them only to respond to the customer and coordinate delivery. Do not share or export this information unnecessarily.</div>
+<section id="offerSettingsAnchor" class="panel nav-target" style="margin-top:18px;display:none">
+  <div class="section-title"><div><div class="eyebrow">Storefront appearance</div><h2>Offer badge settings</h2></div></div>
+  <p class="muted">Edit the offer text shown on both the welcome page and the home/catalog page. Save once to update both locations for all visitors.</p>
+  <form id="offerSettingsForm">
+    <div class="field"><label for="offerBadgeText">Offer badge text *</label><input id="offerBadgeText" type="text" maxlength="80" required value="🎉 MINIMUM 80% OFF 🎉" placeholder="🎉 MINIMUM 80% OFF 🎉"><small class="muted">Example: 🎉 MINIMUM 80% OFF 🎉 or FESTIVE DEALS UP TO 90% OFF</small></div>
+    <button id="saveOfferBtn" type="submit" class="btn gold">Save offer badge</button>
+    <div id="offerSettingsMsg" class="msg" role="status"></div>
+  </form>
+</section>
 <section id="ordersAnchor" class="panel nav-target" style="margin-top:18px"><div class="section-title"><div><div class="eyebrow">Checkout & payments</div><h2>Orders</h2></div><span id="orderCount" class="muted">—</span></div><p class="muted">Only successfully verified payments appear here. Unpaid, failed, created, or authorized-only attempts stay under Customers → Payment follow-ups.</p><div id="paymentsAnchor" class="nav-target"></div><div class="orders-toolbar"><input id="orderSearch" type="search" placeholder="Search order number, customer or phone…" aria-label="Search orders"><select id="orderFilter" aria-label="Filter order status"><option value="">All Statuses</option><option value="pending_delivery_review">Pending</option><option value="paid">Confirmed / Paid</option><option value="processing">Processing</option><option value="dispatched">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select></div><div id="orderList" class="orders-table-wrap"><p class="muted" style="padding:16px">Loading orders…</p></div><div id="orderMsg" class="msg" role="status"></div></section>
  <section id="customersAnchor" class="panel nav-target" style="margin-top:18px"><div class="section-title"><div><div class="eyebrow">Customer follow-up</div><h2>Customers & Delivery Enquiries</h2></div><span id="leadCount" class="muted">—</span></div><p class="muted">These are enquiries only, not confirmed orders or paid transactions. Contact the customer to confirm availability before changing the status.</p><div id="leadList" class="products"><p class="muted">Loading enquiries…</p></div><div id="leadMsg" class="msg" role="status"></div></section>
 <div id="productsAnchor" class="grid nav-target" style="margin-top:18px">
@@ -125,7 +137,7 @@ function setAdminView(view,button){
  if(!main)return;
  main.dataset.view=view;
  document.querySelectorAll(".nav-item").forEach(n=>n.classList.toggle("active",n===button));
- const headings={dashboard:["Product dashboard","Store overview"],products:["Products","Catalogue editor"],orders:["Orders","Checkout & payments"],customers:["Customers & Delivery Enquiries","Customer follow-up"],inventory:["Inventory","Live catalogue & stock"],payments:["Payments","Payment records"]};
+ const headings={dashboard:["Product dashboard","Store overview"],products:["Products","Catalogue editor"],orders:["Orders","Checkout & payments"],customers:["Customers & Delivery Enquiries","Customer follow-up"],inventory:["Inventory","Live catalogue & stock"],payments:["Payments","Payment records"],settings:["Offer badge settings","Storefront appearance"]};
  const title=main.querySelector(".dashboard-title h1");
  if(title)title.textContent=headings[view]?.[0]||"Product dashboard";
  if(view==="payments"){
@@ -139,7 +151,7 @@ function setAdminView(view,button){
  }
  window.scrollTo({top:0,behavior:"smooth"});
 }
-document.addEventListener("click",e=>{const btn=e.target.closest("[data-target]");if(!btn)return;setAdminView(({overviewAnchor:"dashboard",productsAnchor:"products",ordersAnchor:"orders",customersAnchor:"customers",inventoryAnchor:"inventory",paymentsAnchor:"payments"})[btn.dataset.target]||"dashboard",btn);});
+document.addEventListener("click",e=>{const btn=e.target.closest("[data-target]");if(!btn)return;setAdminView(({overviewAnchor:"dashboard",productsAnchor:"products",ordersAnchor:"orders",customersAnchor:"customers",inventoryAnchor:"inventory",paymentsAnchor:"payments",offerSettingsAnchor:"settings"})[btn.dataset.target]||"dashboard",btn);});
 let currentUser=null,products=[],leads=[],orders=[],inventoryMovements=[],paymentFollowups=[];
 const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function getProductImages(value){if(typeof value!=="string"||!value.trim())return[];try{const parsed=JSON.parse(value);if(Array.isArray(parsed))return parsed.filter(x=>typeof x==="string"&&x.trim()).slice(0,4)}catch{}return[value.trim()]}
@@ -151,10 +163,16 @@ async function checkAdmin(){
  if(!session){showLogin();return}
  const {data:allowed,error}=await client.rpc("is_admin");
  if(error||allowed!==true){await client.auth.signOut();showLogin();message("loginMsg","This account is not enabled as an admin. Check public.admin_users and is_active.","error");return}
- currentUser=session.user;showDashboard();await Promise.all([loadProducts(),loadLeads(),loadOrders()]);
+ currentUser=session.user;showDashboard();await Promise.all([loadProducts(),loadLeads(),loadOrders(),loadOfferSettings()]);
 }
 function showLogin(){$("loginPanel").classList.remove("hidden");$("dashboard").classList.add("hidden")}
 function showDashboard(){$("loginPanel").classList.add("hidden");$("dashboard").classList.remove("hidden");$("signedInAs").textContent="Signed in as "+(currentUser?.email||"admin");const first=document.querySelector('.nav-item[data-target="overviewAnchor"]');setAdminView("dashboard",first)}
+async function loadOfferSettings(){
+ message("offerSettingsMsg","");
+ const {data,error}=await client.from("store_settings").select("setting_value").eq("setting_key","offer_badge_text").maybeSingle();
+ if(error){message("offerSettingsMsg","Could not load offer text: "+error.message,"error");return}
+ if(data?.setting_value!==undefined)$("offerBadgeText").value=data.setting_value;
+}
 async function loadProducts(){
  $("productList").innerHTML='<p class="muted">Loading products…</p>';if($("inventoryHistory"))$("inventoryHistory").innerHTML='<p class="muted" style="padding:14px">Loading inventory history…</p>';message("listMsg","");
  const {data,error}=await client.from("products").select("id,name,slug,description,price_paise,compare_price_paise,image_url,stock_quantity,is_active,display_order").order("display_order",{ascending:true});
@@ -338,7 +356,20 @@ async function uploadImage(file){
  return client.storage.from("product-images").getPublicUrl(path).data.publicUrl;
 }
 
-$("loginForm").addEventListener("submit",async e=>{e.preventDefault();message("loginMsg","Signing in…");const {data,error}=await client.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error){message("loginMsg",error.message,"error");return}const {data:allowed,error:checkError}=await client.rpc("is_admin");if(checkError||allowed!==true){await client.auth.signOut();message("loginMsg","Sign-in succeeded, but this account is not authorized as an active admin.","error");return}currentUser=data.user;showDashboard();await Promise.all([loadProducts(),loadLeads(),loadOrders()])});
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();message("loginMsg","Signing in…");const {data,error}=await client.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error){message("loginMsg",error.message,"error");return}const {data:allowed,error:checkError}=await client.rpc("is_admin");if(checkError||allowed!==true){await client.auth.signOut();message("loginMsg","Sign-in succeeded, but this account is not authorized as an active admin.","error");return}currentUser=data.user;showDashboard();await Promise.all([loadProducts(),loadLeads(),loadOrders(),loadOfferSettings()])});
+$("offerSettingsForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(!currentUser){message("offerSettingsMsg","Please sign in first.","error");return}
+ const value=$("offerBadgeText").value.trim();
+ if(!value){message("offerSettingsMsg","Enter the offer badge text.","error");return}
+ $("saveOfferBtn").disabled=true;message("offerSettingsMsg","Saving offer badge…");
+ try{
+  const {error}=await client.from("store_settings").upsert({setting_key:"offer_badge_text",setting_value:value,updated_at:new Date().toISOString(),updated_by:currentUser.id},{onConflict:"setting_key"});
+  if(error)throw error;
+  message("offerSettingsMsg","Offer badge saved. It will appear in both storefront locations after visitors refresh the page.","success");
+ }catch(err){message("offerSettingsMsg","Could not save offer badge: "+(err.message||"Unknown error"),"error")}
+ finally{$("saveOfferBtn").disabled=false}
+});
 $("productImages").addEventListener("change",()=>{const files=Array.from($("productImages").files||[]);if(files.length>4){$("productImages").value="";$("productImagePreview").innerHTML="";message("productMsg","Please select no more than 4 product photos.","error");return}const urls=files.map(file=>URL.createObjectURL(file));$("productImagePreview").innerHTML=urls.map(url=>'<img src="'+url+'" alt="Selected product photo">').join("");if(files.length)$("imageHint").textContent=files.length+" photo(s) selected. Saving will replace the current gallery."});
 $("productName").addEventListener("input",()=>{if(!$("productId").value)$("productSlug").value=slugify($("productName").value)});
 $("productForm").addEventListener("submit",async e=>{
