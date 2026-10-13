@@ -141,7 +141,7 @@
       <h2>Diwali Crackers<br><span style="color:#ffbf36">Gift Box</span></h2>
       <p>Lights in the sky. Joy in every celebration.</p>
       <div class="intro-festive-tag">✨ A sparkling festive welcome ✨</div>
-      <div class="offer-highlight welcome-offer" role="note" aria-label="Minimum 80 percent off">🎉 MINIMUM 80% OFF 🎉</div>
+      <div id="welcomeOfferBadge" class="offer-highlight welcome-offer" role="note" aria-label="Store offer">🎉 MINIMUM 80% OFF 🎉</div>
       <button class="btn btn-gold" id="exploreBtn">Explore Gift Boxes →</button>
     </div>
   </div>
@@ -170,7 +170,7 @@
     <div class="hero-inner">
       <h1>Bring home the <span>Diwali</span> feeling.</h1>
       <div class="hero-offer-actions">
-        <div class="offer-highlight" role="note" aria-label="Minimum 80 percent off">🎉 MINIMUM 80% OFF 🎉</div>
+        <div id="homeOfferBadge" class="offer-highlight" role="note" aria-label="Store offer">🎉 MINIMUM 80% OFF 🎉</div>
         <div class="hero-buttons"><button class="btn btn-gold" id="shopNow">Explore gift boxes ↓</button></div>
       </div>
       <p>Explore our festive gift boxes, choose your favourites, and add them to your cart. Enter your delivery details at checkout. We’re preparing a trusted payment gateway for a secure payment experience. For your safety, never share your UPI PIN, OTP, or banking password on this website.</p>
@@ -450,6 +450,19 @@
         console.error("Product catalogue load failed:", error);
         $("catalogStatus").textContent = "Could not load products";
         $("productGrid").innerHTML = '<div class="state-box">We could not load the catalogue right now. Please refresh to try again.</div>';
+      }
+    }
+    async function loadOfferBadge() {
+      if (!supabaseClient) return;
+      try {
+        const { data, error } = await supabaseClient.from("store_settings").select("setting_value").eq("setting_key", "offer_badge_text").maybeSingle();
+        if (error || !data?.setting_value) return;
+        ["welcomeOfferBadge", "homeOfferBadge"].forEach(id => {
+          const el = $(id);
+          if (el) el.textContent = data.setting_value;
+        });
+      } catch (error) {
+        console.warn("Offer badge setting could not be loaded:", error);
       }
     }
     // Lightweight canvas fireworks: short, colorful bursts while the welcome screen is visible.
@@ -879,6 +892,7 @@
       }
     });
     loadProducts();
+    loadOfferBadge();
   </script>
 </body>
 </html>
