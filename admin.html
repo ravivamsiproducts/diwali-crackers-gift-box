@@ -213,9 +213,9 @@ async function loadProducts(){
  if(!products.length){$("productList").innerHTML='<p class="muted">No products yet. Add your first product using the form.</p>';return}
  const soldByProduct=new Map();
  inventoryMovements.filter(m=>m.movement_type==="sale").forEach(m=>soldByProduct.set(m.product_id,(soldByProduct.get(m.product_id)||0)+Math.abs(Number(m.quantity_change)||0)));
- $("productList").innerHTML=products.map(p=>{
+ $("productList").innerHTML=products.map((p,index)=>{
   const stock=Number(p.stock_quantity||0),stockClass=stock===0?"out":stock<=5?"low":"";
-  return '<article class="product"><div class="thumb">'+(p.image_url?'<img src="'+escapeHtml(p.image_url)+'" alt="">':"🎁")+'</div><div><h3>'+escapeHtml(p.name)+'</h3><small>'+formatPrice(p.price_paise)+(Number(p.compare_price_paise)>Number(p.price_paise)?' · <span style="color:#dc2626;text-decoration:line-through">'+formatPrice(p.compare_price_paise)+'</span> · '+Math.round((1-Number(p.price_paise)/Number(p.compare_price_paise))*100)+'% off':'')+'<br>'+escapeHtml(p.slug)+'<br>Sold via paid orders: '+(soldByProduct.get(p.id)||0)+' units</small><br><span class="stock-badge '+stockClass+'">'+(stock===0?"● OUT OF STOCK":stock<=5?"● LOW STOCK · ":"● IN STOCK · ")+(stock===0?"":stock+" units")+'</span> <span class="status '+(p.is_active?"":"off")+'">'+(p.is_active?"ACTIVE":"HIDDEN")+'</span></div><div class="product-actions"><button class="btn outline" data-edit="'+escapeHtml(p.id)+'">Edit</button><button class="btn '+(p.is_active?"outline":"gold")+'" data-toggle="'+escapeHtml(p.id)+'">'+(p.is_active?"Hide":"Activate")+'</button><button class="btn outline" style="color:#b42318;border-color:#fecaca" data-delete="'+escapeHtml(p.id)+'">Delete</button></div></article>';
+  return '<article class="product"><div class="thumb">'+(p.image_url?'<img src="'+escapeHtml(p.image_url)+'" alt="">':"🎁")+'</div><div><h3>'+escapeHtml(p.name)+'</h3><small>Display position: '+(index+1)+'<br>'+formatPrice(p.price_paise)+(Number(p.compare_price_paise)>Number(p.price_paise)?' · <span style="color:#dc2626;text-decoration:line-through">'+formatPrice(p.compare_price_paise)+'</span> · '+Math.round((1-Number(p.price_paise)/Number(p.compare_price_paise))*100)+'% off':'')+'<br>'+escapeHtml(p.slug)+'<br>Sold via paid orders: '+(soldByProduct.get(p.id)||0)+' units</small><br><span class="stock-badge '+stockClass+'">'+(stock===0?"● OUT OF STOCK":stock<=5?"● LOW STOCK · ":"● IN STOCK · ")+(stock===0?"":stock+" units")+'</span> <span class="status '+(p.is_active?"":"off")+'">'+(p.is_active?"ACTIVE":"HIDDEN")+'</span></div><div class="product-actions"><button class="btn outline" data-move="up" data-id="'+escapeHtml(p.id)+'" '+(index===0?'disabled':'')+' title="Move product up">↑ Up</button><button class="btn outline" data-move="down" data-id="'+escapeHtml(p.id)+'" '+(index===products.length-1?'disabled':'')+' title="Move product down">↓ Down</button><button class="btn outline" data-edit="'+escapeHtml(p.id)+'">Edit</button><button class="btn '+(p.is_active?"outline":"gold")+'" data-toggle="'+escapeHtml(p.id)+'">'+(p.is_active?"Hide":"Activate")+'</button><button class="btn outline" style="color:#b42318;border-color:#fecaca" data-delete="'+escapeHtml(p.id)+'">Delete</button></div></article>';
  }).join("");
 }
 function renderInventory(){
@@ -417,7 +417,30 @@ $("productForm").addEventListener("submit",async e=>{
   message("productMsg","Product saved successfully.","success");clearForm();await loadProducts();
  }catch(err){message("productMsg",err.message||"Could not save product.","error")}finally{$("saveBtn").disabled=false}
 });
+async function moveProduct(id,direction){
+ const currentIndex=products.findIndex(p=>p.id===id);
+ const targetIndex=currentIndex+(direction==="up"?-1:1);
+ if(currentIndex<0||targetIndex<0||targetIndex>=products.length)return;
+ const reordered=[...products];
+ [reordered[currentIndex],reordered[targetIndex]]=[reordered[targetIndex],reordered[currentIndex]];
+ const buttons=$("productList").querySelectorAll("[data-move]");
+ buttons.forEach(button=>button.disabled=true);
+ message("listMsg","Saving product display order…");
+ try{
+  for(let index=0;index<reordered.length;index++){
+   const product=reordered[index],order=(index+1)*10;
+   const {error}=await client.from("products").update({display_order:order,updated_at:new Date().toISOString()}).eq("id",product.id);
+   if(error)throw error;
+  }
+  message("listMsg","Product order saved. The storefront will show products in this order.","success");
+  await loadProducts();
+ }catch(error){
+  message("listMsg","Could not save the new order: "+(error.message||"Please try again."),"error");
+  await loadProducts();
+ }
+}
 $("productList").addEventListener("click",async e=>{
+ const move=e.target.closest("[data-move]");if(move){await moveProduct(move.dataset.id,move.dataset.move);return}
  const edit=e.target.closest("[data-edit]");if(edit){editProduct(edit.dataset.edit);return}
  const toggle=e.target.closest("[data-toggle]");
  if(toggle){
