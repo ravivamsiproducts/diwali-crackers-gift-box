@@ -138,7 +138,7 @@
   </style>
 </head>
 <body id="top" class="page-home">
-    <div class="topbar"><div class="topbar-track" aria-label="Store announcement"><span class="topbar-offer" id="scrollingAnnouncement">🎉 FESTIVAL OFFER UPTO 83% OFF 🎉</span></div></div>
+    <div class="topbar"><div class="topbar-track" aria-label="Store announcement"><span class="topbar-offer" id="scrollingAnnouncement">🎉 FESTIVE OFFER UPTO 83% OFF 🎉</span></div></div>
   <header class="site-header">
     <nav class="nav" aria-label="Main navigation">
       <div class="nav-brand-group">
@@ -163,7 +163,7 @@
     <div class="hero-inner">
       <h1>Bring home the <span>Diwali</span> feeling.</h1>
       <div class="hero-offer-actions">
-        <div id="homeOfferBadge" class="offer-highlight" role="note" aria-label="Store offer">🎉 FESTIVAL OFFER UPTO 83% OFF 🎉</div>
+        <div id="homeOfferBadge" class="offer-highlight" role="note" aria-label="Store offer">🎉 FESTIVE OFFER UPTO 83% OFF 🎉</div>
         <div class="hero-buttons"><button class="btn btn-gold" id="shopNow">Explore gift boxes ↓</button></div>
       </div>
       <p>Explore our festive gift boxes, choose your favourites, and add them to your cart. Enter your delivery details at checkout. We’re preparing a trusted payment gateway for a secure payment experience. For your safety, never share your UPI PIN, OTP, or banking password on this website.</p>
@@ -451,7 +451,7 @@
         const { data, error } = await supabaseClient.from("store_settings").select("setting_key,setting_value").in("setting_key", ["offer_badge_text", "announcement_message"]);
         if (error) throw error;
         const settings = Object.fromEntries((data || []).map(row => [row.setting_key, row.setting_value]));
-        const offerText = settings.offer_badge_text || "🎉 FESTIVAL OFFER UPTO 83% OFF 🎉";
+        const offerText = settings.offer_badge_text || "🎉 FESTIVE OFFER UPTO 83% OFF 🎉";
         const announcementText = settings.announcement_message || offerText;
         const homeBadge = $("homeOfferBadge");
         const announcement = $("scrollingAnnouncement");
