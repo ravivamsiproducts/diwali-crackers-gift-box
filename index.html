@@ -138,6 +138,7 @@
   </style>
 </head>
 <body id="top" class="page-home">
+    <div class="topbar"><div class="topbar-track" aria-label="Store announcement"><span class="topbar-offer" id="scrollingAnnouncement">🎉 FESTIVAL OFFER UPTO 83% OFF 🎉</span></div></div>
   <header class="site-header">
     <nav class="nav" aria-label="Main navigation">
       <div class="nav-brand-group">
@@ -447,14 +448,17 @@
     async function loadOfferBadge() {
       if (!supabaseClient) return;
       try {
-        const { data, error } = await supabaseClient.from("store_settings").select("setting_value").eq("setting_key", "offer_badge_text").maybeSingle();
-        if (error || !data?.setting_value) return;
-        ["welcomeOfferBadge", "homeOfferBadge"].forEach(id => {
-          const el = $(id);
-          if (el) el.textContent = data.setting_value;
-        });
+        const { data, error } = await supabaseClient.from("store_settings").select("setting_key,setting_value").in("setting_key", ["offer_badge_text", "announcement_message"]);
+        if (error) throw error;
+        const settings = Object.fromEntries((data || []).map(row => [row.setting_key, row.setting_value]));
+        const offerText = settings.offer_badge_text || "🎉 FESTIVAL OFFER UPTO 83% OFF 🎉";
+        const announcementText = settings.announcement_message || offerText;
+        const homeBadge = $("homeOfferBadge");
+        const announcement = $("scrollingAnnouncement");
+        if (homeBadge) homeBadge.textContent = offerText;
+        if (announcement) announcement.textContent = announcementText;
       } catch (error) {
-        console.warn("Offer badge setting could not be loaded:", error);
+        console.warn("Offer settings could not be loaded:", error);
       }
     }
     const menuToggle = $("menuToggle");
