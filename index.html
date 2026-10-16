@@ -138,7 +138,6 @@
   </style>
 </head>
 <body id="top" class="page-home">
-  <div class="topbar"><div class="topbar-track" aria-label="Store announcements"><span class="topbar-message">Festive gifting in Hyderabad &amp; Secunderabad · Approved locality delivery check</span><span class="topbar-offer" id="stockOfferMessage">Offer valid till stock available</span></div></div>
   <header class="site-header">
     <nav class="nav" aria-label="Main navigation">
       <div class="nav-brand-group">
@@ -444,16 +443,6 @@
         $("catalogStatus").textContent = "Could not load products";
         $("productGrid").innerHTML = '<div class="state-box">We could not load the catalogue right now. Please refresh to try again.</div>';
       }
-    }
-    async function loadStockOfferMessage() {
-      if (!supabaseClient) return;
-      try {
-        const { data, error } = await supabaseClient.from("store_settings").select("setting_value").eq("setting_key", "stock_offer_message").maybeSingle();
-        if (!error && data?.setting_value) {
-          const el = $("stockOfferMessage");
-          if (el) el.textContent = data.setting_value;
-        }
-      } catch (error) { console.warn("Stock offer message could not be loaded:", error); }
     }
     async function loadOfferBadge() {
       if (!supabaseClient) return;
@@ -817,7 +806,6 @@
     });
     loadProducts();
     loadOfferBadge();
-    loadStockOfferMessage();
   </script>
 </body>
 </html>
