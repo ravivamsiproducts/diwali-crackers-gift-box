@@ -102,8 +102,9 @@
   <div class="section-title"><div><div class="eyebrow">Storefront appearance</div><h2>Offer badge settings</h2></div></div>
   <p class="muted">Edit the single offer message shown on the home page. Save once to update it for all visitors.</p>
   <form id="offerSettingsForm">
-    <div class="field"><label for="offerBadgeText">Offer badge text *</label><input id="offerBadgeText" type="text" maxlength="80" required value="🎉 FESTIVAL OFFER UPTO 83% OFF 🎉" placeholder="🎉 FESTIVAL OFFER UPTO 83% OFF 🎉"><small class="muted">Shown on the home page.</small></div>
-    <button id="saveOfferBtn" type="submit" class="btn gold">Save offer settings</button>
+    <div class="field"><label for="offerBadgeText">Home page offer badge text *</label><input id="offerBadgeText" type="text" maxlength="80" required value="🎉 FESTIVAL OFFER UPTO 83% OFF 🎉" placeholder="🎉 FESTIVAL OFFER UPTO 83% OFF 🎉"><small class="muted">Shown in the highlighted offer on the home page.</small></div>
+    <div class="field"><label for="announcementMessageInput">Scrolling announcement message *</label><input id="announcementMessageInput" type="text" maxlength="140" required value="🎉 FESTIVAL OFFER UPTO 83% OFF 🎉" placeholder="🎉 FESTIVAL OFFER UPTO 83% OFF 🎉"><small class="muted">Change this text whenever needed. Only this message scrolls above the header.</small></div>
+    <button id="saveOfferBtn" type="submit" class="btn gold">Save offer & announcement</button>
     <div id="offerSettingsMsg" class="msg" role="status"></div>
   </form>
 </section>
@@ -174,10 +175,11 @@ function showLogin(){$("loginPanel").classList.remove("hidden");$("dashboard").c
 function showDashboard(){$("loginPanel").classList.add("hidden");$("dashboard").classList.remove("hidden");$("signedInAs").textContent="Signed in as "+(currentUser?.email||"admin");const first=document.querySelector('.nav-item[data-target="overviewAnchor"]');setAdminView("dashboard",first)}
 async function loadOfferSettings(){
  message("offerSettingsMsg","");
- const {data,error}=await client.from("store_settings").select("setting_key,setting_value").eq("setting_key","offer_badge_text");
+ const {data,error}=await client.from("store_settings").select("setting_key,setting_value").in("setting_key",["offer_badge_text","announcement_message"]);
  if(error){message("offerSettingsMsg","Could not load offer settings: "+error.message,"error");return}
  (data||[]).forEach(row=>{
   if(row.setting_key==="offer_badge_text")$("offerBadgeText").value=row.setting_value;
+  if(row.setting_key==="announcement_message")$("announcementMessageInput").value=row.setting_value;
  });
 }
 async function loadProducts(){
@@ -367,15 +369,16 @@ $("loginForm").addEventListener("submit",async e=>{e.preventDefault();message("l
 $("offerSettingsForm").addEventListener("submit",async e=>{
  e.preventDefault();
  if(!currentUser){message("offerSettingsMsg","Please sign in first.","error");return}
- const value=$("offerBadgeText").value.trim();
- if(!value){message("offerSettingsMsg","Enter the offer badge text.","error");return}
+ const value=$("offerBadgeText").value.trim(), announcement=$("announcementMessageInput").value.trim();
+ if(!value||!announcement){message("offerSettingsMsg","Enter both the offer badge and scrolling announcement text.","error");return}
  $("saveOfferBtn").disabled=true;message("offerSettingsMsg","Saving offer settings…");
  try{
   const {error}=await client.from("store_settings").upsert([
-   {setting_key:"offer_badge_text",setting_value:value,updated_at:new Date().toISOString(),updated_by:currentUser.id}
+   {setting_key:"offer_badge_text",setting_value:value,updated_at:new Date().toISOString(),updated_by:currentUser.id},
+   {setting_key:"announcement_message",setting_value:announcement,updated_at:new Date().toISOString(),updated_by:currentUser.id}
   ],{onConflict:"setting_key"});
   if(error)throw error;
-  message("offerSettingsMsg","Offer badge saved. It will update after visitors refresh the storefront.","success");
+  message("offerSettingsMsg","Offer badge and scrolling announcement saved. They will update after visitors refresh the storefront.","success");
  }catch(err){message("offerSettingsMsg","Could not save offer badge: "+(err.message||"Unknown error"),"error")}
  finally{$("saveOfferBtn").disabled=false}
 });
