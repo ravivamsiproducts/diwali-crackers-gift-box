@@ -62,6 +62,26 @@
  .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .inventory-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+
+ /* Product management: desktop-first horizontal editor, with stock levels directly underneath. */
+ #productsAnchor{display:block}
+ .admin-main[data-view="products"] #productsAnchor{display:block!important}
+ .admin-main[data-view="products"] #inventoryAnchor{display:none!important}
+ #productsAnchor>.panel{width:100%;margin-bottom:20px}
+ #productForm{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 16px;align-items:start}
+ #productForm>.field{min-width:0}
+ #productForm>.field:nth-of-type(1),#productForm>.field:nth-of-type(2){grid-column:span 2}
+ #productForm>.field.wide{grid-column:1/-1}
+ #productForm .form-grid{display:contents}
+ #productForm .form-grid>.field{min-width:0}
+ #productForm .toolbar,#productForm>#productMsg{grid-column:1/-1}
+ #productForm .field input,#productForm .field select,#productForm .field textarea{min-width:0}
+ #productForm .field small{font-size:11px;line-height:1.45}
+ #productForm .field{margin:10px 0}
+ #productForm .field textarea{min-height:64px}
+ .product-stock-panel{margin-top:0}
+ @media(min-width:901px) and (max-width:1150px){#productForm{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
 </style>
 </head>
 <body>
@@ -90,8 +110,7 @@
 <div class="inventory-stat"><span>Out of stock</span><strong id="invOut">—</strong><small>Live products needing restock</small></div>
 </div>
 <div id="inventoryAlert" class="inventory-alert hidden" role="status"></div>
-<div class="inventory-subhead"><h3>Product stock levels</h3><span class="muted">Available quantity now</span></div>
-<div id="productList" class="products"><p class="muted">Loading products…</p></div>
+
 <div class="inventory-subhead" style="margin-top:26px"><h3>Recent stock movements</h3><span class="muted">Latest 100 entries</span></div>
 <div id="inventoryHistory" class="inventory-history"><p class="muted">Loading inventory history…</p></div>
 <div id="listMsg" class="msg" role="status"></div>
@@ -110,13 +129,13 @@
 </section>
 <section id="ordersAnchor" class="panel nav-target" style="margin-top:18px"><div class="section-title"><div><div class="eyebrow">Checkout & payments</div><h2>Orders</h2></div><span id="orderCount" class="muted">—</span></div><p class="muted">Only successfully verified payments appear here. Unpaid, failed, created, or authorized-only attempts stay under Customers → Payment follow-ups.</p><div id="paymentsAnchor" class="nav-target"></div><div class="orders-toolbar"><input id="orderSearch" type="search" placeholder="Search order number, customer or phone…" aria-label="Search orders"><select id="orderFilter" aria-label="Filter order status"><option value="">All Statuses</option><option value="pending_delivery_review">Pending</option><option value="paid">Confirmed / Paid</option><option value="processing">Processing</option><option value="dispatched">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select></div><div id="orderList" class="orders-table-wrap"><p class="muted" style="padding:16px">Loading orders…</p></div><div id="orderMsg" class="msg" role="status"></div></section>
  
-<div id="productsAnchor" class="grid nav-target" style="margin-top:18px">
-<section class="panel"><div class="eyebrow">Catalogue editor</div><h2 id="editorTitle">Add a product</h2>
+<div id="productsAnchor" class="nav-target" style="margin-top:18px">
+<section class="panel catalogue-editor-panel"><div class="eyebrow">Catalogue editor</div><h2 id="editorTitle">Add a product</h2>
 <form id="productForm">
 <input id="productId" type="hidden">
 <div class="field"><label for="productName">Product name *</label><input id="productName" maxlength="140" required placeholder="Diwali Gift Box - Classic"></div>
 <div class="field"><label for="productSlug">URL slug *</label><input id="productSlug" maxlength="160" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" placeholder="diwali-gift-box-classic"><small class="muted">Lowercase letters, numbers and hyphens only.</small></div>
-<div class="field"><label for="productDescription">Description</label><textarea id="productDescription" maxlength="1000" placeholder="A short product description"></textarea></div>
+<div class="field wide"><label for="productDescription">Description</label><textarea id="productDescription" maxlength="1000" placeholder="A short product description"></textarea></div>
 <div class="form-grid">
 <div class="field"><label for="productPrice">Selling price in ₹ *</label><input id="productPrice" type="number" min="0.01" step="0.01" required placeholder="699"></div>
  <div class="field"><label for="productComparePrice">Compare price in ₹</label><input id="productComparePrice" type="number" min="0" step="0.01" placeholder="849"><small class="muted">Optional original price. Must be higher than the selling price to show a discount.</small></div>
@@ -128,7 +147,7 @@
 <div class="toolbar"><button id="saveBtn" class="btn gold" type="submit">Save product</button><button id="resetBtn" class="btn outline" type="button">Clear form</button></div>
 <div id="productMsg" class="msg" role="status"></div>
 </form></section>
-
+<section class="panel product-stock-panel"><div class="section-title"><div><div class="eyebrow">Inventory</div><h2>Product Stock Levels</h2><p class="muted">Available quantity for each product right now.</p></div><span id="productCountProducts" class="muted"></span></div><div id="productList" class="products"><p class="muted">Loading products…</p></div></section>
 </div></div></section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
